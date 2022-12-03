@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/SFMLTest.dir/Agario.cpp.o CMakeFiles/SFMLTest.dir/src/Game.cpp.o CMakeFiles/SFMLTest.dir/src/Player.cpp.o CMakeFiles/SFMLTest.dir/src/StaticPoints.cpp.o -o SFMLTest  -lsfml-graphics -lsfml-window 

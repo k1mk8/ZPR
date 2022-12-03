@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "*.tcc": "cpp"
+    },
+    "code-builder.build.projectBuildCommand": "g++ zadanie.cpp -o new -lsfml-graphics -lsfml-window -lsfml-system"
+}
