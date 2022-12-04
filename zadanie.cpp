@@ -69,6 +69,37 @@ public:
     void render(RenderTarget& target);
 };
 
+class Interface
+{
+private:
+    VideoMode videoMode;
+    Event sfmlEvent;
+
+    Player player;
+
+    Sprite sprajt;
+    Texture texture;
+
+    Text standardText;
+    Font font;
+    Text guiText;
+    IntRect playGame;
+
+    void initWindow();
+    void initFonts();
+    void initText();
+public:
+    RenderWindow* window;
+    Interface();
+    ~Interface();
+
+    const bool running() const;
+    void pollEvents();
+    void update();
+    void renderGui(RenderTarget* target);
+    void render();
+};
+
 class Game
 {
 private:
@@ -93,6 +124,7 @@ private:
     void initWindow();
     void initFonts();
     void initText();
+    void initButtons();
 public:
     Game();
     ~Game();
@@ -382,6 +414,89 @@ void StaticPoints::render(RenderTarget& target)
     target.draw(this->shape);
 }
 
+void Interface::initWindow()
+{
+    texture.loadFromFile("tlo.png");
+    sprajt.setTexture(texture);
+    this->videoMode = VideoMode(1200.f, 630.f);
+    this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
+    this->window->clear(Color::White);
+    this->window->setFramerateLimit(60);
+}
+
+void Interface::initFonts()
+{
+    if(!this->font.loadFromFile("fonts/MilkyHoney.ttf")){
+        cout << " COULD NOT LOAD MilkyHoney.ttf" << "\n";
+    }
+}
+
+void Interface::initText()
+{
+    this->guiText.setFont(this->font);
+    this->guiText.setFillColor(Color::Black);
+    this->guiText.setCharacterSize(32);
+
+    this->standardText.setFont(this->font);
+    this->standardText.setFillColor(Color::Black);
+    this->standardText.setCharacterSize(25);
+    this->standardText.setPosition(Vector2f(280,100));
+    this->standardText.setString("\t\t\t\t\t\tWitamy w grze AGARIO!\n Prosze wcisnac przycisk graj, aby rozpoczac rozgrywke!");
+}
+
+Interface::Interface()
+{
+    this->initWindow();
+    this->initFonts();
+    this->initText();
+}
+
+Interface::~Interface()
+{
+    delete this->window;
+}
+
+const bool Interface::running() const
+{
+    return this->window->isOpen();
+}
+
+void Interface::pollEvents()
+{
+    while(this->window->pollEvent(this->sfmlEvent))
+    {
+        switch(this->sfmlEvent.type)
+        {
+        case Event::Closed:
+            this->window->close();
+            break;
+        case Event::KeyPressed:
+            if(this->sfmlEvent.key.code == Keyboard::Escape){
+                this->window->close();
+            }
+        }
+        break;
+    }
+}
+
+void Interface::update()
+{
+    this->pollEvents();
+}
+
+void Interface::renderGui(RenderTarget* target)
+{
+    target->draw(this->standardText);
+}
+
+void Interface::render()
+{
+    this->window->clear(Color::White);
+    this->window->draw(sprajt);
+    this->renderGui(this->window);
+    this->window->display();
+}
+
 void Game::variables()
 {
     this->endGame = false;
@@ -395,7 +510,7 @@ void Game::variables()
 void Game::initWindow()
 {
     View view(Vector2f(920.f, 540.f), Vector2f(19200.f, 10800.f));
-    //view.zoom(0.1f);
+    view.zoom(0.1f);
     view.setCenter(this->player.getPlayerPostion());
     this->videoMode = VideoMode(1920.f, 1080.f);
     this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
@@ -582,11 +697,17 @@ int main()
 
     Game game;
 
+    Interface interface;
+    Event event;
+    // while(interface.running())
+    // {
+    //     interface.update();
+    //     interface.render();
+    // }
     while(game.running())
     {
         game.update();
         game.render();
     }
-
     return 0;
 }
