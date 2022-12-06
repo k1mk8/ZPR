@@ -2,6 +2,7 @@
 #include<ctime>
 #include<vector>
 #include<sstream>
+#include<fstream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -14,6 +15,41 @@ enum StaticPointsTypes {FOOD = 0, SPIKES};
 using namespace sf;
 using namespace std;
 
+
+
+
+class Button
+{
+private:
+    RectangleShape button;
+public:
+    Button(Vector2f size, Color color, Vector2f pos);
+    ~Button();
+    const RectangleShape& getButton() const;
+    const bool isButtonPressed(RenderWindow* window) const;
+};
+
+class GameOver
+{
+private:
+    Button buttonYes;
+    Button buttonNo;
+    VideoMode videoMode;
+    Event sfmlEvent;
+
+    Sprite sprajt;
+    Texture texture;
+
+    void initWindow();
+    void initButton();
+public:
+    RenderWindow* window;
+    GameOver();
+    ~GameOver();
+    const int buttonPressed() const;
+    void render();
+};
+
 class Player
 {
 private:
@@ -21,7 +57,6 @@ private:
     float speed;
     int mass;
     int timeOfLive;
-    vector<Player> playerBalls;
     void Variables(const int mass);
     void makeShape();
 public:
@@ -31,7 +66,6 @@ public:
     const CircleShape& getShape() const;
     const int& getMass() const;
     const int& getSpeed() const;
-    const vector<Player>& getPlayerBalls() const;
     const Vector2f& getPlayerPostion() const;
 
     void setMass(const int weight);
@@ -55,9 +89,9 @@ private:
     CircleShape shape;
     int type;
     int mass = 5;
-    void makeShape(const View& window);
+    void makeShape(const View& window, IntRect rect);
 public:
-    StaticPoints(const View& window, int type);
+    StaticPoints(const View& window, int type, IntRect rect);
     virtual ~StaticPoints();
 
     const CircleShape getShape() const;
@@ -73,7 +107,7 @@ class Interface
 {
 private:
 
-    RectangleShape button;
+    Button button;
     VideoMode videoMode;
     Event sfmlEvent;
 
@@ -85,6 +119,7 @@ private:
     Text standardText;
     Text guiText;
     Text buttonText;
+    Text maxPointsText;
     Font font;
 
     void initWindow();
@@ -122,6 +157,7 @@ private:
     float spawnTimer;
     int maxStaticPoints;
     int totalPoints;
+    int maxPoints = 10;
 
     void variables();
     void initWindow();
@@ -142,12 +178,85 @@ public:
     void updatePlayer();
     void updateCollision();
     void updateGui();
+    void updateMaxPoints();
     void update();
 
     void renderGui(RenderTarget* target);
     void render();
 };
 
+Button::Button(Vector2f size = Vector2f(125, 60), Color color = Color::Cyan, Vector2f pos = Vector2f(560, 500))
+{
+    this->button.setSize(size);
+    this->button.setFillColor(color);
+    this->button.setPosition(pos);
+}
+Button::~Button()
+{
+
+}
+
+const RectangleShape& Button::getButton() const
+{
+    return this->button;
+}
+
+const bool Button::isButtonPressed(RenderWindow* window) const
+{
+    IntRect rect(this->button.getPosition().x, this->button.getPosition().y, this->button.getGlobalBounds().width, this->button.getGlobalBounds().height);
+        if (rect.contains(Mouse::getPosition(*window)) && (sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+                return true;
+        }
+        return false; 
+}
+
+void GameOver::initWindow()
+{
+    this->texture.loadFromFile("game_over.png");
+    this->sprajt.setTexture(texture);
+    this->videoMode = VideoMode(1920.f, 1080.f);
+    this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
+    this->window->clear(Color::White);
+    this->window->setFramerateLimit(60);
+}
+
+void GameOver::initButton()
+{
+    this->buttonYes = Button(Vector2f(125, 60), Color::Transparent, Vector2f(800, 750));
+    this->buttonNo = Button(Vector2f(125, 60), Color::Transparent, Vector2f(1000, 750));
+}
+
+GameOver::GameOver()
+{
+    this->initWindow();
+    this->initButton();
+}
+
+GameOver::~GameOver()
+{
+    delete this->window;
+}
+
+const int GameOver::buttonPressed() const
+{
+    int choice = 0;
+    if(this->buttonYes.isButtonPressed(window)){
+        choice = 1;
+    }
+    else if(this->buttonNo.isButtonPressed(window)){
+        choice = 2;
+    }
+    return choice;
+}
+
+void GameOver::render()
+{
+    this->window->clear(Color::White);
+    this->window->draw(sprajt);
+    this->window->draw(buttonYes.getButton());
+    this->window->draw(buttonNo.getButton());
+    this->window->display();
+}
 
 void Player::Variables(const int mass)
 {
@@ -189,11 +298,6 @@ const int & Player::getSpeed() const
     return this->speed;
 }
 
-const vector<Player>& Player::getPlayerBalls() const
-{
-    return this->playerBalls;
-}
-
 const Vector2f & Player::getPlayerPostion() const
 {
     return this->shape.getPosition();
@@ -220,11 +324,6 @@ void Player::splitMass()
 void Player::split()
 {
     if(Keyboard::isKeyPressed(Keyboard::Space)){
-        if(this->playerBalls.size() == 0){
-            Vector2f x = this->shape.getPosition();
-            playerBalls.push_back(Player(x.x+this->mass, x.y, this->mass / 2));
-            playerBalls.push_back(Player(x.x, x.y, this->mass / 2));
-        }
         this->splitMass();
         this->shape.setRadius(this->getMass());
     }
@@ -249,89 +348,36 @@ void Player::shootingMass()
 void Player::move()
 {
     if(Keyboard::isKeyPressed(Keyboard::W)){
-        if(this->getPlayerBalls().size() > 0)
-        {
-            for(auto i : this->getPlayerBalls()){
-            i.shape.move(0.f, -this->speed);
-            }
-        }
-        else
-        {
-            this->shape.move(0.f, -this->speed);
-        }
+        this->shape.move(0.f, -this->speed);
     }
     else if(Keyboard::isKeyPressed(Keyboard::S)){
-        if(this->getPlayerBalls().size() > 0)
-        {
-            for(auto i : this->getPlayerBalls()){
-            i.shape.move(0.f, this->speed);
-            }
-        }
-        else
-        {
-            this->shape.move(0.f, this->speed);
-        }
+        this->shape.move(0.f, this->speed);
     }
     else if(Keyboard::isKeyPressed(Keyboard::A)){
-        if(this->getPlayerBalls().size() > 0)
-        {
-            for(auto i : this->getPlayerBalls()){
-            i.shape.move(-this->speed, 0.f);
-            }
-        }
-        else
-        {
-            this->shape.move(-this->speed, 0.f);
-        }
+        this->shape.move(-this->speed, 0.f);
     }
     else if(Keyboard::isKeyPressed(Keyboard::D)){
-        if(this->getPlayerBalls().size() > 0)
-        {
-            for(auto i : this->getPlayerBalls()){
-            i.shape.move(this->speed, 0.f);
-            }
-        }
-        else
-        {
-            this->shape.move(this->speed, 0.f);
-        }
+        this->shape.move(this->speed, 0.f);
+    }
+    else if(Keyboard::isKeyPressed(Keyboard::P)){
+        this->setMass(0);
     }
 }
 
 void Player::checkMapCollision(const View* target)
 {
-    if(this->getPlayerBalls().size() > 0)
-    {
-        for(auto i : this->getPlayerBalls())
-        { 
-            if(i.shape.getGlobalBounds().left <= 0.f){
-                i.shape.setPosition(0.f, i.shape.getGlobalBounds().top);
-            }
-            if(i.shape.getGlobalBounds().left + i.shape.getGlobalBounds().width >= target->getSize().x){
-                i.shape.setPosition(target->getSize().x - i.shape.getGlobalBounds().width, i.shape.getGlobalBounds().top);
-            }
-            if(i.shape.getGlobalBounds().top <= 0.f){
-                i.shape.setPosition(i.shape.getGlobalBounds().left, 0.f);
-            }
-            if(i.shape.getGlobalBounds().top + i.shape.getGlobalBounds().height >= target->getSize().y){
-                i.shape.setPosition(i.shape.getGlobalBounds().left, target->getSize().y - i.shape.getGlobalBounds().height);
-            }   
-        }
+
+    if(this->shape.getGlobalBounds().left <= -9600.f){
+    this->shape.setPosition(-9600.f, this->shape.getGlobalBounds().top);
     }
-    else
-    {
-        if(this->shape.getGlobalBounds().left <= -9600.f){
-        this->shape.setPosition(-9600.f, this->shape.getGlobalBounds().top);
-        }
-        if(this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= target->getSize().x){
-            this->shape.setPosition(target->getSize().x - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
-        }
-        if(this->shape.getGlobalBounds().top <= -5400.f){
-            this->shape.setPosition(this->shape.getGlobalBounds().left, -5400.f);
-        }
-        if(this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= target->getSize().y){
-            this->shape.setPosition(this->shape.getGlobalBounds().left, target->getSize().y - this->shape.getGlobalBounds().height);
-        }
+    if(this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= target->getSize().x){
+        this->shape.setPosition(target->getSize().x - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
+    }
+    if(this->shape.getGlobalBounds().top <= -5400.f){
+        this->shape.setPosition(this->shape.getGlobalBounds().left, -5400.f);
+    }
+    if(this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= target->getSize().y){
+        this->shape.setPosition(this->shape.getGlobalBounds().left, target->getSize().y - this->shape.getGlobalBounds().height);
     }
 }
 
@@ -347,7 +393,7 @@ void Player::render(RenderTarget* target)
     target->draw(this->shape);
 }
 
-void StaticPoints::makeShape(const View& view)
+void StaticPoints::makeShape(const View& view, IntRect rect)
 {
     this->shape.setRadius(5);
     Color color;
@@ -366,16 +412,20 @@ void StaticPoints::makeShape(const View& view)
     int t[2];
     t[0] = -1;
     t[1] = 1;
-    this->shape.setPosition(
-        Vector2f(static_cast<float>((rand() % (int(size.x) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().width),
-        static_cast<float>((rand() % (int(size.y) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().height))
-    );
+    int x = static_cast<float>((rand() % (int(size.x) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().width);
+    int y = static_cast<float>((rand() % (int(size.y) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().height);
+    while(rect.contains(x,y))
+    {
+        x = static_cast<float>((rand() % (int(size.x) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().width);
+        y = static_cast<float>((rand() % (int(size.y) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().height);
+    }
+    this->shape.setPosition(Vector2f(x,y));
 }
 
-StaticPoints::StaticPoints(const View& window, int type)
+StaticPoints::StaticPoints(const View& window, int type, IntRect rect)
         : type(type)
 {
-    this->makeShape(window);
+    this->makeShape(window, rect);
 }
 
 StaticPoints::~StaticPoints()
@@ -402,15 +452,15 @@ void StaticPoints::eatMass(const int food)
 {
     this->mass += food;
 }
-void StaticPoints::checkSpikeMass(const View& window)
-{
-    if(this->type == StaticPointsTypes::SPIKES){
-        if(this->mass > 25){
-            this->mass = 5;
-            StaticPoints(window, SPIKES);
-        }
-    }
-}
+// void StaticPoints::checkSpikeMass(const View& window)
+// {
+//     if(this->type == StaticPointsTypes::SPIKES){
+//         if(this->mass > 25){
+//             this->mass = 5;
+//             StaticPoints(window, SPIKES);
+//         }
+//     }
+// }
 
 void StaticPoints::render(RenderTarget& target)
 {
@@ -419,8 +469,8 @@ void StaticPoints::render(RenderTarget& target)
 
 void Interface::initWindow()
 {
-    texture.loadFromFile("tlo.png");
-    sprajt.setTexture(texture);
+    this->texture.loadFromFile("tlo.png");
+    this->sprajt.setTexture(texture);
     this->videoMode = VideoMode(1200.f, 630.f);
     this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
     this->window->clear(Color::White);
@@ -436,9 +486,7 @@ void Interface::initFonts()
 
 void Interface::initButton()
 {
-    this->button.setSize(Vector2f(125, 65));
-    this->button.setFillColor(Color::Cyan );
-    this->button.setPosition(Vector2f(560,500));
+    this->button = Button(Vector2f(125, 60), Color::Cyan, Vector2f(560, 500));
 }
 
 
@@ -454,11 +502,16 @@ void Interface::initText()
     this->standardText.setPosition(Vector2f(280,100));
     this->standardText.setString("\t\t\t\t\t\tWitamy w grze AGARIO!\n Prosze wcisnac przycisk graj, aby rozpoczac rozgrywke!");
 
-    this->standardText.setFont(this->font);
-    this->standardText.setFillColor(Color::Black);
-    this->standardText.setCharacterSize(25);
-    this->standardText.setPosition(Vector2f(590,515));
-    this->standardText.setString("Graj!");
+    this->maxPointsText.setFont(this->font);
+    this->maxPointsText.setFillColor(Color::Black);
+    this->maxPointsText.setCharacterSize(25);
+    this->maxPointsText.setPosition(Vector2f(380,425));
+    int allMaxPoints = 0;
+    ifstream Plik("./maxPoints.txt");
+    Plik >> allMaxPoints;
+    Plik.close();
+    auto s = to_string(allMaxPoints);
+    this->maxPointsText.setString("Twoj najlepszy dotychczasowy wynik to: " + s);
 }
 
 Interface::Interface()
@@ -472,16 +525,6 @@ Interface::Interface()
 Interface::~Interface()
 {
     delete this->window;
-}
-
-const bool Interface::isButtonPressed() const
-{
-    sf::IntRect rect(button.getPosition().x, button.getPosition().y, button.getGlobalBounds().width,   
-        button.getGlobalBounds().height);
-        if (rect.contains(Mouse::getPosition(*window)) && (sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
-                return true;
-        }
-        return false; 
 }
 
 const bool Interface::running() const
@@ -510,20 +553,21 @@ void Interface::pollEvents()
 const bool Interface::update()
 {
     this->pollEvents();
-    return this->isButtonPressed();
+    return this->button.isButtonPressed(this->window);
 }
 
 void Interface::renderGui(RenderTarget* target)
 {
+    target->draw(this->guiText);
     target->draw(this->standardText);
-    target->draw(this->buttonText);
+    target->draw(this->maxPointsText);
 }
 
 void Interface::render()
 {
     this->window->clear(Color::White);
     this->window->draw(sprajt);
-    this->window->draw(button);
+    this->window->draw(this->button.getButton());
     this->renderGui(this->window);
     this->window->display();
 }
@@ -614,12 +658,7 @@ void Game::pollEvents()
 
 void Game::calculateTotalPoints()
 {
-    int points = 0;
-    vector<Player> totalMass = this->player.getPlayerBalls();
-    for(auto i : totalMass){
-        points += i.getMass();
-    }
-    this->totalPoints = points;
+    this->totalPoints = this->player.getMass();
 }
 
 void Game::spawnStaticPoints()
@@ -629,7 +668,9 @@ void Game::spawnStaticPoints()
     }
     else{
         if(this->staticPoints.size() < this->maxStaticPoints){
-            this->staticPoints.push_back(StaticPoints(this->window->getView(), this->randPointType()));
+            IntRect rect(this->player.getPlayerPostion().x, this->player.getPlayerPostion().y,
+            this->player.getShape().getGlobalBounds().width,this->player.getShape().getGlobalBounds().height);
+            this->staticPoints.push_back(StaticPoints(this->window->getView(), this->randPointType(), rect));
             this->spawnTimer = 0.f;
         }
     }
@@ -674,15 +715,35 @@ void Game::updateGui()
 {
     stringstream ss;
     int mass = this->player.getMass();
+    if(mass > maxPoints){
+        maxPoints = mass;
+    }
     ss << " - Points: " << mass << "\n";
     Vector2f playerPos = this->player.getPlayerPostion() + Vector2f(mass, mass);
     this->guiText.setPosition(playerPos + Vector2f(-960, -540));
     this->guiText.setString(ss.str());
 }
 
+void Game::updateMaxPoints()
+{
+    int allMaxPoints = 0;
+    ifstream Plik("./maxPoints.txt");
+    Plik >> allMaxPoints;
+    Plik.close();
+    if(maxPoints > allMaxPoints){
+        ofstream Plik("./maxPoints.txt");
+        Plik << maxPoints;
+        Plik.close();
+    }
+}
+
 void Game::update()
 {
     this->pollEvents();
+    if(this->player.getMass() <= 0){
+        this->endGame = true;
+        this->updateMaxPoints();
+    }
     if(this->endGame == false){
         this->spawnStaticPoints();
         this->updatePlayer();
@@ -700,14 +761,7 @@ void Game::render()
 {
     this->window->clear(Color::White);
 
-    if(player.getPlayerBalls().size() == 0){
-        this->player.render(this->window);
-    }
-    else{
-        for(auto i : this->player.getPlayerBalls()){
-            i.render(this->window);
-        }
-    }
+    this->player.render(this->window);
 
     for(auto i : this->staticPoints){
 
@@ -717,7 +771,7 @@ void Game::render()
     this->renderGui(this->window);
 
     if(this->endGame == true){
-        this->window->draw(this->endGameText);
+        this->window->close();
     }
 
     this->window->display();
@@ -726,19 +780,37 @@ void Game::render()
 int main()
 {
     srand(static_cast<unsigned>(time(0)));
-    Interface interface;
-    bool change = false;
-    while(interface.running() && change == false)
+    int choice = 0;
+    while(true)
     {
-        change = interface.update();
-        interface.render();
-    }
-    interface.~Interface();
-    Game game;
-    while(game.running())
-    {
-        game.update();
-        game.render();
+        Interface interface;
+        bool change = false;
+        while(interface.running() && change == false)
+        {
+            change = interface.update();
+            interface.render();
+        }
+        interface.~Interface();
+        Game game;
+        while(game.running())
+        {
+            game.update();
+            game.render();
+        }
+        GameOver gameOver;
+        while(choice == 0)
+        {
+            choice = gameOver.buttonPressed();
+            gameOver.render();
+        }
+        if(choice == 1){
+            choice = 0;
+        }
+        else if(choice == 2){
+            gameOver.~GameOver();
+            break;
+        }
+        gameOver.~GameOver();
     }
     return 0;
 }

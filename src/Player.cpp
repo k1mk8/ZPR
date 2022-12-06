@@ -1,6 +1,6 @@
 #include "Player.h"
 
-void Player::Variables()
+void Player::Variables(const int mass)
 {
     this->speed = 5.f;
     this->mass = 10;
@@ -12,11 +12,11 @@ void Player::makeShape()
     this->shape.setRadius(getMass());
 }
 
-Player::Player(float x, float y)
+Player::Player(float x, float y, const int mass)
 {
     this->shape.setPosition(x,y);
-
-    this->Variables();
+    this->timeOfLive = 0;
+    this->Variables(mass);
     this->makeShape();
 }
 
@@ -40,6 +40,11 @@ const int & Player::getSpeed() const
     return this->speed;
 }
 
+const Vector2f & Player::getPlayerPostion() const
+{
+    return this->shape.getPosition();
+}
+
 void Player::setMass(const int weight)
 {
     this->mass = weight;
@@ -53,7 +58,9 @@ void Player::grow(const int food)
 
 void Player::splitMass()
 {
-    this->mass /= 2;
+    if(mass > 20){
+        this->mass /= 2;    
+    }   
 }
 
 void Player::split()
@@ -96,25 +103,27 @@ void Player::move()
     }
 }
 
-void Player::checkMapCollision(const RenderTarget* target)
+void Player::checkMapCollision(const View* target)
 {
-    if(this->shape.getGlobalBounds().left <= 0.f){
-        this->shape.setPosition(0.f, this->shape.getGlobalBounds().top);
+
+    if(this->shape.getGlobalBounds().left <= -9600.f){
+    this->shape.setPosition(-9600.f, this->shape.getGlobalBounds().top);
     }
     if(this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= target->getSize().x){
         this->shape.setPosition(target->getSize().x - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
     }
-    if(this->shape.getGlobalBounds().top <= 0.f){
-        this->shape.setPosition(this->shape.getGlobalBounds().left, 0.f);
+    if(this->shape.getGlobalBounds().top <= -5400.f){
+        this->shape.setPosition(this->shape.getGlobalBounds().left, -5400.f);
     }
     if(this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= target->getSize().y){
         this->shape.setPosition(this->shape.getGlobalBounds().left, target->getSize().y - this->shape.getGlobalBounds().height);
     }
 }
 
-void Player::setPosition(const RenderTarget* target)
+void Player::setPosition(const View* target)
 {
     this->move();
+    this->split();
     this->checkMapCollision(target);
 }
 

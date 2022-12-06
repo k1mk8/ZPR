@@ -13,14 +13,16 @@ private:
     CircleShape shape;
     int type;
     int mass = 5;
-    void makeShape(const RenderWindow& window);
+    void makeShape(const View& window, IntRect rect);
 public:
-    StaticPoints(const RenderWindow& window, int type);
+    StaticPoints(const View& window, int type, IntRect rect);
     virtual ~StaticPoints();
 
     const CircleShape getShape() const;
     const int& getType() const;
     const int& getMass() const;
 
+    void eatMass(const int food);
+    void checkSpikeMass(const View& window);
     void render(RenderTarget& target);
 };

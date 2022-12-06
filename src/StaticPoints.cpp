@@ -1,8 +1,7 @@
 #include "StaticPoints.h"
 
-void StaticPoints::makeShape(const RenderWindow& window)
+void StaticPoints::makeShape(const View& view, IntRect rect)
 {
-
     this->shape.setRadius(5);
     Color color;
     switch (this->type)
@@ -16,16 +15,24 @@ void StaticPoints::makeShape(const RenderWindow& window)
         break;
     }
     this->shape.setFillColor(color);
-    this->shape.setPosition(
-        Vector2f(static_cast<float>(rand() % window.getSize().x - this->shape.getGlobalBounds().width),
-        static_cast<float>(rand() % window.getSize().y - this->shape.getGlobalBounds().height))
-    );
+    Vector2f size = view.getSize();
+    int t[2];
+    t[0] = -1;
+    t[1] = 1;
+    int x = static_cast<float>((rand() % (int(size.x) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().width);
+    int y = static_cast<float>((rand() % (int(size.y) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().height);
+    while(rect.contains(x,y))
+    {
+        x = static_cast<float>((rand() % (int(size.x) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().width);
+        y = static_cast<float>((rand() % (int(size.y) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().height);
+    }
+    this->shape.setPosition(Vector2f(x,y));
 }
 
-StaticPoints::StaticPoints(const RenderWindow& window, int type)
+StaticPoints::StaticPoints(const View& window, int type, IntRect rect)
         : type(type)
 {
-    this->makeShape(window);
+    this->makeShape(window, rect);
 }
 
 StaticPoints::~StaticPoints()
@@ -47,6 +54,20 @@ const int& StaticPoints::getMass() const
 {
     return this->mass;
 }
+
+void StaticPoints::eatMass(const int food)
+{
+    this->mass += food;
+}
+// void StaticPoints::checkSpikeMass(const View& window)
+// {
+//     if(this->type == StaticPointsTypes::SPIKES){
+//         if(this->mass > 25){
+//             this->mass = 5;
+//             StaticPoints(window, SPIKES);
+//         }
+//     }
+// }
 
 void StaticPoints::render(RenderTarget& target)
 {

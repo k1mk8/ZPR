@@ -27,6 +27,7 @@ private:
     float spawnTimerMax;
     float spawnTimer;
     int maxStaticPoints;
+    int totalPoints;
 
     void variables();
     void initWindow();
@@ -41,6 +42,7 @@ public:
     const bool running() const;
     void pollEvents();
 
+    void calculateTotalPoints();
     void spawnStaticPoints();
     const int randPointType() const;
     void updatePlayer();
