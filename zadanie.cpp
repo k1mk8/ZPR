@@ -72,6 +72,8 @@ public:
 class Interface
 {
 private:
+
+    RectangleShape button;
     VideoMode videoMode;
     Event sfmlEvent;
 
@@ -81,21 +83,22 @@ private:
     Texture texture;
 
     Text standardText;
-    Font font;
     Text guiText;
-    IntRect playGame;
+    Text buttonText;
+    Font font;
 
     void initWindow();
     void initFonts();
     void initText();
+    void initButton();
 public:
     RenderWindow* window;
     Interface();
     ~Interface();
-
+    const bool isButtonPressed() const;
     const bool running() const;
     void pollEvents();
-    void update();
+    const bool update();
     void renderGui(RenderTarget* target);
     void render();
 };
@@ -124,7 +127,6 @@ private:
     void initWindow();
     void initFonts();
     void initText();
-    void initButtons();
 public:
     Game();
     ~Game();
@@ -145,6 +147,7 @@ public:
     void renderGui(RenderTarget* target);
     void render();
 };
+
 
 void Player::Variables(const int mass)
 {
@@ -431,6 +434,14 @@ void Interface::initFonts()
     }
 }
 
+void Interface::initButton()
+{
+    this->button.setSize(Vector2f(125, 65));
+    this->button.setFillColor(Color::Cyan );
+    this->button.setPosition(Vector2f(560,500));
+}
+
+
 void Interface::initText()
 {
     this->guiText.setFont(this->font);
@@ -442,6 +453,12 @@ void Interface::initText()
     this->standardText.setCharacterSize(25);
     this->standardText.setPosition(Vector2f(280,100));
     this->standardText.setString("\t\t\t\t\t\tWitamy w grze AGARIO!\n Prosze wcisnac przycisk graj, aby rozpoczac rozgrywke!");
+
+    this->standardText.setFont(this->font);
+    this->standardText.setFillColor(Color::Black);
+    this->standardText.setCharacterSize(25);
+    this->standardText.setPosition(Vector2f(590,515));
+    this->standardText.setString("Graj!");
 }
 
 Interface::Interface()
@@ -449,11 +466,22 @@ Interface::Interface()
     this->initWindow();
     this->initFonts();
     this->initText();
+    this->initButton();
 }
 
 Interface::~Interface()
 {
     delete this->window;
+}
+
+const bool Interface::isButtonPressed() const
+{
+    sf::IntRect rect(button.getPosition().x, button.getPosition().y, button.getGlobalBounds().width,   
+        button.getGlobalBounds().height);
+        if (rect.contains(Mouse::getPosition(*window)) && (sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+                return true;
+        }
+        return false; 
 }
 
 const bool Interface::running() const
@@ -479,20 +507,23 @@ void Interface::pollEvents()
     }
 }
 
-void Interface::update()
+const bool Interface::update()
 {
     this->pollEvents();
+    return this->isButtonPressed();
 }
 
 void Interface::renderGui(RenderTarget* target)
 {
     target->draw(this->standardText);
+    target->draw(this->buttonText);
 }
 
 void Interface::render()
 {
     this->window->clear(Color::White);
     this->window->draw(sprajt);
+    this->window->draw(button);
     this->renderGui(this->window);
     this->window->display();
 }
@@ -619,7 +650,7 @@ void Game::updatePlayer()
 {
     this->player.setPosition(&this->window->getView());
     View view = this->window->getView();
-    view.setCenter(this->player.getPlayerPostion());
+    view.setCenter(this->player.getPlayerPostion()+Vector2f(this->player.getMass(),this->player.getMass()));
     this->window->setView(view);
 }
 
@@ -642,8 +673,9 @@ void Game::updateCollision()
 void Game::updateGui()
 {
     stringstream ss;
-    ss << " - Points: " << this->player.getMass() << "\n";
-    Vector2f playerPos = this->player.getPlayerPostion();
+    int mass = this->player.getMass();
+    ss << " - Points: " << mass << "\n";
+    Vector2f playerPos = this->player.getPlayerPostion() + Vector2f(mass, mass);
     this->guiText.setPosition(playerPos + Vector2f(-960, -540));
     this->guiText.setString(ss.str());
 }
@@ -694,16 +726,15 @@ void Game::render()
 int main()
 {
     srand(static_cast<unsigned>(time(0)));
-
-    Game game;
-
     Interface interface;
-    Event event;
-    // while(interface.running())
-    // {
-    //     interface.update();
-    //     interface.render();
-    // }
+    bool change = false;
+    while(interface.running() && change == false)
+    {
+        change = interface.update();
+        interface.render();
+    }
+    interface.~Interface();
+    Game game;
     while(game.running())
     {
         game.update();
