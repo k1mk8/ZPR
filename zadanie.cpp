@@ -395,16 +395,16 @@ void Player::render(RenderTarget* target)
 
 void StaticPoints::makeShape(const View& view, IntRect rect)
 {
-    this->shape.setRadius(5);
     Color color;
     switch (this->type)
     {
     case FOOD:
         color = Color::Blue;
+        this->shape.setRadius(5);
         break;
     case SPIKES:
-        color = Color::Yellow;
-        this->shape.setOutlineColor(Color::Red);
+        color = Color::Red;
+        this->shape.setRadius(30);
         break;
     }
     this->shape.setFillColor(color);
@@ -502,6 +502,12 @@ void Interface::initText()
     this->standardText.setPosition(Vector2f(280,100));
     this->standardText.setString("\t\t\t\t\t\tWitamy w grze AGARIO!\n Prosze wcisnac przycisk graj, aby rozpoczac rozgrywke!");
 
+    this->buttonText.setFont(this->font);
+    this->buttonText.setFillColor(Color::Black);
+    this->buttonText.setCharacterSize(25);
+    this->buttonText.setPosition(Vector2f(590,515));
+    this->buttonText.setString("Graj!");
+
     this->maxPointsText.setFont(this->font);
     this->maxPointsText.setFillColor(Color::Black);
     this->maxPointsText.setCharacterSize(25);
@@ -544,6 +550,7 @@ void Interface::pollEvents()
         case Event::KeyPressed:
             if(this->sfmlEvent.key.code == Keyboard::Escape){
                 this->window->close();
+                break;
             }
         }
         break;
@@ -561,6 +568,7 @@ void Interface::renderGui(RenderTarget* target)
     target->draw(this->guiText);
     target->draw(this->standardText);
     target->draw(this->maxPointsText);
+    target->draw(this->buttonText);
 }
 
 void Interface::render()
@@ -702,9 +710,13 @@ void Game::updateCollision()
             switch(this->staticPoints[i].getType())
             {
                 case StaticPointsTypes::FOOD:
-                    this->player.grow(staticPoints[i].getMass());
+                    this->player.grow(this->staticPoints[i].getMass());
                     break;
-                // TODO co jeśli się zetknie ze SPIKE
+                case StaticPointsTypes::SPIKES:
+                    if(this->player.getMass() > this->staticPoints[i].getMass() * 1.1){
+                        //this->player.splitBySpike();
+                        continue;
+                    }
             }
             this->staticPoints.erase(this->staticPoints.begin() + i);
         }
@@ -783,20 +795,22 @@ int main()
     int choice = 0;
     while(true)
     {
-        Interface interface;
-        bool change = false;
-        while(interface.running() && change == false)
-        {
-            change = interface.update();
-            interface.render();
-        }
-        interface.~Interface();
+        // Interface interface;
+        // bool change = false;
+        // while(interface.running() && change == false)
+        // {
+        //     change = interface.update();
+        //     interface.render();
+        // }
+        // interface.~Interface();
         Game game;
+        cout<<game.running()<<endl;
         while(game.running())
         {
             game.update();
             game.render();
         }
+        game.~Game();
         GameOver gameOver;
         while(choice == 0)
         {
