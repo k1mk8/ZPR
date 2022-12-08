@@ -1,5 +1,4 @@
 #include "Game.h"
-#include "Interface.h"
 #include "GameOver.h"
 
 int main()

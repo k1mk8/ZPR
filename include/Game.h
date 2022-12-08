@@ -4,7 +4,6 @@
 #include<sstream>
 #include<fstream>
 
-#include "Player.h"
 #include "StaticPoints.h"
 
 using namespace sf;

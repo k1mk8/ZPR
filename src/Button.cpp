@@ -1,7 +1,12 @@
 #include <Button.h>
 
 using namespace std;
-
+Button::Button()
+{
+    this->button.setSize(Vector2f(1, 1));
+    this->button.setFillColor(Color::Blue);
+    this->button.setPosition(Vector2f(5, 5));
+}
 Button::Button(Vector2f size = Vector2f(125, 60), Color color = Color::Cyan, Vector2f pos = Vector2f(560, 500))
 {
     this->button.setSize(size);

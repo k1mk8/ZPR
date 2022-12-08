@@ -1,3 +1,0 @@
-/home/karolkasperek/Desktop/ZPR-project/build/CMakeFiles/SFMLTest.dir
-/home/karolkasperek/Desktop/ZPR-project/build/CMakeFiles/edit_cache.dir
-/home/karolkasperek/Desktop/ZPR-project/build/CMakeFiles/rebuild_cache.dir

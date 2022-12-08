@@ -1,5 +1,4 @@
 #include <GameOver.h>
-#include <Button.h>
 
 void GameOver::initWindow()
 {

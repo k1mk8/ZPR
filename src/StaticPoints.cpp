@@ -1,5 +1,4 @@
 #include "StaticPoints.h"
-#include "Player.h"
 
 void StaticPoints::makeShape(const View& view, std::vector<Player> rect)
 {

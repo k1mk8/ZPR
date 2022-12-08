@@ -15,7 +15,7 @@ void Game::variables()
 void Game::initWindow()
 {
     View view(Vector2f(920.f, 540.f), Vector2f(19200.f, 10800.f));
-    //view.zoom(0.1f);
+    view.zoom(0.1f);
     view.setCenter(this->players[0].getPlayerPostion());
     this->videoMode = VideoMode(1920.f, 1080.f);
     this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);

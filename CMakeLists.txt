@@ -1,9 +1,24 @@
 cmake_minimum_required(VERSION 3.16)
-project(SFMLTest)
-set(SFML_LIBRARIES sfml-graphics sfml-window)
-set(CMAKE_BUILD_TYPE debug)
-set(SFML_STATIC_LIBRARIES TRUE)
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED true)
+project(agario)
+
+find_package(SFML 2.5
+    COMPONENTS
+    system window graphics network audio REQUIRED
+)
 include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
-add_executable(SFMLTest Agario.cpp ${SOURCES})
-target_link_libraries(SFMLTest sfml-graphics sfml-window)
+add_executable(
+    agario
+    Agario.cpp
+    ${SOURCES}
+)
+target_link_libraries(
+    agario
+    sfml-graphics
+)
+
+
+

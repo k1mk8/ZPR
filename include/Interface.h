@@ -6,7 +6,6 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
-#include "Player.h"
 #include "Button.h"
 using namespace sf;
 
@@ -17,8 +16,6 @@ private:
     Button button;
     VideoMode videoMode;
     Event sfmlEvent;
-
-    Player player;
 
     Sprite sprajt;
     Texture texture;

@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/Agario.dir/Agario.cpp.o CMakeFiles/Agario.dir/src/Game.cpp.o CMakeFiles/Agario.dir/src/Player.cpp.o CMakeFiles/Agario.dir/src/StaticPoints.cpp.o -o Agario 

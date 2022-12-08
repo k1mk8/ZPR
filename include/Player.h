@@ -6,8 +6,6 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
-#include "StaticPoints.h"
-
 using namespace sf;
 class Player
 {

@@ -6,6 +6,8 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
+#include "Player.h"
+
 using namespace sf;
 enum StaticPointsTypes {FOOD = 0, SPIKES};
 

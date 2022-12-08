@@ -5,7 +5,9 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
+#include "Interface.h"
 using namespace sf;
+
 
 class GameOver
 {
