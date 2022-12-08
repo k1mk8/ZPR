@@ -2,13 +2,12 @@
 
 using namespace std;
 
-Button::Button(Vector2f size, Color color, Vector2f pos)
+Button::Button(Vector2f size = Vector2f(125, 60), Color color = Color::Cyan, Vector2f pos = Vector2f(560, 500))
 {
     this->button.setSize(size);
     this->button.setFillColor(color);
     this->button.setPosition(pos);
 }
-
 Button::~Button()
 {
 

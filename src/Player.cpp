@@ -101,6 +101,9 @@ void Player::move()
     else if(Keyboard::isKeyPressed(Keyboard::D)){
         this->shape.move(this->speed, 0.f);
     }
+    else if(Keyboard::isKeyPressed(Keyboard::P)){
+        this->setMass(0);
+    }
 }
 
 void Player::checkMapCollision(const View* target)
@@ -127,7 +130,7 @@ void Player::setPosition(const View* target)
     this->checkMapCollision(target);
 }
 
-void Player::render(RenderTarget* target)
+void Player::render(RenderTarget& target)
 {
-    target->draw(this->shape);
+    target.draw(this->shape);
 }

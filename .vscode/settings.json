@@ -10,7 +10,8 @@
         "regex": "cpp",
         "utility": "cpp",
         "valarray": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "fstream": "cpp"
     },
     "code-builder.build.projectBuildCommand": "g++ zadanie.cpp -o new -lsfml-graphics -lsfml-window -lsfml-system"
 }

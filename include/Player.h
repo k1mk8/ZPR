@@ -39,5 +39,5 @@ public:
     void move();
     void checkMapCollision(const View* target);
     void setPosition(const View* target);
-    void render(RenderTarget* target);
+    void render(RenderTarget& target);
 };

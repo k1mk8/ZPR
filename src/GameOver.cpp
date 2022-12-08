@@ -13,8 +13,8 @@ void GameOver::initWindow()
 
 void GameOver::initButton()
 {
-    this->buttonYes = Button(Vector2f(125, 60), Color::Cyan, Vector2f(560, 500));
-    this->buttonNo = Button(Vector2f(125, 60), Color::Cyan, Vector2f(560, 500));
+    this->buttonYes = Button(Vector2f(125, 60), Color::Transparent, Vector2f(800, 750));
+    this->buttonNo = Button(Vector2f(125, 60), Color::Transparent, Vector2f(1000, 750));
 }
 
 GameOver::GameOver()

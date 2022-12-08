@@ -1,3 +1,5 @@
+#include <vector>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -13,9 +15,9 @@ private:
     CircleShape shape;
     int type;
     int mass = 5;
-    void makeShape(const View& window, IntRect rect);
+    void makeShape(const View& window, std::vector<Player> rect);
 public:
-    StaticPoints(const View& window, int type, IntRect rect);
+    StaticPoints(const View& window, int type, std::vector<Player> rect);
     virtual ~StaticPoints();
 
     const CircleShape getShape() const;

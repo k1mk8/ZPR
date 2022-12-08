@@ -7,14 +7,16 @@ void Game::variables()
     this->spawnTimer = this->spawnTimerMax;
     this->maxStaticPoints = 1000;
     this->totalPoints = 10;
+    Player player;
+    this->players.push_back(player);
 
 }
 
 void Game::initWindow()
 {
     View view(Vector2f(920.f, 540.f), Vector2f(19200.f, 10800.f));
-    view.zoom(0.1f);
-    view.setCenter(this->player.getPlayerPostion());
+    //view.zoom(0.1f);
+    view.setCenter(this->players[0].getPlayerPostion());
     this->videoMode = VideoMode(1920.f, 1080.f);
     this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
     this->window->clear(Color::White);
@@ -38,7 +40,7 @@ void Game::initText()
     this->endGameText.setFont(this->font);
     this->endGameText.setFillColor(Color::Red);
     this->endGameText.setCharacterSize(60);
-    Vector2f playerPos = this->player.getPlayerPostion();
+    Vector2f playerPos = this->players[0].getPlayerPostion();
     this->endGameText.setPosition(Vector2f(20, 100));
     this->endGameText.setString("YOU HAVE BEEN EATEN! GAME OVER!");
 }
@@ -86,7 +88,11 @@ void Game::pollEvents()
 
 void Game::calculateTotalPoints()
 {
-    this->totalPoints = this->player.getMass();
+    this->totalPoints = 0;
+    for(auto& it : this->players)
+    {
+        this->totalPoints += it.getMass();
+    }
 }
 
 void Game::spawnStaticPoints()
@@ -96,9 +102,7 @@ void Game::spawnStaticPoints()
     }
     else{
         if(this->staticPoints.size() < this->maxStaticPoints){
-            IntRect rect(this->player.getPlayerPostion().x, this->player.getPlayerPostion().y,
-            this->player.getShape().getGlobalBounds().width,this->player.getShape().getGlobalBounds().height);
-            this->staticPoints.push_back(StaticPoints(this->window->getView(), this->randPointType(), rect));
+            this->staticPoints.push_back(StaticPoints(this->window->getView(), this->randPointType(), this->players));
             this->spawnTimer = 0.f;
         }
     }
@@ -117,24 +121,39 @@ const int Game::randPointType() const
 
 void Game::updatePlayer()
 {
-    this->player.setPosition(&this->window->getView());
     View view = this->window->getView();
-    view.setCenter(this->player.getPlayerPostion()+Vector2f(this->player.getMass(),this->player.getMass()));
+    Vector2f viewCenter;
+    for(auto& it : this->players)
+    {
+        it.setPosition(&this->window->getView());
+        viewCenter +=  it.getPlayerPostion();
+        viewCenter += Vector2f(it.getMass(),it.getMass());
+    }
+    viewCenter.x = viewCenter.x / this->players.size();
+    viewCenter.y = viewCenter.y / this->players.size();
+    view.setCenter(viewCenter);
     this->window->setView(view);
 }
 
 void Game::updateCollision()
 {
     for(size_t i = 0; i < this->staticPoints.size(); i++){
-        if(this->player.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds())){
+        for(auto& it : this->players)
+        {
+            if(it.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds())){
             switch(this->staticPoints[i].getType())
             {
                 case StaticPointsTypes::FOOD:
-                    this->player.grow(staticPoints[i].getMass());
+                    it.grow(this->staticPoints[i].getMass());
                     break;
-                // TODO co jeśli się zetknie ze SPIKE
+                case StaticPointsTypes::SPIKES:
+                    if(it.getMass() > this->staticPoints[i].getMass() * 1.1){
+                        //this->player.splitBySpike();
+                        continue;
+                    }
             }
             this->staticPoints.erase(this->staticPoints.begin() + i);
+            }
         }
     }
 }
@@ -142,21 +161,49 @@ void Game::updateCollision()
 void Game::updateGui()
 {
     stringstream ss;
-    int mass = this->player.getMass();
-    ss << " - Points: " << mass << "\n";
-    Vector2f playerPos = this->player.getPlayerPostion() + Vector2f(mass, mass);
-    this->guiText.setPosition(playerPos + Vector2f(-960, -540));
+    if(this->totalPoints > maxPoints){
+        maxPoints = this->totalPoints;
+    }
+    ss << " - Points: " << this->totalPoints << "\n";
+    Vector2f viewCenter;
+    for(auto& it : this->players)
+    {
+        viewCenter += it.getPlayerPostion();
+        viewCenter += Vector2f(it.getMass(),it.getMass());
+    }
+    viewCenter.x = viewCenter.x / this->players.size();
+    viewCenter.y = viewCenter.y / this->players.size();
+    viewCenter += Vector2f(-960, -540);
+    this->guiText.setPosition(viewCenter);
     this->guiText.setString(ss.str());
+}
+
+void Game::updateMaxPoints()
+{
+    int allMaxPoints = 0;
+    ifstream Plik("./maxPoints.txt");
+    Plik >> allMaxPoints;
+    Plik.close();
+    if(maxPoints > allMaxPoints){
+        ofstream Plik("./maxPoints.txt");
+        Plik << maxPoints;
+        Plik.close();
+    }
 }
 
 void Game::update()
 {
     this->pollEvents();
     if(this->endGame == false){
+        this->calculateTotalPoints();
         this->spawnStaticPoints();
         this->updatePlayer();
         this->updateCollision();
         this->updateGui();
+    }
+    if(this->totalPoints <= 0){
+        this->endGame = true;
+        this->updateMaxPoints();
     }
 }
 
@@ -169,17 +216,21 @@ void Game::render()
 {
     this->window->clear(Color::White);
 
-    this->player.render(this->window);
+    cout<<players.size()<<endl;
+    for(auto& it : players){
+        cout<<it.getMass()<<endl;
+        it.render(*this->window);
+    }
 
-    for(auto i : this->staticPoints){
+    for(auto& it : this->staticPoints){
 
-        i.render(*this->window);
+        it.render(*this->window);
     }
 
     this->renderGui(this->window);
 
     if(this->endGame == true){
-        this->window->draw(this->endGameText);
+        this->window->close();
     }
 
     this->window->display();

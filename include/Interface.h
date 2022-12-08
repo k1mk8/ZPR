@@ -7,13 +7,14 @@
 #include <SFML/Network.hpp>
 
 #include "Player.h"
+#include "Button.h"
 using namespace sf;
 
 class Interface
 {
 private:
 
-    RectangleShape button;
+    Button button;
     VideoMode videoMode;
     Event sfmlEvent;
 
@@ -25,6 +26,7 @@ private:
     Text standardText;
     Text guiText;
     Text buttonText;
+    Text maxPointsText;
     Font font;
 
     void initWindow();

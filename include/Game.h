@@ -2,6 +2,7 @@
 #include<ctime>
 #include<vector>
 #include<sstream>
+#include<fstream>
 
 #include "Player.h"
 #include "StaticPoints.h"
@@ -17,7 +18,8 @@ private:
     bool endGame;
     Event sfmlEvent;
 
-    Player player;
+
+    vector<Player> players;
 
     Font font;
     Text guiText;
@@ -28,6 +30,7 @@ private:
     float spawnTimer;
     int maxStaticPoints;
     int totalPoints;
+    int maxPoints = 10;
 
     void variables();
     void initWindow();
@@ -48,6 +51,7 @@ public:
     void updatePlayer();
     void updateCollision();
     void updateGui();
+    void updateMaxPoints();
     void update();
 
     void renderGui(RenderTarget* target);
