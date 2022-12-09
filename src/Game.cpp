@@ -216,9 +216,7 @@ void Game::render()
 {
     this->window->clear(Color::White);
 
-    cout<<players.size()<<endl;
     for(auto& it : players){
-        cout<<it.getMass()<<endl;
         it.render(*this->window);
     }
 

@@ -16,7 +16,6 @@ int main()
         }
         interface.~Interface();
         Game game;
-        cout<<game.running()<<endl;
         while(game.running())
         {
             game.update();
