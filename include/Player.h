@@ -22,7 +22,7 @@ public:
 
     const CircleShape& getShape() const;
     const int& getMass() const;
-    const int& getSpeed() const;
+    const float& getSpeed() const;
     const Vector2f& getPlayerPostion() const;
 
     void setMass(const int weight);

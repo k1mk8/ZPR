@@ -3,7 +3,7 @@
 void Player::Variables(const int mass)
 {
     this->speed = 5.f;
-    this->mass = 10;
+    this->mass = mass;
 }
 
 void Player::makeShape()
@@ -35,7 +35,7 @@ const int & Player::getMass() const
     return this->mass;
 }
 
-const int & Player::getSpeed() const
+const float & Player::getSpeed() const
 {
     return this->speed;
 }

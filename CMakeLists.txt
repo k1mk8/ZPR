@@ -4,11 +4,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 project(agario)
 
-find_package(SFML 2.5
+find_package(GTest REQUIRED)
+find_package(
+    SFML 2.5
     COMPONENTS
     system window graphics network audio REQUIRED
 )
 include_directories(include)
+enable_testing()
 file(GLOB SOURCES "src/*.cpp")
 add_executable(
     agario
@@ -20,5 +23,19 @@ target_link_libraries(
     sfml-graphics
 )
 
+add_executable(
+    playerTest
+    ./tests/PlayerTest.cpp
+    ${SOURCES}
+)
+
+target_link_libraries(
+    playerTest
+    GTest::gtest_main
+    sfml-graphics
+)
+
+include(GoogleTest)
+gtest_discover_tests(playerTest)
 
 
