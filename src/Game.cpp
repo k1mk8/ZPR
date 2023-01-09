@@ -118,8 +118,7 @@ void Game::updatePlayer()
     {
         it.setPosition(this->players);
         viewCenter += it.getPlayerPostion();
-        cout<<it.getMass() << " "<<endl;//<< it.getRadius()<<endl;
-        viewCenter += Vector2f(it.getMass(),it.getMass());
+        viewCenter += Vector2f(log(it.getMass())/log(1.05),log(it.getMass())/log(1.05));
     }
     viewCenter.x = viewCenter.x / this->players.size();
     viewCenter.y = viewCenter.y / this->players.size();
@@ -161,7 +160,7 @@ void Game::updateGui()
     for(auto& it : this->players)
     {
         viewCenter += it.getPlayerPostion();
-        viewCenter += Vector2f(it.getMass(),it.getMass());
+        viewCenter += Vector2f(log(it.getMass())/log(1.05),log(it.getMass())/log(1.05));
     }
     viewCenter.x = viewCenter.x / this->players.size();
     viewCenter.y = viewCenter.y / this->players.size();

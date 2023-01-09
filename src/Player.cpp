@@ -18,6 +18,23 @@ void Player::calculateSpeed()
     this->speed = this->startingSpeed - (log(this->mass) / log(4));
 }
 
+void Player::connect(std::vector<Player>& players)
+{
+    clock_t actualTime = clock();
+    if(players.size() > 1){
+        cout<<((double)(actualTime - this->splitTime) / CLOCKS_PER_SEC)<<endl;
+        if(((double)(actualTime - this->splitTime) / CLOCKS_PER_SEC) > 30.0){
+            int mass = 0;
+            for(auto& it : players){
+                mass += it.getMass();
+            }
+            Player player = Player(players[0].getPlayerPostion().x, players[0].getPlayerPostion().x, mass);
+            players.clear();
+            players.push_back(player);
+        }
+    }
+}
+
 Player::Player(float x, float y, const int mass)
 {
     this->shape.setPosition(x,y);
@@ -46,11 +63,6 @@ const float & Player::getSpeed() const
     return this->speed;
 }
 
-const float & Player::getRadius() const
-{
-    return this->shape.getRadius();
-}
-
 const Vector2f & Player::getPlayerPostion() const
 {
     return this->shape.getPosition();
@@ -65,7 +77,6 @@ void Player::grow(const int food)
 {
     this->mass += food;
     int mass = this->getMass();
-    std::cout<<log(mass)/log(1.05)<<std::endl;
     this->shape.setRadius(log(mass)/log(1.05));
 }
 
@@ -79,15 +90,21 @@ void Player::splitMass()
 
 void Player::split(std::vector<Player>& players)
 {
-    if(Keyboard::isKeyPressed(Keyboard::Space)){
-        for(auto it : players){
+    bool flag = false;
+    while(Keyboard::isKeyPressed(Keyboard::Space)){
+        flag = true;
+    }
+    if(flag){
+        for(auto& it : players){
             if(players.size() < 16){
-                it.splitMass();
-                Player player = Player(it.getPlayerPostion().x+it.getMass(), it.getPlayerPostion().x, it.getMass());
-                players.push_back(player);
+                if(it.getMass() > 30){
+                    splitTime = clock();
+                    it.splitMass();
+                    Player player = Player(it.getPlayerPostion().x+ 2 * log(it.getMass())/log(1.05), it.getPlayerPostion().y + 2 * log(it.getMass())/log(1.05), it.getMass());
+                    players.push_back(player);
+                }
             }
         }
-        return;
     }
 }
 
@@ -158,6 +175,7 @@ void Player::setPosition(std::vector<Player>& players)
 {
     this->move();
     this->split(players);
+    this->connect(players);
     this->checkMapCollision();
 }
 
