@@ -16,16 +16,13 @@ private:
     Button button;
     VideoMode videoMode;
     Event sfmlEvent;
-
-    Sprite sprajt;
+    Sprite sprite;
     Texture texture;
-
     Text standardText;
     Text guiText;
     Text buttonText;
     Text maxPointsText;
     Font font;
-
     void initWindow();
     void initFonts();
     void initText();

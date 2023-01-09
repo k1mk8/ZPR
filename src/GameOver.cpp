@@ -2,9 +2,9 @@
 
 void GameOver::initWindow()
 {
-    this->texture.loadFromFile("game_over.png");
-    this->sprajt.setTexture(texture);
-    this->videoMode = VideoMode(1920.f, 1080.f);
+    this->texture.loadFromFile("images/game_over.png");
+    this->sprite.setTexture(texture);
+    this->videoMode = VideoMode(1920, 1080);
     this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
     this->window->clear(Color::White);
     this->window->setFramerateLimit(60);
@@ -39,10 +39,35 @@ const int GameOver::buttonPressed() const
     return choice;
 }
 
+void GameOver::pollEvents()
+{
+    while(this->window->pollEvent(this->sfmlEvent))
+    {
+        switch(this->sfmlEvent.type)
+        {
+        case Event::Closed:
+            this->window->close();
+            break;
+        case Event::KeyPressed:
+            if(this->sfmlEvent.key.code == Keyboard::Escape){
+                this->window->close();
+                break;
+            }
+        }
+        break;
+    }
+}
+
+const bool GameOver::update()
+{
+    this->pollEvents();
+    return this->buttonPressed();
+}
+
 void GameOver::render()
 {
     this->window->clear(Color::White);
-    this->window->draw(sprajt);
+    this->window->draw(sprite);
     this->window->draw(buttonYes.getButton());
     this->window->draw(buttonNo.getButton());
     this->window->display();

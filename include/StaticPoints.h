@@ -17,15 +17,13 @@ private:
     CircleShape shape;
     int type;
     int mass = 5;
-    void makeShape(const View& window, std::vector<Player> rect);
+    void makeShape(std::vector<Player> rect);
 public:
-    StaticPoints(const View& window, int type, std::vector<Player> rect);
+    StaticPoints(int type, std::vector<Player> rect);
     virtual ~StaticPoints();
-
     const CircleShape getShape() const;
     const int& getType() const;
     const int& getMass() const;
-
     void eatMass(const int food);
     void checkSpikeMass(const View& window);
     void render(RenderTarget& target);

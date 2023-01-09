@@ -3,9 +3,9 @@
 using namespace std;
 void Interface::initWindow()
 {
-    this->texture.loadFromFile("tlo.png");
-    this->sprajt.setTexture(texture);
-    this->videoMode = VideoMode(1200.f, 630.f);
+    this->texture.loadFromFile("images/tlo.png");
+    this->sprite.setTexture(texture);
+    this->videoMode = VideoMode(1200, 630);
     this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
     this->window->clear(Color::White);
     this->window->setFramerateLimit(60);
@@ -108,7 +108,7 @@ void Interface::renderGui(RenderTarget* target)
 void Interface::render()
 {
     this->window->clear(Color::White);
-    this->window->draw(sprajt);
+    this->window->draw(sprite);
     this->window->draw(this->button.getButton());
     this->renderGui(this->window);
     this->window->display();

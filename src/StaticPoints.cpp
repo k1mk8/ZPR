@@ -1,21 +1,23 @@
 #include "StaticPoints.h"
 
-void StaticPoints::makeShape(const View& view, std::vector<Player> rect)
+void StaticPoints::makeShape(std::vector<Player> rect)
 {
     Color color;
     switch (this->type)
     {
     case FOOD:
         color = Color::Blue;
+        this->mass = 1;
         this->shape.setRadius(5);
         break;
     case SPIKES:
         color = Color::Red;
         this->shape.setRadius(30);
+        this->mass = 30;
         break;
     }
     this->shape.setFillColor(color);
-    Vector2f size = view.getSize();
+    Vector2f size = Vector2f(9600, 5400);
     int t[2];
     t[0] = -1;
     t[1] = 1;
@@ -43,10 +45,10 @@ void StaticPoints::makeShape(const View& view, std::vector<Player> rect)
     this->shape.setPosition(Vector2f(x,y));
 }
 
-StaticPoints::StaticPoints(const View& window, int type, std::vector <Player> rect)
+StaticPoints::StaticPoints(int type, std::vector <Player> rect)
         : type(type)
 {
-    this->makeShape(window, rect);
+    this->makeShape(rect);
 }
 
 StaticPoints::~StaticPoints()

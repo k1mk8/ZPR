@@ -3,21 +3,18 @@
 void Game::variables()
 {
     this->endGame = false;
-    this->spawnTimerMax = 2.f;
-    this->spawnTimer = this->spawnTimerMax;
     this->maxStaticPoints = 1000;
     this->totalPoints = 10;
     Player player;
     this->players.push_back(player);
-
 }
 
 void Game::initWindow()
 {
-    View view(Vector2f(920.f, 540.f), Vector2f(19200.f, 10800.f));
-    view.zoom(0.1f);
+    View view(Vector2f(920, 540), Vector2f(9600, 5400));
+    view.zoom(0.2);
     view.setCenter(this->players[0].getPlayerPostion());
-    this->videoMode = VideoMode(1920.f, 1080.f);
+    this->videoMode = VideoMode(1920, 1080);
     this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
     this->window->clear(Color::White);
     this->window->setFramerateLimit(60);
@@ -36,13 +33,13 @@ void Game::initText()
     this->guiText.setFont(this->font);
     this->guiText.setFillColor(Color::Black);
     this->guiText.setCharacterSize(32);
+}
 
-    this->endGameText.setFont(this->font);
-    this->endGameText.setFillColor(Color::Red);
-    this->endGameText.setCharacterSize(60);
-    Vector2f playerPos = this->players[0].getPlayerPostion();
-    this->endGameText.setPosition(Vector2f(20, 100));
-    this->endGameText.setString("YOU HAVE BEEN EATEN! GAME OVER!");
+void Game::zoomOut()
+{
+    View view = this->window->getDefaultView();
+    view.zoom(1+ log(this->totalPoints) / log(4) / 10);
+    this->window->setView(view);
 }
 
 Game::Game()
@@ -97,14 +94,8 @@ void Game::calculateTotalPoints()
 
 void Game::spawnStaticPoints()
 {
-    if(this->spawnTimer < this->spawnTimerMax){
-        this->spawnTimer += 1.f;
-    }
-    else{
-        if(this->staticPoints.size() < this->maxStaticPoints){
-            this->staticPoints.push_back(StaticPoints(this->window->getView(), this->randPointType(), this->players));
-            this->spawnTimer = 0.f;
-        }
+    if(this->staticPoints.size() < this->maxStaticPoints){
+        this->staticPoints.push_back(StaticPoints(this->randPointType(), this->players));
     }
 }
 
@@ -125,8 +116,9 @@ void Game::updatePlayer()
     Vector2f viewCenter;
     for(auto& it : this->players)
     {
-        it.setPosition(&this->window->getView());
-        viewCenter +=  it.getPlayerPostion();
+        it.setPosition(this->players);
+        viewCenter += it.getPlayerPostion();
+        cout<<it.getMass() << " "<<endl;//<< it.getRadius()<<endl;
         viewCenter += Vector2f(it.getMass(),it.getMass());
     }
     viewCenter.x = viewCenter.x / this->players.size();
@@ -137,7 +129,7 @@ void Game::updatePlayer()
 
 void Game::updateCollision()
 {
-    for(size_t i = 0; i < this->staticPoints.size(); i++){
+    for(size_t i = 0; i < this->staticPoints.size(); ++i){
         for(auto& it : this->players)
         {
             if(it.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds())){
@@ -148,8 +140,8 @@ void Game::updateCollision()
                     break;
                 case StaticPointsTypes::SPIKES:
                     if(it.getMass() > this->staticPoints[i].getMass() * 1.1){
-                        //this->player.splitBySpike();
-                        continue;
+                        it.grow(this->staticPoints[i].getMass());
+                        it.splitBySpike(this->players);
                     }
             }
             this->staticPoints.erase(this->staticPoints.begin() + i);
@@ -173,7 +165,9 @@ void Game::updateGui()
     }
     viewCenter.x = viewCenter.x / this->players.size();
     viewCenter.y = viewCenter.y / this->players.size();
-    viewCenter += Vector2f(-960, -540);
+    View view = window->getView();
+    Vector2f size = view.getSize();
+    viewCenter += Vector2f(-size.x/2, -size.y/2);
     this->guiText.setPosition(viewCenter);
     this->guiText.setString(ss.str());
 }
@@ -194,7 +188,8 @@ void Game::updateMaxPoints()
 void Game::update()
 {
     this->pollEvents();
-    if(this->endGame == false){
+    if(!this->endGame){
+        this->zoomOut();
         this->calculateTotalPoints();
         this->spawnStaticPoints();
         this->updatePlayer();
@@ -216,9 +211,7 @@ void Game::render()
 {
     this->window->clear(Color::White);
 
-    cout<<players.size()<<endl;
     for(auto& it : players){
-        cout<<it.getMass()<<endl;
         it.render(*this->window);
     }
 
@@ -229,9 +222,8 @@ void Game::render()
 
     this->renderGui(this->window);
 
-    if(this->endGame == true){
+    if(this->endGame){
         this->window->close();
     }
-
     this->window->display();
 }

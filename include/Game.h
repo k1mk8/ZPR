@@ -16,34 +16,24 @@ private:
     RenderWindow* window;
     bool endGame;
     Event sfmlEvent;
-
-
     vector<Player> players;
-
     Font font;
     Text guiText;
-    Text endGameText;
-
     vector<StaticPoints> staticPoints;
-    float spawnTimerMax;
-    float spawnTimer;
     int maxStaticPoints;
     int totalPoints;
     int maxPoints = 10;
-
     void variables();
     void initWindow();
     void initFonts();
     void initText();
+    void zoomOut();
 public:
     Game();
     ~Game();
-
     const bool& getEndGame() const;
-
     const bool running() const;
     void pollEvents();
-
     void calculateTotalPoints();
     void spawnStaticPoints();
     const int randPointType() const;
@@ -52,7 +42,6 @@ public:
     void updateGui();
     void updateMaxPoints();
     void update();
-
     void renderGui(RenderTarget* target);
     void render();
 };

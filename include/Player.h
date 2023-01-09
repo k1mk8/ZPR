@@ -1,4 +1,6 @@
 #include <vector>
+#include <cmath>
+#include <iostream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -12,30 +14,29 @@ class Player
 private:
     CircleShape shape;
     float speed;
+    float startingSpeed;
     int mass;
     int timeOfLive;
     void Variables(const int mass);
     void makeShape();
+    void calculateSpeed();
 public:
     Player(float x = 0.f, float y = 0.f, const int mass = 10);
     virtual ~Player();
-
     const CircleShape& getShape() const;
     const int& getMass() const;
     const float& getSpeed() const;
+    const float& getRadius() const;
     const Vector2f& getPlayerPostion() const;
-
     void setMass(const int weight);
     void grow(const int food);
-
     void splitMass();
-    void split();
-
+    void split(std::vector <Player>& players);
+    void splitBySpike(std::vector <Player>& players);
     void loseMass();
     void shootingMass();
-
     void move();
-    void checkMapCollision(const View* target);
-    void setPosition(const View* target);
+    void checkMapCollision();
+    void setPosition(std::vector <Player>& players);
     void render(RenderTarget& target);
 };
