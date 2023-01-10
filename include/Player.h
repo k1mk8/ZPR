@@ -24,7 +24,7 @@ private:
     void calculateSpeed(); // obliczanie prędkości
     void connect(std::vector<Player>& players); // łącznie graczy
 public:
-    Player(float x = 0, float y = 0, const int mass = 512); // konstruktor graczy
+    Player(float x = 0, float y = 0, const int mass = 10); // konstruktor graczy
     ~Player(); // destruktor klasy
     const CircleShape& getShape() const; // getter kształtu
     const int& getMass() const; // getter masy
@@ -37,11 +37,11 @@ public:
     void grow(const int food); // jedzenie masy
     void split(std::vector <Player>& players); // dzielenie gracza
     void splitBySpike(std::vector <Player>& players); // dzielenie przez spike'a
-    void move(); // ruch gracza
+    void move(RenderWindow& window, std::vector <Player>& players); // ruch gracza
     void checkMapCollision(); // sprawdzanie ograniczeń mapy
     void loseMass(); // tracenie masy
     void splitMass(); // dzielenie masy
     void shootingMass(); // strzelanie masą
-    void setPosition(std::vector <Player>& players); // ustawianie pozycji
+    void setPosition(std::vector <Player>& players, RenderWindow& window); // ustawianie pozycji
     void render(RenderTarget& target); // enderowanie gracza
 };

@@ -28,7 +28,7 @@ void Player::connect(std::vector<Player>& players)
     /// @param players wektor graczy na mapie
     clock_t actualTime = clock();
     if(players.size() > 1){
-        if(((double)(actualTime - players[0].getSplitTime()) / CLOCKS_PER_SEC) > 30.0){ // sprawdza czy od ostatniego podziału minął określony czas
+        if(((double)(actualTime - players[0].getSplitTime()) / CLOCKS_PER_SEC) > 20.0){ // sprawdza czy od ostatniego podziału minął określony czas
             int mass = 0;
             Vector2f oldPlayersPos;
             for(auto& it : players){ // łączy wszystkich graczy w jedną masę
@@ -201,23 +201,28 @@ void Player::shootingMass()
     // return false;
 }
 
-void Player::move()
+void Player::move(RenderWindow& window, std::vector <Player>& players)
 {
     /// @brief funkcja odpowiedzialna za poruszanie się gracza w każdą stronę 
     this->calculateSpeed(); // obliczanie prędkości gracza
-    if(Keyboard::isKeyPressed(Keyboard::W)){ // poruszanie do góry
-        this->shape.move(0, -this->speed);
+    float mouseX = Mouse::getPosition(window).x;
+    float mouseY = Mouse::getPosition(window).y;
+    mouseX -= window.getSize().x / 2;
+    mouseY -= window.getSize().y / 2;
+    float centralPositionX = 0;
+    float centralPositionY = 0;
+    for(auto& it : players)
+    { // łączy wszystkich graczy w jedną masę
+        centralPositionX += it.getPlayerPostion().x;
+        centralPositionY += it.getPlayerPostion().y;
     }
-    else if(Keyboard::isKeyPressed(Keyboard::S)){ // poruszanie do dołu
-        this->shape.move(0, this->speed);
-    }
-    else if(Keyboard::isKeyPressed(Keyboard::A)){ // poruszanie w ewo
-        this->shape.move(-this->speed, 0);
-    }
-    else if(Keyboard::isKeyPressed(Keyboard::D)){ // porzuszanie w prawo
-        this->shape.move(this->speed, 0);
-    }
-    else if(Keyboard::isKeyPressed(Keyboard::P)){ // do usunięcia
+    centralPositionX /= players.size();
+    centralPositionY /= players.size();
+    mouseX += -this->getPlayerPostion().x + centralPositionX;
+    mouseY += -this->getPlayerPostion().y + centralPositionY;
+    float direction = atan2(-mouseY, mouseX);
+    this->shape.move(cos(direction) * this->speed, -sin(direction) * this->speed);
+    if(Keyboard::isKeyPressed(Keyboard::P)){ // do usunięcia
         this->setMass(0);
     }
 }
@@ -239,11 +244,11 @@ void Player::checkMapCollision()
     }
 }
 
-void Player::setPosition(std::vector<Player>& players)
+void Player::setPosition(std::vector<Player>& players, RenderWindow& window)
 {
     /// @brief setter pozyji gracza
     /// @param players wektor graczy na planszy
-    this->move();
+    this->move(window, players);
     this->split(players);
     this->connect(players);
     this->shootingMass();

@@ -136,7 +136,7 @@ void Game::updatePlayer()
     Vector2f viewCenter;
     for(auto& it : this->players)
     {
-        it.setPosition(this->players);
+        it.setPosition(this->players, *this->window);
         // if(shoot){ // sprawdza czy gracz strzelił
         //     //TODO
         //     int type = StaticPointsTypes::FOOD;
