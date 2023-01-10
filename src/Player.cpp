@@ -30,10 +30,12 @@ void Player::connect(std::vector<Player>& players)
     if(players.size() > 1){
         if(((double)(actualTime - players[0].getSplitTime()) / CLOCKS_PER_SEC) > 30.0){ // sprawdza czy od ostatniego podziału minął określony czas
             int mass = 0;
+            Vector2f oldPlayersPos;
             for(auto& it : players){ // łączy wszystkich graczy w jedną masę
                 mass += it.getMass();
+                oldPlayersPos += it.getPlayerPostion();
             }
-            Player player = Player(players[0].getPlayerPostion().x, players[0].getPlayerPostion().x, mass); // tworzy gracza po połączeniu
+            Player player = Player(oldPlayersPos.x / players.size(), oldPlayersPos.y / players.size(), mass); // tworzy gracza po połączeniu
             players.clear(); // usuwa połączonych graczy
             players.push_back(player);
         }
@@ -70,6 +72,13 @@ const int & Player::getMass() const
     return this->mass;
 }
 
+float Player::getRadius()
+{
+    /// @brief getter promienia gracza
+    /// @return promień gracza
+    return log(this->mass)/log(1.05);
+}
+
 const float & Player::getSpeed() const
 {
     /// @brief getter prędkości gracza
@@ -103,7 +112,7 @@ void Player::setMass(const int weight)
     /// @brief setter masy, ustawia również promień gracza
     /// @param weight masa gracza
     this->mass = weight;
-    this->shape.setRadius(log(weight)/log(1.05));
+    this->shape.setRadius(this->getRadius());
 }
 
 void Player::grow(const int food)
@@ -111,8 +120,7 @@ void Player::grow(const int food)
     /// @brief funkcja zwiekszająca masę i promień gracza
     /// @param food masa do zjedzenia
     this->mass += food;
-    int mass = this->getMass();
-    this->shape.setRadius(log(mass)/log(1.05));
+    this->shape.setRadius(this->getRadius());
 }
 
 void Player::splitMass()
@@ -120,7 +128,7 @@ void Player::splitMass()
     /// @brief funkcja dzieli masę gracza
     if(this->mass > 20){
         this->mass /= 2;    
-        this->shape.setRadius(log(mass)/log(1.05));
+        this->shape.setRadius(this->getRadius());
     }   
 }
 
@@ -139,8 +147,8 @@ void Player::split(std::vector<Player>& players)
                 if(it.getMass() > 30){
                     players[0].setSplitTime(clock());
                     it.splitMass();
-                    Player player = Player(it.getPlayerPostion().x + 2 * log(it.getMass())/log(1.05),
-                        it.getPlayerPostion().y + 2 * log(it.getMass())/log(1.05), it.getMass());
+                    Player player = Player(it.getPlayerPostion().x + 2 * it.getRadius(),
+                        it.getPlayerPostion().y + 2 * it.getRadius(), it.getMass());
                     tempPlayers.push_back(player);
                 }
             }
@@ -155,10 +163,15 @@ void Player::splitBySpike(std::vector <Player>& players)
 {
     /// @brief funkcja dzieląca gracza po dotknięciu spike'a
     /// @param players wektor graczy na mapie
-    if(players.size() + 8 <=16){
-        this->setMass(this->getMass()/8);
-        for(int i=0;i<8;++i){
-            Player player = Player(this->getPlayerPostion().x, this->getPlayerPostion().x, this->getMass());
+    int maxPartsNumber = min(7, (16 - (int)players.size()));//maksymalna ilosc kulek jednego gracza wynosi 16
+    if(maxPartsNumber > 0)
+    {
+        this->setMass(this->getMass() / (maxPartsNumber + 1));
+        for(int i = 1; i <= maxPartsNumber; ++i)
+        {
+            players[0].setSplitTime(clock());
+            Player player = Player(this->getPlayerPostion().x + 2 * i * this->getRadius(), this->getPlayerPostion().y, this->getMass());
+            players.push_back(player);
         }
     }
 }
