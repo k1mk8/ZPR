@@ -9,22 +9,22 @@
 #include "Player.h"
 
 using namespace sf;
-enum StaticPointsTypes {FOOD = 0, SPIKES};
+enum StaticPointsTypes {FOOD = 0, SPIKES}; // typy punktów statycznych
 
-class StaticPoints
+class StaticPoints // klasa punktów statycznych w grze
 {
 private:
-    CircleShape shape;
-    int type;
-    int mass = 5;
-    void makeShape(std::vector<Player> rect);
+    CircleShape shape; // kształ punktu
+    int type; // typ punktu
+    int mass = 5; // masa punktu
+    void makeShape(std::vector<Player> rect); // tworzy punkt
 public:
-    StaticPoints(int type, std::vector<Player> rect);
-    virtual ~StaticPoints();
-    const CircleShape getShape() const;
-    const int& getType() const;
-    const int& getMass() const;
-    void eatMass(const int food);
-    void checkSpikeMass(const View& window);
-    void render(RenderTarget& target);
+    StaticPoints(int type, std::vector<Player> rect); // domyślny konstruktor
+    virtual ~StaticPoints(); // destruktor 
+    const CircleShape getShape() const; // zwraca kształt punktu
+    const int& getType() const; // zwraca typ punktu
+    const int& getMass() const; // zwraca mase punktu
+    void eatMass(const int food); // zwiększenie masy punktu
+    void checkSpikeMass(const View& window); // sprawdzanie masy Spike'a
+    void render(RenderTarget& target); // renderowanie punktu
 };

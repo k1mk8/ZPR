@@ -5,8 +5,8 @@
 TEST(PlayerTest, variables)
 {
     Player player = Player(5,5,10);
-    float speed = 5.f;
     int mass = 10;
+    float speed = 10 - log(mass) / log(4);
     ASSERT_EQ(player.getSpeed(), speed);
     ASSERT_EQ(player.getMass(), mass);
 }

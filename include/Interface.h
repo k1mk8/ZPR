@@ -13,28 +13,27 @@ class Interface
 {
 private:
 
-    Button button;
-    VideoMode videoMode;
-    Event sfmlEvent;
-    Sprite sprite;
-    Texture texture;
-    Text standardText;
-    Text guiText;
-    Text buttonText;
-    Text maxPointsText;
-    Font font;
-    void initWindow();
-    void initFonts();
-    void initText();
-    void initButton();
+    Button button; // przycisk rozpoczęcia gry
+    VideoMode videoMode; // wyświetlanie okno
+    Event sfmlEvent; // eventy
+    Sprite sprite; // wygląd okna
+    Texture texture; // tekstura
+    Text standardText; // tekst paska 
+    Text guiText; // tekst głównego ekranu
+    Text buttonText; // tekst przycisku
+    Text maxPointsText; // tekst maksymalnej historycznej liczby punktów
+    Font font; // czcionka
+    void initWindow(); // inicjowanie okna
+    void initFonts(); // inicjowanie czcionki
+    void initText(); // inicjowanie tekstu
+    void initButton(); // inicjowanie przycisków
 public:
-    RenderWindow* window;
-    Interface();
-    ~Interface();
-    const bool isButtonPressed() const;
-    const bool running() const;
-    void pollEvents();
-    const bool update();
-    void renderGui(RenderTarget* target);
-    void render();
+    RenderWindow* window; // okno gry
+    Interface(); // konstruktor domyślny
+    ~Interface(); // destruktor domyślny
+    const bool running() const; // sprawdzenie czy okno działa
+    void pollEvents(); // // sprawdzanie wydarzeń
+    const bool update(); // uaktualnianie okna
+    void renderGui(RenderTarget* target); // renderowanie GUI
+    void render(); // renderowanie i wyświetlanie okna 
 };

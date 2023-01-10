@@ -10,14 +10,14 @@
 using namespace sf;
 using namespace std;
 
-class Button
+class Button // klasa odpowiedzialna za klikalny button do interakcji z użytkownikiem
 {
 private:
-    RectangleShape button;
+    RectangleShape button; // zmienna przetrzymująca kształt przycisku
 public:
-    Button();
-    Button(Vector2f size, Color color, Vector2f pos);
-    ~Button();
-    const RectangleShape& getButton() const;
-    const bool isButtonPressed(RenderWindow* window) const;
+    Button(); // konstruktor domyślny
+    Button(Vector2f size, Color color, Vector2f pos); // konstruktor przyjmujący wartości startowe
+    ~Button(); // destruktor
+    const RectangleShape& getButton() const; // zwraca przycisk
+    const bool isButtonPressed(RenderWindow* window) const; // sprawdza czy button jest wciśnięty
 };

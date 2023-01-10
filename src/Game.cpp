@@ -2,6 +2,7 @@
 
 void Game::variables()
 {
+    /// @brief ustawia zmienne klasy
     this->endGame = false;
     this->maxStaticPoints = 1000;
     this->totalPoints = 10;
@@ -11,6 +12,7 @@ void Game::variables()
 
 void Game::initWindow()
 {
+    /// @brief inicjuje okno gry
     View view(Vector2f(920, 540), Vector2f(9600, 5400));
     view.zoom(0.2);
     view.setCenter(this->players[0].getPlayerPostion());
@@ -23,6 +25,7 @@ void Game::initWindow()
 
 void Game::initFonts()
 {
+    /// @brief ustawia czcionkę tekstu
     if(!this->font.loadFromFile("fonts/MilkyHoney.ttf")){
         cout << " COULD NOT LOAD MilkyHoney.ttf" << "\n";
     }
@@ -30,6 +33,7 @@ void Game::initFonts()
 
 void Game::initText()
 {
+    /// @brief iniciuje teksty w grze
     this->guiText.setFont(this->font);
     this->guiText.setFillColor(Color::Black);
     this->guiText.setCharacterSize(32);
@@ -37,6 +41,7 @@ void Game::initText()
 
 void Game::zoomOut()
 {
+    /// @brief oddala obraz aby gracz mieścił się w oknie
     View view = this->window->getDefaultView();
     view.zoom(1+ log(this->totalPoints) / log(4) / 10);
     this->window->setView(view);
@@ -44,6 +49,7 @@ void Game::zoomOut()
 
 Game::Game()
 {
+    /// @brief konstruktor klasy tworzący jej obiekt
     this->variables();
     this->initWindow();
     this->initFonts();
@@ -52,21 +58,27 @@ Game::Game()
 
 Game::~Game()
 {
+    /// @brief destruktor domyślny
     delete this->window;
 }
 
 const bool& Game::getEndGame() const
 {
+    /// @brief getter końca gry
+    /// @return prawda lub fałsz czy koniec gry 
     return this->endGame;
 }
 
 const bool Game::running() const
 {
+    /// @brief funkcja sprawdzająca czy okno jest otwarte
+    /// @return prawda lub fałsz, czy okno jest otwarte
     return this->window->isOpen();
 }
 
 void Game::pollEvents()
 {
+    /// @brief funkcja sprawdzająca czy okno ma być zamknięte
     while(this->window->pollEvent(this->sfmlEvent))
     {
         switch(this->sfmlEvent.type)
@@ -85,6 +97,7 @@ void Game::pollEvents()
 
 void Game::calculateTotalPoints()
 {
+    /// @brief oblicza łączną liczbę punktów gracza
     this->totalPoints = 0;
     for(auto& it : this->players)
     {
@@ -94,6 +107,7 @@ void Game::calculateTotalPoints()
 
 void Game::spawnStaticPoints()
 {
+    /// @brief tworzy obiekty statyczne na mapie
     if(this->staticPoints.size() < this->maxStaticPoints){
         this->staticPoints.push_back(StaticPoints(this->randPointType(), this->players));
     }
@@ -101,6 +115,8 @@ void Game::spawnStaticPoints()
 
 const int Game::randPointType() const
 {
+    /// @brief generuje losowy punkt 
+    /// @return typ punktu statycznego
     int type = StaticPointsTypes::FOOD;
     int value = rand() % 100 + 1;
     if(value > 98){
@@ -112,11 +128,18 @@ const int Game::randPointType() const
 
 void Game::updatePlayer()
 {
+    /// @brief funkcja uaktualniająca informację o graczu
     View view = this->window->getView();
     Vector2f viewCenter;
     for(auto& it : this->players)
     {
         it.setPosition(this->players);
+        // if(shoot){ // sprawdza czy gracz strzelił
+        //     //TODO
+        //     int type = StaticPointsTypes::FOOD;
+        //     //this->staticPoints.push_back(StaticPoints(this->randPointType(), this->players));
+        //     continue;;
+        // }
         viewCenter += it.getPlayerPostion();
         viewCenter += Vector2f(log(it.getMass())/log(1.05),log(it.getMass())/log(1.05));
     }
@@ -128,22 +151,23 @@ void Game::updatePlayer()
 
 void Game::updateCollision()
 {
-    for(size_t i = 0; i < this->staticPoints.size(); ++i){
-        for(auto& it : this->players)
+    /// @brief funkcja sprawdzająca kolizję na mapie
+    for(size_t i = 0; i < this->staticPoints.size(); ++i){ // iteracja po wszystkich punktach na mapie
+        for(auto& it : this->players) // iteracja po wszystkich graczach
         {
-            if(it.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds())){
+            if(it.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds())){ // sprawdzenie czy punkty się nie przecinają
             switch(this->staticPoints[i].getType())
             {
-                case StaticPointsTypes::FOOD:
+                case StaticPointsTypes::FOOD: // jeśli jedzenie zwiększ mase
                     it.grow(this->staticPoints[i].getMass());
                     break;
-                case StaticPointsTypes::SPIKES:
+                case StaticPointsTypes::SPIKES: // jeśli spike'a porównaj mase
                     if(it.getMass() > this->staticPoints[i].getMass() * 1.1){
                         it.grow(this->staticPoints[i].getMass());
                         it.splitBySpike(this->players);
                     }
             }
-            this->staticPoints.erase(this->staticPoints.begin() + i);
+            this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
             }
         }
     }
@@ -151,11 +175,12 @@ void Game::updateCollision()
 
 void Game::updateGui()
 {
+    /// @brief aktualizowanie informacji interfejsu
     stringstream ss;
     if(this->totalPoints > maxPoints){
         maxPoints = this->totalPoints;
     }
-    ss << " - Points: " << this->totalPoints << "\n";
+    ss << " - Points: " << this->totalPoints << "\n"; // uaktualnienie liczby punktów
     Vector2f viewCenter;
     for(auto& it : this->players)
     {
@@ -173,6 +198,7 @@ void Game::updateGui()
 
 void Game::updateMaxPoints()
 {
+    /// @brief funkcja po zakończeniu gry zapisuje maksymalną ilość punktów do pliku
     int allMaxPoints = 0;
     ifstream Plik("./maxPoints.txt");
     Plik >> allMaxPoints;
@@ -186,6 +212,7 @@ void Game::updateMaxPoints()
 
 void Game::update()
 {
+    /// @brief funkcja uaktualniająca wydarzenia na mapie
     this->pollEvents();
     if(!this->endGame){
         this->zoomOut();
@@ -203,11 +230,14 @@ void Game::update()
 
 void Game::renderGui(RenderTarget* target)
 {
+    /// @brief funkcja generująca GUI dla okna
+    /// @param target miejsce renderu obiektu
     target->draw(this->guiText);
 }
 
 void Game::render()
 {
+    /// @brief funkcja renderująca i wyświetlająca okno oraz obiekty na nim
     this->window->clear(Color::White);
 
     for(auto& it : players){

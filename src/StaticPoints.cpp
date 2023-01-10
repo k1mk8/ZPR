@@ -2,15 +2,17 @@
 
 void StaticPoints::makeShape(std::vector<Player> rect)
 {
+    /// @brief tworzy kształt przycisku na podstawie typu obiektu
+    /// @param rect lista graczy, aby punkty nie tworzyły się w graczach
     Color color;
     switch (this->type)
     {
-    case FOOD:
+    case FOOD: // tworzenie jedzenia
         color = Color::Blue;
         this->mass = 1;
         this->shape.setRadius(5);
         break;
-    case SPIKES:
+    case SPIKES: // tworzenie spike, który rozbija większych graczy
         color = Color::Red;
         this->shape.setRadius(30);
         this->mass = 30;
@@ -27,12 +29,12 @@ void StaticPoints::makeShape(std::vector<Player> rect)
     {
         x = static_cast<float>((rand() % (int(size.x) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().width);
         y = static_cast<float>((rand() % (int(size.y) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().height);
-        for(auto& it : rect)
+        for(auto& it : rect) // interuje się po wszystkich graczach na planszy
         {
             CircleShape point;
             point.setRadius(5);
             point.setPosition(x,y);
-            if(it.getShape().getGlobalBounds().intersects(point.getGlobalBounds())){
+            if(it.getShape().getGlobalBounds().intersects(point.getGlobalBounds())){ // sprawdza przecięcie się punktó na planszy
                 contain = true;
                 break;
             }
@@ -42,41 +44,54 @@ void StaticPoints::makeShape(std::vector<Player> rect)
             }
         }
     }
-    this->shape.setPosition(Vector2f(x,y));
+    this->shape.setPosition(Vector2f(x,y)); // ustawia pozycje punktu
 }
 
 StaticPoints::StaticPoints(int type, std::vector <Player> rect)
         : type(type)
 {
+    /// @brief konstruktor domyślny tworzący obiekt klasy
+    /// @param type typ punktu
+    /// @param rect wektor z graczami na planszy
     this->makeShape(rect);
 }
 
 StaticPoints::~StaticPoints()
 {
-
+    /// destruktor klasy
 }
 
 const CircleShape StaticPoints::getShape() const
 {
+    /// @brief getter kształtu punktu
+    /// @return kształt punktu
     return this->shape;
 }
 
 const int& StaticPoints::getType() const
 {
+    /// @brief getter typu punktu
+    /// @return typ punktu
     return this->type;
 }
 
 const int& StaticPoints::getMass() const
 {
+    /// @brief getter masy punktu
+    /// @return masa punktu
     return this->mass;
 }
 
 void StaticPoints::eatMass(const int food)
 {
+    /// @brief funkcja zwiększająca masę punktu o podaną wartość
+    /// @param food masa jedzonego punktu
     this->mass += food;
 }
 // void StaticPoints::checkSpikeMass(const View& window)
 // {
+//     /// @brief funkcja sprawdzająca czy spike nie powinien się rozdzielić
+//     /// @param window okno gry
 //     if(this->type == StaticPointsTypes::SPIKES){
 //         if(this->mass > 25){
 //             this->mass = 5;
@@ -87,5 +102,7 @@ void StaticPoints::eatMass(const int food)
 
 void StaticPoints::render(RenderTarget& target)
 {
+    /// @brief renderuje obiekt na mapie
+    /// @param target miejsce renderu obiektu
     target.draw(this->shape);
 }

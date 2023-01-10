@@ -12,20 +12,20 @@ using namespace sf;
 class GameOver
 {
 private:
-    RenderWindow* window;
-    Button buttonYes;
-    Button buttonNo;
-    VideoMode videoMode;
-    Event sfmlEvent;
-    Sprite sprite;
-    Texture texture;
-    void initWindow();
-    void initButton();
+    RenderWindow* window; // okno końca gry
+    Button buttonYes; // przycisk powtórzenia gry
+    Button buttonNo; // przycisk zakończenia gry
+    VideoMode videoMode; // okno wyświetlane
+    Event sfmlEvent; // event
+    Sprite sprite; // wygląd okna
+    Texture texture; // tekstura
+    void initWindow(); // inicjowanie okna
+    void initButton(); // inicjowanie przycisków
 public:
-    GameOver();
-    ~GameOver();
-    const int buttonPressed() const;
-    void pollEvents();
-    const bool update();
-    void render();
+    GameOver(); // konstruktor domyślny
+    ~GameOver(); // destruktor domyślny
+    const int buttonPressed() const; // sprawdzenie czy przycisk wciśnięty
+    void pollEvents(); // sprawdzanie wydarzeń 
+    const bool update(); // uaktualnianie okna
+    void render(); // renderowanie i wyświetlanie okna 
 };
