@@ -29,12 +29,12 @@ void StaticPoints::makeShape(std::vector<Player> rect)
     {
         x = static_cast<float>((rand() % (int(size.x) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().width);
         y = static_cast<float>((rand() % (int(size.y) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().height);
-        for(auto& it : rect) // interuje się po wszystkich graczach na planszy
+        for(auto& it : rect) // iteruje się po wszystkich graczach na planszy
         {
             CircleShape point;
             point.setRadius(5);
             point.setPosition(x,y);
-            if(it.getShape().getGlobalBounds().intersects(point.getGlobalBounds())){ // sprawdza przecięcie się punktó na planszy
+            if(it.getShape().getGlobalBounds().intersects(point.getGlobalBounds())){ // sprawdza przecięcie się punktów na planszy
                 contain = true;
                 break;
             }

@@ -24,12 +24,14 @@ private:
     void calculateSpeed(); // obliczanie prędkości
     void connect(std::vector<Player>& players); // łącznie graczy
 public:
-    Player(float x = 0.f, float y = 0.f, const int mass = 10); // konstruktor graczy
-    virtual ~Player(); // destruktor klasy
+    Player(float x = 0, float y = 0, const int mass = 512); // konstruktor graczy
+    ~Player(); // destruktor klasy
     const CircleShape& getShape() const; // getter kształtu
     const int& getMass() const; // getter masy
     const float& getSpeed() const; // getter prędkości
     const Vector2f& getPlayerPostion() const; // getter pozycji gracza
+    const clock_t& getSplitTime() const; // getter czasu podziału
+    void setSplitTime(clock_t splittime); // setter czasu podziału
     void setMass(const int weight); // setter masy
     void grow(const int food); // jedzenie masy
     void split(std::vector <Player>& players); // dzielenie gracza

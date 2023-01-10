@@ -19,5 +19,5 @@ public:
     Button(Vector2f size, Color color, Vector2f pos); // konstruktor przyjmujący wartości startowe
     ~Button(); // destruktor
     const RectangleShape& getButton() const; // zwraca przycisk
-    const bool isButtonPressed(RenderWindow* window) const; // sprawdza czy button jest wciśnięty
+    bool isButtonPressed(RenderWindow* window); // sprawdza czy button jest wciśnięty
 };

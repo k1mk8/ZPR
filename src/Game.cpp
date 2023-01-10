@@ -69,7 +69,7 @@ const bool& Game::getEndGame() const
     return this->endGame;
 }
 
-const bool Game::running() const
+bool Game::running()
 {
     /// @brief funkcja sprawdzająca czy okno jest otwarte
     /// @return prawda lub fałsz, czy okno jest otwarte
@@ -81,14 +81,17 @@ void Game::pollEvents()
     /// @brief funkcja sprawdzająca czy okno ma być zamknięte
     while(this->window->pollEvent(this->sfmlEvent))
     {
-        switch(this->sfmlEvent.type)
+        if (this->sfmlEvent.type == Event::Closed)
         {
-        case Event::Closed:
             this->window->close();
             break;
-        case Event::KeyPressed:
-            if(this->sfmlEvent.key.code == Keyboard::Escape){
+        }
+        else if(this->sfmlEvent.type == Event::KeyPressed)
+        {
+            if(this->sfmlEvent.key.code == Keyboard::Escape)
+            {
                 this->window->close();
+                break;
             }
         }
         break;
@@ -108,12 +111,12 @@ void Game::calculateTotalPoints()
 void Game::spawnStaticPoints()
 {
     /// @brief tworzy obiekty statyczne na mapie
-    if(this->staticPoints.size() < this->maxStaticPoints){
+    if((int)this->staticPoints.size() < this->maxStaticPoints){
         this->staticPoints.push_back(StaticPoints(this->randPointType(), this->players));
     }
 }
 
-const int Game::randPointType() const
+int Game::randPointType()
 {
     /// @brief generuje losowy punkt 
     /// @return typ punktu statycznego

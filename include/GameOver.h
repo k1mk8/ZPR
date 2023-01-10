@@ -24,8 +24,8 @@ private:
 public:
     GameOver(); // konstruktor domyślny
     ~GameOver(); // destruktor domyślny
-    const int buttonPressed() const; // sprawdzenie czy przycisk wciśnięty
+    int buttonPressed(); // sprawdzenie czy przycisk wciśnięty
     void pollEvents(); // sprawdzanie wydarzeń 
-    const bool update(); // uaktualnianie okna
+    bool update(); // uaktualnianie okna
     void render(); // renderowanie i wyświetlanie okna 
 };

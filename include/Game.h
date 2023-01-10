@@ -32,11 +32,11 @@ public:
     Game(); // konstruktor domyślny
     ~Game(); // destruktor domyślny
     const bool& getEndGame() const; // zwraca informację o końcu gry
-    const bool running() const; // czy okno otwarte
+    bool running(); // czy okno otwarte
     void pollEvents(); // eventy na mapie
     void calculateTotalPoints(); // obliczanie sumy punktów
     void spawnStaticPoints(); // tworzenie obiektów statycznych
-    const int randPointType() const; // losowanie obiektów do stworzenia
+    int randPointType(); // losowanie obiektów do stworzenia
     void updatePlayer(); // uaktualnianie graczy
     void updateCollision(); // sprawdzanie kolizji
     void updateGui(); // uaktualnianie GUI

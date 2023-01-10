@@ -76,7 +76,7 @@ Interface::~Interface()
     delete this->window;
 }
 
-const bool Interface::running() const
+bool Interface::running()
 {
     /// @brief funkcja sprawdzająca czy okno jest otwarte
     /// @return prawda lub fałsz, czy okno jest otwarte
@@ -88,13 +88,15 @@ void Interface::pollEvents()
     /// @brief funkcja sprawdzająca czy okno ma być zamknięte
     while(this->window->pollEvent(this->sfmlEvent))
     {
-        switch(this->sfmlEvent.type)
+if (this->sfmlEvent.type == Event::Closed)
         {
-        case Event::Closed:
             this->window->close();
             break;
-        case Event::KeyPressed:
-            if(this->sfmlEvent.key.code == Keyboard::Escape){ // przyciskiem escape można zamknąć okno
+        }
+        else if(this->sfmlEvent.type == Event::KeyPressed)
+        {
+            if(this->sfmlEvent.key.code == Keyboard::Escape)
+            {
                 this->window->close();
                 break;
             }
@@ -103,7 +105,7 @@ void Interface::pollEvents()
     }
 }
 
-const bool Interface::update()
+bool Interface::update()
 {
     /// @brief funkcja sprawdzająca czy wydarzyły się jakieś interakcje od użytkownika
     /// @return czy przycisk rozpoczęcia gry został wciśnięty

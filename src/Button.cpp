@@ -30,7 +30,7 @@ const RectangleShape& Button::getButton() const
     return this->button;
 }
 
-const bool Button::isButtonPressed(RenderWindow* window) const
+bool Button::isButtonPressed(RenderWindow* window)
 {
     /// @brief sprawdza czy dany przycisk jest wciśnięty
     /// @param window ekran gry
@@ -39,5 +39,5 @@ const bool Button::isButtonPressed(RenderWindow* window) const
         if (rect.contains(Mouse::getPosition(*window)) && (sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
                 return true;
         }
-        return false; 
+        return false;
 }

@@ -31,7 +31,7 @@ GameOver::~GameOver()
     delete this->window;
 }
 
-const int GameOver::buttonPressed() const
+int GameOver::buttonPressed()
 {
     /// @brief funkcja sprawdzająca, jaki przycisk jest wciskany
     /// @return informacja na temat wciśniętego przycisku
@@ -50,13 +50,15 @@ void GameOver::pollEvents()
     /// @brief funkcja sprawdzająca czy okno ma być zamknięte
     while(this->window->pollEvent(this->sfmlEvent))
     {
-        switch(this->sfmlEvent.type)
+        if (this->sfmlEvent.type == Event::Closed)
         {
-        case Event::Closed:
             this->window->close();
             break;
-        case Event::KeyPressed:
-            if(this->sfmlEvent.key.code == Keyboard::Escape){
+        }
+        else if(this->sfmlEvent.type == Event::KeyPressed)
+        {
+            if(this->sfmlEvent.key.code == Keyboard::Escape)
+            {
                 this->window->close();
                 break;
             }
@@ -65,7 +67,7 @@ void GameOver::pollEvents()
     }
 }
 
-const bool GameOver::update()
+bool GameOver::update()
 {
     /// @brief funkcja sprawdzająca czy wydarzyły się jakieś interakcje od użytkownika
     /// @return czy przycisk rozpoczęcia gry został wciśnięty

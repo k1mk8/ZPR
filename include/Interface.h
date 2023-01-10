@@ -31,9 +31,9 @@ public:
     RenderWindow* window; // okno gry
     Interface(); // konstruktor domyślny
     ~Interface(); // destruktor domyślny
-    const bool running() const; // sprawdzenie czy okno działa
+    bool running(); // sprawdzenie czy okno działa
     void pollEvents(); // // sprawdzanie wydarzeń
-    const bool update(); // uaktualnianie okna
+    bool update(); // uaktualnianie okna
     void renderGui(RenderTarget* target); // renderowanie GUI
     void render(); // renderowanie i wyświetlanie okna 
 };

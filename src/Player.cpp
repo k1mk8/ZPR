@@ -28,9 +28,7 @@ void Player::connect(std::vector<Player>& players)
     /// @param players wektor graczy na mapie
     clock_t actualTime = clock();
     if(players.size() > 1){
-        double timePassed = (double)(actualTime - splitTime) / CLOCKS_PER_SEC;
-        cout<<timePassed<<endl;
-        if(((double)(actualTime - this->splitTime) / CLOCKS_PER_SEC) > 30.0){ // sprawdza czy od ostatniego podziału minął określony czas
+        if(((double)(actualTime - players[0].getSplitTime()) / CLOCKS_PER_SEC) > 30.0){ // sprawdza czy od ostatniego podziału minął określony czas
             int mass = 0;
             for(auto& it : players){ // łączy wszystkich graczy w jedną masę
                 mass += it.getMass();
@@ -51,7 +49,7 @@ Player::Player(float x, float y, const int mass)
     this->shape.setPosition(x,y);
     this->Variables(mass);
     this->makeShape();
-}
+    }
 
 Player::~Player()
 {
@@ -84,6 +82,20 @@ const Vector2f & Player::getPlayerPostion() const
     /// @brief getter pozycji gracza na mapie
     /// @return pozycja
     return this->shape.getPosition();
+}
+
+const clock_t & Player::getSplitTime() const
+{
+    /// @brief getter czasu podziału
+    /// @return splittime
+    return this->splitTime;
+}
+
+void Player::setSplitTime(clock_t splittime)
+{
+    /// @brief setter czasu podziału
+    /// @param splittime czasu podziału gracza
+    this->splitTime = splittime;
 }
 
 void Player::setMass(const int weight)
@@ -121,15 +133,20 @@ void Player::split(std::vector<Player>& players)
         flag = true;
     }
     if(flag){
+        std::vector<Player> tempPlayers;
         for(auto& it : players){
-            if(players.size() < 16){
+            if(players.size() + tempPlayers.size() < 16){
                 if(it.getMass() > 30){
-                    splitTime = clock();
+                    players[0].setSplitTime(clock());
                     it.splitMass();
-                    Player player = Player(it.getPlayerPostion().x+ 2 * log(it.getMass())/log(1.05), it.getPlayerPostion().y + 2 * log(it.getMass())/log(1.05), it.getMass());
-                    players.push_back(player);
+                    Player player = Player(it.getPlayerPostion().x + 2 * log(it.getMass())/log(1.05),
+                        it.getPlayerPostion().y + 2 * log(it.getMass())/log(1.05), it.getMass());
+                    tempPlayers.push_back(player);
                 }
             }
+        }
+        for(auto& it : tempPlayers){
+            players.push_back(it);
         }
     }
 }
