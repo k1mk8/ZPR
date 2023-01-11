@@ -144,12 +144,21 @@ void Game::updatePlayer()
     for(auto& it : this->players)
     {
         it.setPosition(this->players, *this->window);
-        // if(shoot){ // sprawdza czy gracz strzelił
-        //     //TODO
-        //     int type = StaticPointsTypes::FOOD;
-        //     //this->staticPoints.push_back(StaticPoints(this->randPointType(), this->players));
-        //     continue;;
-        // }
+        bool shooting = false;
+        while(Keyboard::isKeyPressed(Keyboard::E)){
+            shooting = true;
+        }
+        if(shooting && it.getMass() > 20){ // sprawdza czy gracz strzelił
+            int type = StaticPointsTypes::FOOD;
+            float mouseX = Mouse::getPosition(*this->window).x;
+            float mouseY = Mouse::getPosition(*this->window).y;
+            mouseX -= this->window->getSize().x / 2;
+            mouseY -= this->window->getSize().y / 2;
+            mouseX += it.getPlayerPostion().x;
+            mouseY += it.getPlayerPostion().y;
+            this->staticPoints.push_back(StaticPoints(type, mouseX, mouseY));
+            it.loseMass();
+        }
         viewCenter += it.getPlayerPostion();
         viewCenter += Vector2f(log(it.getMass())/log(1.05),log(it.getMass())/log(1.05));
     }
@@ -165,19 +174,22 @@ void Game::updateCollision()
     for(size_t i = 0; i < this->staticPoints.size(); ++i){ // iteracja po wszystkich punktach na mapie
         for(auto& it : this->players) // iteracja po wszystkich graczach
         {
-            if(it.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds())){ // sprawdzenie czy punkty się nie przecinają
-            switch(this->staticPoints[i].getType())
-            {
-                case StaticPointsTypes::FOOD: // jeśli jedzenie zwiększ mase
-                    it.grow(this->staticPoints[i].getMass());
-                    break;
-                case StaticPointsTypes::SPIKES: // jeśli spike'a porównaj mase
-                    if(it.getMass() > this->staticPoints[i].getMass() * 1.1){
+            if(it.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds()))
+            { // sprawdzenie czy punkty się nie przecinają
+                switch(this->staticPoints[i].getType())
+                {
+                    case StaticPointsTypes::FOOD: // jeśli jedzenie zwiększ mase
                         it.grow(this->staticPoints[i].getMass());
-                        it.splitBySpike(this->players);
-                    }
-            }
-            this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
+                        this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
+                        break;
+                    case StaticPointsTypes::SPIKES: // jeśli spike'a porównaj mase
+                        if(it.getMass() > this->staticPoints[i].getMass() * 1.1)
+                        {
+                            it.grow(this->staticPoints[i].getMass());
+                            it.splitBySpike(this->players);
+                            this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
+                        }
+                }
             }
         }
     }

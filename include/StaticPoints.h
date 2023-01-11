@@ -20,6 +20,7 @@ private:
     void makeShape(std::vector<Player> rect); // tworzy punkt
 public:
     StaticPoints(int type, std::vector<Player> rect); // domyślny konstruktor
+    StaticPoints(int type, float X, float Y); // konstruktor pozycyjny
     virtual ~StaticPoints(); // destruktor 
     const CircleShape getShape() const; // zwraca kształt punktu
     const int& getType() const; // zwraca typ punktu

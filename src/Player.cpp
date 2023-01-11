@@ -13,7 +13,7 @@ void Player::makeShape()
 {
     /// @brief tworzy obiekt
     this->shape.setFillColor(Color::Green);
-    this->shape.setRadius(log(mass)/log(1.05));
+    this->shape.setRadius(this->getRadius());
 }
 
 void Player::calculateSpeed()
@@ -22,7 +22,7 @@ void Player::calculateSpeed()
     this->speed = this->startingSpeed - (log(this->mass) / log(4));
 }
 
-void Player::connect(std::vector<Player>& players)
+void Player::connect(vector<Player>& players)
 {
     /// @brief łączy rozdzielonego gracza po określonym czasie
     /// @param players wektor graczy na mapie
@@ -75,7 +75,7 @@ float Player::getRadius()
 {
     /// @brief getter promienia gracza
     /// @return promień gracza
-    return log(this->mass)/log(1.05);
+    return log(this->mass)/log(1.05) - 30;
 }
 
 const float & Player::getSpeed() const
@@ -182,27 +182,13 @@ void Player::loseMass()
     {
         this->mass -= 10;
     }
-}
-
-void Player::shootingMass()
-{
-    // /// @brief funkcja odpowiedzialna za wystrzeliwanie masy przez gracza
-    // /// @return prawda lub fałsz, czy gracz strzelił masą
-    // bool shooting = false;
-    // while(Keyboard::isKeyPressed(Keyboard::T)){
-    //     shooting = true;
-    // }
-    // if(shooting){
-    //     this->loseMass();
-    //     this->shape.setRadius(log(this->getMass())/log(1.05));
-    //     return true;
-    // }
-    // return false;
+    this->shape.setRadius(this->getRadius());
 }
 
 void Player::move(RenderWindow& window, std::vector <Player>& players)
 {
     /// @brief funkcja odpowiedzialna za poruszanie się gracza w każdą stronę 
+    std::cout<<this->getRadius()<<"\n";
     this->calculateSpeed(); // obliczanie prędkości gracza
     float mouseX = Mouse::getPosition(window).x;
     float mouseY = Mouse::getPosition(window).y;
@@ -250,7 +236,6 @@ void Player::setPosition(std::vector<Player>& players, RenderWindow& window)
     this->move(window, players);
     this->split(players);
     this->connect(players);
-    this->shootingMass();
     this->checkMapCollision();
 }
 

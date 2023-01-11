@@ -55,6 +55,17 @@ StaticPoints::StaticPoints(int type, std::vector <Player> rect)
     /// @param rect wektor z graczami na planszy
     this->makeShape(rect);
 }
+StaticPoints::StaticPoints(int type, float X, float Y)
+        : type(type)
+{
+    /// @brief konstruktor pozycyjny tworzący obiekt klasy
+    /// @param type typ punktu
+    /// @param rect wektor z graczami na planszy
+    this->shape.setFillColor(Color::Blue);
+    this->mass = 10;
+    this->shape.setRadius(8);
+    this->shape.setPosition(X, Y);
+}
 
 StaticPoints::~StaticPoints()
 {

@@ -42,7 +42,6 @@ public:
     void checkMapCollision(); // sprawdzanie ograniczeń mapy
     void loseMass(); // tracenie masy
     void splitMass(); // dzielenie masy
-    void shootingMass(); // strzelanie masą
     void setPosition(std::vector <Player>& players, RenderWindow& window); // ustawianie pozycji
     void render(RenderTarget& target); // enderowanie gracza
 };
