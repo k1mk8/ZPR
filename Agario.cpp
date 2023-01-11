@@ -8,13 +8,20 @@ int main()
     while(true)
     {
         Interface interface;
-        bool change = false;
-        while(interface.running() && change == false)
+        int change = 0;
+        int speed = 10;
+        while(interface.running() && change != 1)
         {
             change = interface.update();
             interface.render();
+            if(change == 2)
+                speed = 5;
+            if(change == 3)
+                speed = 10;
+            if(change == 4)
+                speed = 20;
         }
-        Game game;
+        Game game(speed);
         while(game.running())
         {
             game.update();

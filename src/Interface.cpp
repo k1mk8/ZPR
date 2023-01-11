@@ -23,8 +23,12 @@ void Interface::initFonts()
 void Interface::initButton()
 {
     /// @brief iniciuje przycisk do rozpoczęcia gry
-    this->button = Button(Vector2f(125, 60), Color::Cyan, Vector2f(560, 500));
+    this->button = Button(Vector2f(125, 60), Color::Cyan, Vector2f(560, 550));
+    this->speed1 = Button(Vector2f(125, 60), Color::Cyan, Vector2f(380, 470));
+    this->speed2 = Button(Vector2f(125, 60), Color::Cyan, Vector2f(560, 470));
+    this->speed3 = Button(Vector2f(125, 60), Color::Cyan, Vector2f(740, 470));
 }
+
 
 
 void Interface::initText()
@@ -45,8 +49,29 @@ void Interface::initText()
     this->buttonText.setFont(this->font);
     this->buttonText.setFillColor(Color::Black);
     this->buttonText.setCharacterSize(25);
-    this->buttonText.setPosition(Vector2f(590,515));
+    this->buttonText.setPosition(Vector2f(590,565));
     this->buttonText.setString("Graj!");
+
+    // tekst na przycisku prędkości
+    this->buttonText1.setFont(this->font);
+    this->buttonText1.setFillColor(Color::Black);
+    this->buttonText1.setCharacterSize(35);
+    this->buttonText1.setPosition(Vector2f(420,475));
+    this->buttonText1.setString("5x");
+
+    // tekst na przycisku prędkości
+    this->buttonText2.setFont(this->font);
+    this->buttonText2.setFillColor(Color::Black);
+    this->buttonText2.setCharacterSize(35);
+    this->buttonText2.setPosition(Vector2f(600,475));
+    this->buttonText2.setString("10x");
+
+    // tekst na przycisku prędkości
+    this->buttonText3.setFont(this->font);
+    this->buttonText3.setFillColor(Color::Black);
+    this->buttonText3.setCharacterSize(35);
+    this->buttonText3.setPosition(Vector2f(780,475));
+    this->buttonText3.setString("20x");
 
     // maksymalna ilość punktów w historii
     this->maxPointsText.setFont(this->font);
@@ -105,12 +130,20 @@ if (this->sfmlEvent.type == Event::Closed)
     }
 }
 
-bool Interface::update()
+int Interface::update()
 {
     /// @brief funkcja sprawdzająca czy wydarzyły się jakieś interakcje od użytkownika
     /// @return czy przycisk rozpoczęcia gry został wciśnięty
     this->pollEvents();
-    return this->button.isButtonPressed(this->window);
+    if(this->button.isButtonPressed(this->window))
+        return 1;
+    if(this->speed1.isButtonPressed(this->window))
+        return 2;
+    if(this->speed2.isButtonPressed(this->window))
+        return 3;
+    if(this->speed3.isButtonPressed(this->window))
+        return 4;
+    return 0;
 }
 
 void Interface::renderGui(RenderTarget* target)
@@ -121,6 +154,9 @@ void Interface::renderGui(RenderTarget* target)
     target->draw(this->standardText);
     target->draw(this->maxPointsText);
     target->draw(this->buttonText);
+    target->draw(this->buttonText1);
+    target->draw(this->buttonText2);
+    target->draw(this->buttonText3);
 }
 
 void Interface::render()
@@ -129,6 +165,9 @@ void Interface::render()
     this->window->clear(Color::White);
     this->window->draw(sprite);
     this->window->draw(this->button.getButton());
+    this->window->draw(this->speed1.getButton());
+    this->window->draw(this->speed2.getButton());
+    this->window->draw(this->speed3.getButton());
     this->renderGui(this->window);
     this->window->display();
 }

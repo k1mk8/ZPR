@@ -1,5 +1,5 @@
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install libsfml-dev
-sudo apt-get install libgtest-dev
-sudo apt-get install cmake
+sudo apt update
+sudo apt upgrade
+sudo apt install libsfml-dev
+sudo apt install libgtest-dev
+sudo apt install cmake

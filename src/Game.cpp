@@ -1,12 +1,12 @@
 #include "Game.h"
 
-void Game::variables()
+void Game::variables(const int speed)
 {
     /// @brief ustawia zmienne klasy
     this->endGame = false;
     this->maxStaticPoints = 1000;
     this->totalPoints = 10;
-    Player player;
+    Player player(0, 0, 10, speed);
     this->players.push_back(player);
 }
 
@@ -47,10 +47,10 @@ void Game::zoomOut()
     this->window->setView(view);
 }
 
-Game::Game()
+Game::Game(const int speed)
 {
     /// @brief konstruktor klasy tworzący jej obiekt
-    this->variables();
+    this->variables(speed);
     this->initWindow();
     this->initFonts();
     this->initText();

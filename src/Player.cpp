@@ -1,10 +1,10 @@
 #include "Player.h"
 
-void Player::Variables(const int mass)
+void Player::Variables(const int mass, const int speed)
 {
     /// @brief ustawia zmienne klasy
     /// @param mass masa punktu
-    this->startingSpeed = 10;
+    this->startingSpeed = speed;
     this->mass = mass;
     this->speed = this->startingSpeed - (log(this->mass) / log(4));
 }
@@ -35,21 +35,20 @@ void Player::connect(std::vector<Player>& players)
                 mass += it.getMass();
                 oldPlayersPos += it.getPlayerPostion();
             }
-            Player player = Player(oldPlayersPos.x / players.size(), oldPlayersPos.y / players.size(), mass); // tworzy gracza po połączeniu
+            Player player = Player(oldPlayersPos.x / players.size(), oldPlayersPos.y / players.size(), mass, startingSpeed); // tworzy gracza po połączeniu
             players.clear(); // usuwa połączonych graczy
             players.push_back(player);
         }
     }
 }
-
-Player::Player(float x, float y, const int mass)
+Player::Player(float x, float y, const int mass, const int speed)
 {
     /// @brief konstruktor klasy tworzący jej obiekt
     /// @param x pozycja horyzontalna gracza
     /// @param y pozycja wertykalna gracza
     /// @param mass masa gracza
     this->shape.setPosition(x,y);
-    this->Variables(mass);
+    this->Variables(mass, speed);
     this->makeShape();
 }
 
@@ -148,7 +147,7 @@ void Player::split(std::vector<Player>& players)
                     players[0].setSplitTime(clock());
                     it.splitMass();
                     Player player = Player(it.getPlayerPostion().x + 2 * it.getRadius(),
-                        it.getPlayerPostion().y + 2 * it.getRadius(), it.getMass());
+                        it.getPlayerPostion().y + 2 * it.getRadius(), it.getMass(), startingSpeed);
                     tempPlayers.push_back(player);
                 }
             }
@@ -170,7 +169,7 @@ void Player::splitBySpike(std::vector <Player>& players)
         for(int i = 1; i <= maxPartsNumber; ++i)
         {
             players[0].setSplitTime(clock());
-            Player player = Player(this->getPlayerPostion().x + 2 * i * this->getRadius(), this->getPlayerPostion().y, this->getMass());
+            Player player = Player(this->getPlayerPostion().x + 2 * i * this->getRadius(), this->getPlayerPostion().y, this->getMass(), startingSpeed);
             players.push_back(player);
         }
     }

@@ -23,13 +23,13 @@ private:
     int maxStaticPoints; // maksymalna ilość obiektó statycznych
     int totalPoints; // sumaryczna ilośc punktów
     int maxPoints = 10; // maksymalna ilość punktów w grze
-    void variables(); // inicjowanie zmiennych
+    void variables(const int speed); // inicjowanie zmiennych
     void initWindow(); // inicjowanie okna
     void initFonts(); // inicjowanie czcionki
     void initText(); // inicjowanie tekstu
     void zoomOut(); // oddalanie obrazu
 public:
-    Game(); // konstruktor domyślny
+    Game(const int speed); // konstruktor domyślny
     ~Game(); // destruktor domyślny
     const bool& getEndGame() const; // zwraca informację o końcu gry
     bool running(); // czy okno otwarte
