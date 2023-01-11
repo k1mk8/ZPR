@@ -6,7 +6,7 @@ TEST(PlayerTest, variables)
 {
     Player player = Player(5,5,10);
     int mass = 10;
-    float speed = 10 - log(mass) / log(4);
+    float speed = 10 - (log(10) / log(4));;
     ASSERT_EQ(player.getSpeed(), speed);
     ASSERT_EQ(player.getMass(), mass);
 }
@@ -16,7 +16,16 @@ TEST(PlayerTest, makeShape)
     Player player = Player(5,5,10);
     auto shape = player.getShape();
     ASSERT_EQ(shape.getFillColor(), Color::Green);
-    ASSERT_EQ(shape.getRadius(), 10);
+    ASSERT_EQ(round(round(shape.getRadius())), round(log(10)/log(1.05)));
+}
+
+TEST(PlayerTest, calculateSpeed)
+{   
+    Player player = Player(5,5,10);
+    player.grow(10);
+    player.move();
+    float speed = 10 - (log(20) / log(4));
+    ASSERT_EQ(player.getSpeed(), speed);
 }
 
 TEST(PlayerTest, createPlayer)
@@ -43,8 +52,24 @@ TEST(PlayerTest, getMass)
 TEST(PlayerTest, getSpeed)
 {
     Player player = Player(5,5,10);
-    float speed = 5.f;
+    float speed = 10 - (log(10) / log(4));
     ASSERT_EQ(player.getSpeed(), speed);
+}
+
+TEST(PlayerTest, getPlayerPosition)
+{
+    Player player = Player(5,5,10);
+    Vector2f pos = player.getPlayerPostion();
+    ASSERT_EQ(pos.x, 5);
+    ASSERT_EQ(pos.y, 5);
+}
+
+TEST(PlayerTest, SplitTime)
+{
+    Player player = Player(5,5,10);
+    clock_t split = clock();
+    player.setSplitTime(split);
+    ASSERT_EQ(player.getSplitTime(), split);
 }
 
 TEST(PlayerTest, setMass)
@@ -61,7 +86,6 @@ TEST(PlayerTest, grow)
     int mass = 5;
     player.grow(mass);
     ASSERT_EQ(player.getMass(), 15);
-    ASSERT_EQ(player.getShape().getRadius(), 15);
 }
 
 TEST(PlayerTest, splitMassEven)

@@ -4,9 +4,9 @@ void Player::Variables(const int mass)
 {
     /// @brief ustawia zmienne klasy
     /// @param mass masa punktu
-    this->speed = 10;
     this->startingSpeed = 10;
     this->mass = mass;
+    this->speed = this->startingSpeed - (log(this->mass) / log(4));
 }
 
 void Player::makeShape()
@@ -51,7 +51,7 @@ Player::Player(float x, float y, const int mass)
     this->shape.setPosition(x,y);
     this->Variables(mass);
     this->makeShape();
-    }
+}
 
 Player::~Player()
 {

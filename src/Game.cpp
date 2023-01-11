@@ -98,6 +98,13 @@ void Game::pollEvents()
     }
 }
 
+const int & Game::getTotalPoints() const
+{
+    /// @brief getter sumarycznej liczby punktów
+    /// @return sumaryczną ilość punktów
+    return this->totalPoints;
+}
+
 void Game::calculateTotalPoints()
 {
     /// @brief oblicza łączną liczbę punktów gracza

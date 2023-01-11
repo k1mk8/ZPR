@@ -34,6 +34,7 @@ public:
     const bool& getEndGame() const; // zwraca informację o końcu gry
     bool running(); // czy okno otwarte
     void pollEvents(); // eventy na mapie
+    const int& getTotalPoints() const; // zwraca sumaryczną ilośc punktów
     void calculateTotalPoints(); // obliczanie sumy punktów
     void spawnStaticPoints(); // tworzenie obiektów statycznych
     int randPointType(); // losowanie obiektów do stworzenia
