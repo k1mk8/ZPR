@@ -188,7 +188,6 @@ void Player::loseMass()
 void Player::move(RenderWindow& window, std::vector <Player>& players)
 {
     /// @brief funkcja odpowiedzialna za poruszanie się gracza w każdą stronę 
-    std::cout<<this->getRadius()<<"\n";
     this->calculateSpeed(); // obliczanie prędkości gracza
     float mouseX = Mouse::getPosition(window).x;
     float mouseY = Mouse::getPosition(window).y;

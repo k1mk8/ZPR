@@ -55,19 +55,16 @@ void GameOver::pollEvents()
             this->window->close();
             break;
         }
-        else if(this->sfmlEvent.type == Event::KeyPressed)
+        if(this->sfmlEvent.key.code == Keyboard::Escape)
         {
-            if(this->sfmlEvent.key.code == Keyboard::Escape)
-            {
-                this->window->close();
-                break;
-            }
+            this->window->close();
+            break;
         }
         break;
     }
 }
 
-bool GameOver::update()
+int GameOver::update()
 {
     /// @brief funkcja sprawdzająca czy wydarzyły się jakieś interakcje od użytkownika
     /// @return czy przycisk rozpoczęcia gry został wciśnięty

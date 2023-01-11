@@ -26,6 +26,6 @@ public:
     ~GameOver(); // destruktor domyślny
     int buttonPressed(); // sprawdzenie czy przycisk wciśnięty
     void pollEvents(); // sprawdzanie wydarzeń 
-    bool update(); // uaktualnianie okna
+    int update(); // uaktualnianie okna
     void render(); // renderowanie i wyświetlanie okna 
 };
