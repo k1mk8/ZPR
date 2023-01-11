@@ -19,6 +19,7 @@ private:
     vector<Player> players; // wektor graczy
     Font font; // czcionka
     Text guiText; // tekst GUI
+    Text table; //tekst wyników
     vector<StaticPoints> staticPoints; // punkty statyczne na mapie
     int maxStaticPoints; // maksymalna ilość obiektó statycznych
     int totalPoints; // sumaryczna ilośc punktów

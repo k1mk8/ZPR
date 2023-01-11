@@ -37,6 +37,9 @@ void Game::initText()
     this->guiText.setFont(this->font);
     this->guiText.setFillColor(Color::Black);
     this->guiText.setCharacterSize(32);
+    this->table.setFont(this->font);
+    this->table.setFillColor(Color::Black);
+    this->table.setCharacterSize(32);
 }
 
 void Game::zoomOut()
@@ -195,24 +198,30 @@ void Game::updateCollision()
 void Game::updateGui()
 {
     /// @brief aktualizowanie informacji interfejsu
-    stringstream ss;
+    stringstream ss, ss2;
     if(this->totalPoints > maxPoints){
         maxPoints = this->totalPoints;
     }
     ss << " - Points: " << this->totalPoints << "\n"; // uaktualnienie liczby punktów
     Vector2f viewCenter;
-    for(auto& it : this->players)
+    ss2 << "TABLICA WYNIKOW\n";
+    for(size_t i = 0; i < players.size(); ++i)
     {
-        viewCenter += it.getPlayerPostion();
-        viewCenter += Vector2f(log(it.getMass())/log(1.05),log(it.getMass())/log(1.05));
+        viewCenter += players[i].getPlayerPostion();
+        viewCenter += Vector2f(log(players[i].getMass())/log(1.05), log(players[i].getMass())/log(1.05));
+        ss2 << i + 1 << ". " << players[i].getMass() << "\n"; // wyświetlanie liczby punktów
     }
     viewCenter.x = viewCenter.x / this->players.size();
     viewCenter.y = viewCenter.y / this->players.size();
     View view = window->getView();
     Vector2f size = view.getSize();
+    Vector2f tablePosition = viewCenter;
+    tablePosition += Vector2f(size.x/2 - 300, -size.y/2);
     viewCenter += Vector2f(-size.x/2, -size.y/2);
     this->guiText.setPosition(viewCenter);
     this->guiText.setString(ss.str());
+    this->table.setPosition(tablePosition);
+    this->table.setString(ss2.str());
 }
 
 void Game::updateMaxPoints()
@@ -252,6 +261,7 @@ void Game::renderGui(RenderTarget* target)
     /// @brief funkcja generująca GUI dla okna
     /// @param target miejsce renderu obiektu
     target->draw(this->guiText);
+    target->draw(this->table);
 }
 
 void Game::render()
