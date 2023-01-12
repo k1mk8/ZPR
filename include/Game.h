@@ -25,7 +25,7 @@ private:
     int maxStaticPoints; // maksymalna ilość obiektó statycznych
     int totalPoints; // sumaryczna ilośc punktów
     int maxPoints = 10; // maksymalna ilość punktów w grze
-    int maxBots = 1; // maksymalna ilość graczy w grze
+    int maxBots = 10; // maksymalna ilość graczy w grze
     void variables(const int& speed); // inicjowanie zmiennych
     void initWindow(); // inicjowanie okna
     void initFonts(); // inicjowanie czcionki

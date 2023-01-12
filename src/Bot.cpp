@@ -17,6 +17,10 @@ Bot::Bot(float x, float y, const int mass, const int speed)
     this->makeShape();
 }
 
+Bot::~Bot()
+{
+}
+
 /// @brief Try moving in given direction, as long as there are no spikes in the way that can explode the bot's first cell.
 /// When no spikes are in the way, updates bot's velocity and returns true, otherwise doesn't change velocity and returns false.
 ///

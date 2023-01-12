@@ -48,7 +48,7 @@ void Game::initBots(const int& speed)
     srand( time( NULL ) );
     for(int i = 0; i < this->maxBots; ++i)
     {
-        Bot bot(rand()%100, rand()%100, 10, speed);
+        Bot bot(rand()%10000 - 5000, rand()%5000 - 2500, 10, speed);
         this->bots.push_back(bot);
     }
 }
@@ -207,6 +207,46 @@ void Game::updateCollision(vector<T>& participants)
             }
         }
     }
+    for(auto& it : participants)
+        for(size_t i = 0; i < this->players.size(); ++i){
+        {
+            if(it.getShape().getGlobalBounds().intersects(this->players[i].getShape().getGlobalBounds()))
+            { // sprawdzenie czy punkty się nie przecinają
+                if(it.getMass() > this->players[i].getMass() * 1.1)
+                {
+                    it.grow(this->players[i].getMass());
+                    this->players.erase(this->players.begin() + i); // usuń punkt z mapy
+                    break;
+                }
+            }
+        }
+    }
+    int deleteBot = -1;
+    for(auto& it : participants)
+        for(size_t i = 0; i < this->bots.size(); ++i){ 
+        {
+            if(it.getShape().getGlobalBounds().intersects(this->bots[i].getShape().getGlobalBounds()))
+            { // sprawdzenie czy punkty się nie przecinają
+                if(it.getMass() > this->bots[i].getMass() * 1.1)
+                {
+                    it.grow(this->bots[i].getMass());
+                    deleteBot = i;
+                    break;
+                }
+            }
+        }
+    }
+    vector<Bot> tempBots;
+    for(size_t i = 0; i < this->bots.size(); ++i)
+    {
+        if((int)i!=deleteBot)
+        {
+            tempBots.push_back(this->bots[i]);
+        }
+    }
+    this->bots.clear();
+    for(auto& it: tempBots)
+        this->bots.push_back(it);
 }
 
 void Game::updateGui()
