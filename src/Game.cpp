@@ -101,12 +101,12 @@ void Game::pollEvents()
     {
         if (this->sfmlEvent.type == Event::Closed)
         {
-            this->window->close();
+            this->endGame = true;
             break;
         }
         if(this->sfmlEvent.key.code == Keyboard::Escape)
         {
-            this->window->close();
+            this->endGame = true;
             break;
         }
         break;
@@ -318,7 +318,7 @@ void Game::update()
         this->calculateStaticPoints();
     }
     this->calculateTotalPoints();
-    if(this->totalPoints <= 0){
+    if(this->totalPoints <= 0 || this->endGame == true){
         this->endGame = true;
         this->updateMaxPoints();
     }
