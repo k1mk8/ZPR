@@ -82,4 +82,5 @@ void Bot::moveBot(const vector<Bot>& bots, const vector<Player>& players, const 
     if(searchNearby(players, this->getMass() / 5 + 300))
         if(searchNearby(bots, this->getMass() / 5 + 300))
             searchNearby(staticPoints, 4000);
+    this->checkMapCollision();
 }
