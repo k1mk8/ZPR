@@ -14,6 +14,4 @@ public:
 private:
     float getDirection(float x, float y);
     void makeShape();
-    const int NEARBY_SQ = 1000*1000;
-    const int MAX_DIST_TO_SPIKES = 600;
 };

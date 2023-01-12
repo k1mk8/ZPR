@@ -184,7 +184,7 @@ void Game::updatePlayer()
 }
 
 template<typename T>
-void Game::updateCollision(vector<T>& participants)
+void Game::updateCollision(vector<T>& participants, bool isBot)
 {
     /// @brief funkcja sprawdzająca kolizję na mapie
     for(size_t i = 0; i < this->staticPoints.size(); ++i){ // iteracja po wszystkich punktach na mapie
@@ -210,46 +210,35 @@ void Game::updateCollision(vector<T>& participants)
             }
         }
     }
-    for(auto& it : participants)
-        for(size_t i = 0; i < this->players.size(); ++i){
-        {
-            if(it.getShape().getGlobalBounds().intersects(this->players[i].getShape().getGlobalBounds()))
-            { // sprawdzenie czy punkty się nie przecinają
-                if(it.getMass() > this->players[i].getMass() * 1.1)
-                {
-                    it.grow(this->players[i].getMass());
-                    this->players.erase(this->players.begin() + i); // usuń punkt z mapy
-                    break;
+    if(isBot == true)
+        for(auto& it : participants)
+            for(size_t i = 0; i < this->players.size(); ++i){
+            {
+                if(it.getShape().getGlobalBounds().intersects(this->players[i].getShape().getGlobalBounds()))
+                { // sprawdzenie czy punkty się nie przecinają
+                    if(it.getMass() > this->players[i].getMass() * 1.1)
+                    {
+                        it.grow(this->players[i].getMass());
+                        this->players.erase(this->players.begin() + i); // usuń punkt z mapy
+                        break;
+                    }
                 }
             }
         }
-    }
-    int deleteBot = -1;
     for(auto& it : participants)
-        for(size_t i = 0; i < this->bots.size(); ++i){ 
+        for(size_t i = 0; i < this->bots.size(); ++i){
         {
             if(it.getShape().getGlobalBounds().intersects(this->bots[i].getShape().getGlobalBounds()))
             { // sprawdzenie czy punkty się nie przecinają
                 if(it.getMass() > this->bots[i].getMass() * 1.1)
                 {
                     it.grow(this->bots[i].getMass());
-                    deleteBot = i;
+                    this->bots.erase(this->bots.begin() + i); // usuń punkt z mapy
                     break;
                 }
             }
         }
     }
-    vector<Bot> tempBots;
-    for(size_t i = 0; i < this->bots.size(); ++i)
-    {
-        if((int)i!=deleteBot)
-        {
-            tempBots.push_back(this->bots[i]);
-        }
-    }
-    this->bots.clear();
-    for(auto& it: tempBots)
-        this->bots.push_back(it);
 }
 
 void Game::updateGui()
@@ -321,8 +310,8 @@ void Game::update()
         this->spawnStaticPoints();
         this->updatePlayer();
         this->updateBot();
-        this->updateCollision(this->players);
-        this->updateCollision(this->bots);
+        this->updateCollision(this->players, false);
+        this->updateCollision(this->bots, true);
         this->updateGui();
         this->initBots(this->players[0].getStartingSpeed());
     }

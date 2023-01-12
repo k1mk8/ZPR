@@ -44,7 +44,7 @@ public:
     int randPointType(); // losowanie obiektów do stworzenia
     void updatePlayer(); // uaktualnianie graczy
     template<typename T>
-    void updateCollision(vector<T>& participants); // sprawdzanie kolizji
+    void updateCollision(vector<T>& participants, bool isBot); // sprawdzanie kolizji
     void updateGui(); // uaktualnianie GUI
     void updateMaxPoints(); // uaktualnianie maksymalnej liczby punktów w grze
     void updateBot(); // wykonanie aktualizacji ruchow
