@@ -4,7 +4,7 @@ void Player::Variables(const int mass, const int speed)
 {
     /// @brief ustawia zmienne klasy
     /// @param mass masa punktu
-    this->startingSpeed = speed;
+    this->startingSpeed = (float)speed;
     this->mass = mass;
     this->speed = this->startingSpeed - (log(this->mass) / log(4));
     this->shape.setOutlineColor(Color::Cyan);
@@ -83,6 +83,13 @@ const int & Player::getMass() const
     /// @brief getter masy gracza
     /// @return masa gracza
     return this->mass;
+}
+
+float Player::getStartingSpeed()
+{
+    /// @brief getter prędkości gracza
+    /// @return prędkość gracza
+    return this->startingSpeed;
 }
 
 float Player::getRadius()

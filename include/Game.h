@@ -30,7 +30,7 @@ private:
     void initWindow(); // inicjowanie okna
     void initFonts(); // inicjowanie czcionki
     void initText(); // inicjowanie tekstu
-    void initBots(const int& speed); // inicjowanie botów
+    void initBots(const float& speed); // inicjowanie botów
     void zoomOut(); // oddalanie obrazu
 public:
     Game(const int& speed); // konstruktor domyślny

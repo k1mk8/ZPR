@@ -13,6 +13,7 @@ void Game::variables(const int& speed)
 void Game::initWindow()
 {
     /// @brief inicjuje okno gry
+    srand( time( NULL ) );
     View view(Vector2f(920, 540), Vector2f(9600, 5400));
     view.zoom(0.2);
     view.setCenter(this->players[0].getPlayerPostion());
@@ -42,14 +43,16 @@ void Game::initText()
     this->table.setCharacterSize(32);
 }
 
-void Game::initBots(const int& speed)
+void Game::initBots(const float& speed)
 {
     /// @brief iniciuje boty w grze
-    srand( time( NULL ) );
-    for(int i = 0; i < this->maxBots; ++i)
+    if(this->bots.size() < 10)
     {
-        Bot bot(rand()%10000 - 5000, rand()%5000 - 2500, 10, speed);
-        this->bots.push_back(bot);
+        for(int i = (int)this->bots.size(); i < this->maxBots; ++i)
+        {
+            Bot bot(rand()%8000 - 4000, rand()%5000 - 2500, 10, speed);
+            this->bots.push_back(bot);
+        }
     }
 }
 
@@ -321,6 +324,7 @@ void Game::update()
         this->updateCollision(this->players);
         this->updateCollision(this->bots);
         this->updateGui();
+        this->initBots(this->players[0].getStartingSpeed());
     }
     if(this->totalPoints <= 0){
         this->endGame = true;

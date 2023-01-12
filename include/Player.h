@@ -30,6 +30,7 @@ public:
     ~Player(); // destruktor klasy
     CircleShape& getShape(); // getter kształtu
     const int& getMass() const; // getter masy
+    float getStartingSpeed(); // getter masy
     float getRadius(); // getter promienia
     const float& getSpeed() const; // getter prędkości
     const Vector2f& getPlayerPostion() const; // getter pozycji gracza
