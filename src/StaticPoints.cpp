@@ -66,6 +66,20 @@ StaticPoints::StaticPoints(int type, float X, float Y)
     this->shape.setRadius(8);
     this->shape.setPosition(X, Y);
 }
+StaticPoints::StaticPoints(int type, float X, float Y, float speed, float direction)
+        : type(type)
+{
+    /// @brief konstruktor pozycyjny tworzący obiekt klasy
+    /// @param type typ punktu
+    /// @param rect wektor z graczami na planszy
+    this->shape.setFillColor(Color::Blue);
+    this->mass = 10;
+    this->shape.setRadius(8);
+    this->shape.setPosition(X, Y);
+    this->speed = speed;
+    this->freshSpawnedTime = clock();
+    this->direction = direction;
+}
 StaticPoints::~StaticPoints()
 {
     /// destruktor klasy
@@ -99,27 +113,21 @@ const int& StaticPoints::getMass() const
     return this->mass;
 }
 
-void StaticPoints::eatMass(const int food)
-{
-    /// @brief funkcja zwiększająca masę punktu o podaną wartość
-    /// @param food masa jedzonego punktu
-    this->mass += food;
-}
-// void StaticPoints::checkSpikeMass(const View& window)
-// {
-//     /// @brief funkcja sprawdzająca czy spike nie powinien się rozdzielić
-//     /// @param window okno gry
-//     if(this->type == StaticPointsTypes::SPIKES){
-//         if(this->mass > 25){
-//             this->mass = 5;
-//             StaticPoints(window, SPIKES);
-//         }
-//     }
-// }
-
 void StaticPoints::render(RenderTarget& target)
 {
     /// @brief renderuje obiekt na mapie
     /// @param target miejsce renderu obiektu
     target.draw(this->shape);
+}
+
+
+void StaticPoints::calculateSpeed()
+{
+    if((double)(clock() - this->freshSpawnedTime) / CLOCKS_PER_SEC < 0.3 &&
+        (double)(clock() - this->freshSpawnedTime) / CLOCKS_PER_SEC > 0)
+    {
+        this->speed -= (double)(clock() - this->freshSpawnedTime) / CLOCKS_PER_SEC;
+        this->shape.setPosition(this->getPlayerPostion().x + cos(direction) * speed, 
+            this->getPlayerPostion().y - sin(direction) * speed);
+    }
 }

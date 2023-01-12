@@ -18,10 +18,10 @@ private:
     Event sfmlEvent; // event gry
     vector<Player> players; // wektor graczy
     vector<Bot> bots; // wektor botów
+    vector<StaticPoints> staticPoints; // punkty statyczne na mapie
     Font font; // czcionka
     Text guiText; // tekst GUI
     Text table; //tekst wyników
-    vector<StaticPoints> staticPoints; // punkty statyczne na mapie
     int maxStaticPoints; // maksymalna ilość obiektó statycznych
     int totalPoints; // sumaryczna ilośc punktów
     int maxPoints = 10; // maksymalna ilość punktów w grze
@@ -49,6 +49,7 @@ public:
     void updateMaxPoints(); // uaktualnianie maksymalnej liczby punktów w grze
     void updateBot(); // wykonanie aktualizacji ruchow
     void update(); // uaktualnianie wydarzeń na mapie
+    void calculateStaticPoints();
     void renderGui(RenderTarget* target); // wyświetlanie GUI
     void render(); // renderowanie i wyświetlanie mapy oraz obiektów
 };

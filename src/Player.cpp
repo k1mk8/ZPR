@@ -278,13 +278,13 @@ void Player::checkMapCollision()
 {
     /// @brief funkcja odpowiedzialna za nie wykraczanie gracza poza obszar mapy
     if(this->shape.getGlobalBounds().left <= -4800){
-        this->shape.setPosition(-4799, this->shape.getGlobalBounds().top);
+        this->shape.setPosition(-4790, this->shape.getGlobalBounds().top);
     }
     if(this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= 4800){
         this->shape.setPosition(4800 - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
     }
     if(this->shape.getGlobalBounds().top <= -2700){
-        this->shape.setPosition(this->shape.getGlobalBounds().left, -2699);
+        this->shape.setPosition(this->shape.getGlobalBounds().left, -2690);
     }
     if(this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= 2700){
         this->shape.setPosition(this->shape.getGlobalBounds().left, 2700 - this->shape.getGlobalBounds().height);
