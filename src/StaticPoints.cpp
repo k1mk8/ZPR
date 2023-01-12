@@ -66,7 +66,6 @@ StaticPoints::StaticPoints(int type, float X, float Y)
     this->shape.setRadius(8);
     this->shape.setPosition(X, Y);
 }
-
 StaticPoints::~StaticPoints()
 {
     /// destruktor klasy
@@ -77,6 +76,13 @@ const CircleShape StaticPoints::getShape() const
     /// @brief getter kształtu punktu
     /// @return kształt punktu
     return this->shape;
+}
+
+const Vector2f & StaticPoints::getPlayerPostion() const
+{
+    /// @brief getter pozycji gracza na mapie
+    /// @return pozycja
+    return this->shape.getPosition();
 }
 
 const int& StaticPoints::getType() const

@@ -37,51 +37,45 @@ void Bot::makeShape()
     this->getShape().setFillColor(Color::Black);
     this->getShape().setRadius(this->getRadius());
 }
+template<typename T>
+bool Bot::searchNearby(const vector<T>& participants, int range)
+{
+    float direction = 0;
+    float closest = 1e12;
+    for(auto& it: participants)
+    {
+        if(it.getPlayerPostion() == this->getPlayerPostion())
+            continue;
+        float diffX = abs(it.getPlayerPostion().x - this->getPlayerPostion().x);
+        float diffY = abs(it.getPlayerPostion().y - this->getPlayerPostion().y);
+        if(diffX < range && diffY < range)
+        {
+            if(this->getMass() >= 1.2 * it.getMass())
+            {
+                if(diffX + diffY < closest)
+                {
+                    direction = this->getDirection(it.getPlayerPostion().x, it.getPlayerPostion().y);
+                    closest = diffX + diffY;
+                }
+            }
+            else if(0.95 * this->getMass() < it.getMass() && it.getMass() != 30)
+            {
+                direction = this->getDirection(it.getPlayerPostion().x, it.getPlayerPostion().y);
+                this->getShape().move(-cos(direction) * this->getSpeed(), sin(direction) * this->getSpeed());
+                return 0;
+            }
+        }
+    }
+    if(direction == 0)
+        return 1;
+    this->getShape().move(cos(direction) * this->getSpeed(), -sin(direction) * this->getSpeed());
+    return 0;
+}
 
 void Bot::moveBot(const vector<Bot>& bots, const vector<Player>& players, const vector<StaticPoints>& staticPoints)
 {
     this->calculateSpeed();
-    bool flag = 0;
-    for(auto& it: players)
-    {
-        if(abs(it.getPlayerPostion().x - this->getPlayerPostion().x) < 200 &&
-            abs(it.getPlayerPostion().y - this->getPlayerPostion().y) < 200)
-        {
-            float direction = this->getDirection(it.getPlayerPostion().x, it.getPlayerPostion().y);
-            if(this->getMass() >= 1.2 * it.getMass())
-            {
-                this->getShape().move(cos(direction) * this->getSpeed(), -sin(direction) * this->getSpeed());
-                break;
-            }
-            else if(0.95 * this->getMass() < it.getMass())
-            {
-                this->getShape().move(-cos(direction) * this->getSpeed(), sin(direction) * this->getSpeed());
-                break;
-            }
-            else
-            {
-                flag = 1;
-            }
-        }
-        else
-            flag = 1;
-    }
-    if(flag)
-    {    
-        float closestPoint = 10000;
-        float closestx, closesty;
-        for(auto& it: staticPoints)
-        {
-            float positonDifference = abs(it.getShape().getPosition().x - this->getPlayerPostion().x) +
-                abs(it.getShape().getPosition().y - this->getPlayerPostion().y);
-            if(positonDifference <= closestPoint && it.getType() != SPIKES )
-            {
-                closestPoint = positonDifference;
-                closestx = it.getShape().getPosition().x;
-                closesty = it.getShape().getPosition().y;
-            }
-        }
-        float direction = this->getDirection(closestx, closesty);
-        this->getShape().move(cos(direction) * this->getSpeed(), -sin(direction) * this->getSpeed());
-    }
+    if(searchNearby(players, this->getMass() / 5 + 300))
+        if(searchNearby(bots, this->getMass() / 5 + 300))
+            searchNearby(staticPoints, 4000);
 }

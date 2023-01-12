@@ -23,6 +23,7 @@ public:
     StaticPoints(int type, float X, float Y); // konstruktor pozycyjny
     virtual ~StaticPoints(); // destruktor 
     const CircleShape getShape() const; // zwraca kształt punktu
+    const Vector2f& getPlayerPostion() const; // getter pozycji gracza
     const int& getType() const; // zwraca typ punktu
     const int& getMass() const; // zwraca mase punktu
     void eatMass(const int food); // zwiększenie masy punktu

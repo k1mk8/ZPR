@@ -1,6 +1,6 @@
 #include "Game.h"
 
-void Game::variables(const int speed)
+void Game::variables(const int& speed)
 {
     /// @brief ustawia zmienne klasy
     this->endGame = false;
@@ -42,12 +42,13 @@ void Game::initText()
     this->table.setCharacterSize(32);
 }
 
-void Game::initBots()
+void Game::initBots(const int& speed)
 {
     /// @brief iniciuje boty w grze
+    srand( time( NULL ) );
     for(int i = 0; i < this->maxBots; ++i)
     {
-        Bot bot;
+        Bot bot(rand()%100, rand()%100, 10, speed);
         this->bots.push_back(bot);
     }
 }
@@ -60,14 +61,14 @@ void Game::zoomOut()
     this->window->setView(view);
 }
 
-Game::Game(const int speed)
+Game::Game(const int& speed)
 {
     /// @brief konstruktor klasy tworzący jej obiekt
     this->variables(speed);
     this->initWindow();
     this->initFonts();
     this->initText();
-    this->initBots();
+    this->initBots(speed);
 }
 
 Game::~Game()
@@ -235,11 +236,20 @@ void Game::updateGui()
     ss << " - Points: " << this->totalPoints << "\n"; // uaktualnienie liczby punktów
     Vector2f viewCenter;
     ss2 << "TABLICA WYNIKOW\n";
+    int playerMass = 0;
     for(auto& it: players)
     {
         viewCenter += it.getPlayerPostion();
         viewCenter += Vector2f(log(it.getMass())/log(1.05), log(it.getMass())/log(1.05));
+        playerMass += it.getMass();
     }
+    vector<int> bestFive;
+    bestFive.push_back(-playerMass);
+    for(auto& it: bots)
+        bestFive.push_back(-it.getMass());
+    sort(bestFive.begin(), bestFive.end());
+    for(int i = 0; i < min(5, (int)bestFive.size()); ++i)
+        ss2 << -bestFive[i] << "\n";
     viewCenter.x = viewCenter.x / this->players.size();
     viewCenter.y = viewCenter.y / this->players.size();
     View view = window->getView();
