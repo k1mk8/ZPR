@@ -21,7 +21,19 @@ void Player::makeShape()
 void Player::calculateSpeed()
 {
     /// @brief oblicza aktualną prędkość gracza na podstawie masy
+    if((double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC < 0.3 &&
+        (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC > 0)
+    {
+        this->calculateFreshSpawnedSpeed();
+        return;
+    }
     this->speed = this->startingSpeed - (log(this->mass) / log(4));
+}
+
+void Player::calculateFreshSpawnedSpeed()
+{
+    /// @brief oblicza aktualną prędkość gracza na podstawie masy
+    this->speed = this->startingSpeed * 3 - 100 * (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC;
 }
 
 void Player::connect(vector<Player>& players)
@@ -94,6 +106,20 @@ const Vector2f & Player::getPlayerPostion() const
     return this->shape.getPosition();
 }
 
+const clock_t & Player::getFreshSpawnedTime() const
+{
+    /// @brief getter czasu podziału
+    /// @return splittime
+    return this->freshSpawnedTime;
+}
+
+void Player::setFreshSpawnedTime(clock_t freshSpawnedTime)
+{
+    /// @brief getter czasu podziału
+    /// @return splittime
+    this->freshSpawnedTime = freshSpawnedTime;
+}
+
 const clock_t & Player::getSplitTime() const
 {
     /// @brief getter czasu podziału
@@ -133,7 +159,7 @@ void Player::splitMass()
     }   
 }
 
-void Player::split(std::vector<Player>& players)
+void Player::split(RenderWindow& window, vector<Player>& players)
 {
     /// @brief funkcja dzieląca gracza na pół po wciśnięciu przycisku spacji
     /// @param players wektor graczy na mapie
@@ -148,8 +174,12 @@ void Player::split(std::vector<Player>& players)
                 if(it.getMass() > 30){
                     players[0].setSplitTime(clock());
                     it.splitMass();
-                    Player player = Player(it.getPlayerPostion().x + 2 * it.getRadius(),
-                        it.getPlayerPostion().y + 2 * it.getRadius(), it.getMass(), startingSpeed);
+                    float radius = it.getRadius();
+                    pair<float, float> relativePos = getRelativeMousePositon(window, players);
+                    float direction = atan2(-relativePos.second, relativePos.first);
+                    Player player = Player(it.getPlayerPostion().x + 2.5 * radius * cos(direction),
+                        it.getPlayerPostion().y - 2.5 * radius * sin(direction), it.getMass(), startingSpeed);
+                    player.setFreshSpawnedTime(clock());
                     tempPlayers.push_back(player);
                 }
             }
@@ -188,10 +218,8 @@ void Player::loseMass()
     this->shape.setRadius(this->getRadius());
 }
 
-void Player::move(RenderWindow& window, std::vector <Player>& players)
+pair<float, float> Player::getRelativeMousePositon(RenderWindow& window, vector <Player>& players)
 {
-    /// @brief funkcja odpowiedzialna za poruszanie się gracza w każdą stronę 
-    this->calculateSpeed(); // obliczanie prędkości gracza
     float mouseX = Mouse::getPosition(window).x;
     float mouseY = Mouse::getPosition(window).y;
     mouseX -= window.getSize().x / 2;
@@ -207,9 +235,19 @@ void Player::move(RenderWindow& window, std::vector <Player>& players)
     centralPositionY /= players.size();
     mouseX += -this->getPlayerPostion().x + centralPositionX;
     mouseY += -this->getPlayerPostion().y + centralPositionY;
-    float direction = atan2(-mouseY, mouseX);
+    return {mouseX, mouseY};
+}
+
+void Player::move(RenderWindow& window, vector <Player>& players)
+{
+    /// @brief funkcja odpowiedzialna za poruszanie się gracza w każdą stronę 
+    this->calculateSpeed(); // obliczanie prędkości gracza
+    pair<float, float> mouseXY = this->getRelativeMousePositon(window, players);
+    float direction = atan2(-mouseXY.second, mouseXY.first);
     this->shape.move(cos(direction) * this->speed, -sin(direction) * this->speed);
-    
+    if((double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC < 0.3 &&
+        (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC > 0)
+            return;
     for(auto& it : players)
     { 
         if(this->getShape().getGlobalBounds().intersects(it.getShape().getGlobalBounds()))
@@ -218,8 +256,9 @@ void Player::move(RenderWindow& window, std::vector <Player>& players)
             float y1 = this->getPlayerPostion().y;
             float x2 = it.getPlayerPostion().x;
             float y2 = it.getPlayerPostion().y;
-            if(abs(mouseX - x1) + abs(mouseY - y1) <= abs(mouseX - x2) + abs(mouseY - y2))
-                continue;
+            if(abs(mouseXY.first - x1) + abs(mouseXY.second - y1) 
+                <= abs(mouseXY.first - x2) + abs(mouseXY.second - y2))
+                    continue;
             float d = this->getRadius() + it.getRadius();
             float diffx = x2 - x1;
             float diffy = y2 - y1;
@@ -233,13 +272,13 @@ void Player::checkMapCollision()
 {
     /// @brief funkcja odpowiedzialna za nie wykraczanie gracza poza obszar mapy
     if(this->shape.getGlobalBounds().left <= -4800){
-        this->shape.setPosition(-4800, this->shape.getGlobalBounds().top);
+        this->shape.setPosition(-4750, this->shape.getGlobalBounds().top);
     }
     if(this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= 4800){
         this->shape.setPosition(4800 - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
     }
     if(this->shape.getGlobalBounds().top <= -2700){
-        this->shape.setPosition(this->shape.getGlobalBounds().left, -2700);
+        this->shape.setPosition(this->shape.getGlobalBounds().left, -2650);
     }
     if(this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= 2700){
         this->shape.setPosition(this->shape.getGlobalBounds().left, 2700 - this->shape.getGlobalBounds().height);
@@ -251,7 +290,7 @@ void Player::setPosition(std::vector<Player>& players, RenderWindow& window)
     /// @brief setter pozyji gracza
     /// @param players wektor graczy na planszy
     this->move(window, players);
-    this->split(players);
+    this->split(window, players);
     this->connect(players);
     this->checkMapCollision();
 }
