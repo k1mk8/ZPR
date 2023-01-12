@@ -84,3 +84,8 @@ void Bot::moveBot(const vector<Bot>& bots, const vector<Player>& players, const 
             searchNearby(staticPoints, 4000);
     this->checkMapCollision();
 }
+
+void Bot::splitBySpike(vector <Bot>& participants)
+{
+    auto x = participants;
+}

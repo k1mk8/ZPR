@@ -11,6 +11,7 @@ public:
     void moveBot(const vector<Bot>& bots, const vector<Player>& players, const vector<StaticPoints>& staticPoints);
     template<typename T>
     bool searchNearby(const vector<T>& participants, int range);
+    void splitBySpike(std::vector<Bot>& participants); // dzielenie przez spike'a
 private:
     float getDirection(float x, float y);
     void makeShape();

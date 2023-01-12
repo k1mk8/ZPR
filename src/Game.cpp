@@ -203,7 +203,8 @@ void Game::updateCollision(vector<T>& participants, bool isBot)
                         {
                             it.grow(this->staticPoints[i].getMass());
                             this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
-                            //it.splitBySpike(participants);
+                            if(isBot == false)
+                                it.splitBySpike(participants);
                             break;
                         }
                 }
