@@ -38,7 +38,9 @@ public:
     void setMass(const int weight); // setter masy
     void grow(const int food); // jedzenie masy
     void split(std::vector <Player>& players); // dzielenie gracza
-    void splitBySpike(std::vector <Player>& players); // dzielenie przez spike'a
+
+    template<typename T>
+    void splitBySpike(std::vector <T>& participants); // dzielenie przez spike'a
     void move(RenderWindow& window, std::vector <Player>& players); // ruch gracza
     void checkMapCollision(); // sprawdzanie ograniczeń mapy
     void loseMass(); // tracenie masy

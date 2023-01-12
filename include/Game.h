@@ -43,7 +43,8 @@ public:
     void spawnStaticPoints(); // tworzenie obiektów statycznych
     int randPointType(); // losowanie obiektów do stworzenia
     void updatePlayer(); // uaktualnianie graczy
-    void updateCollision(); // sprawdzanie kolizji
+    template<typename T>
+    void updateCollision(vector<T>& participants); // sprawdzanie kolizji
     void updateGui(); // uaktualnianie GUI
     void updateMaxPoints(); // uaktualnianie maksymalnej liczby punktów w grze
     void updateBot(); // wykonanie aktualizacji ruchow

@@ -180,11 +180,12 @@ void Game::updatePlayer()
     this->window->setView(view);
 }
 
-void Game::updateCollision()
+template<typename T>
+void Game::updateCollision(vector<T>& participants)
 {
     /// @brief funkcja sprawdzająca kolizję na mapie
     for(size_t i = 0; i < this->staticPoints.size(); ++i){ // iteracja po wszystkich punktach na mapie
-        for(auto& it : this->players) // iteracja po wszystkich graczach
+        for(auto& it : participants) // iteracja po wszystkich graczach
         {
             if(it.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds()))
             { // sprawdzenie czy punkty się nie przecinają
@@ -199,30 +200,12 @@ void Game::updateCollision()
                         {
                             it.grow(this->staticPoints[i].getMass());
                             this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
-                            it.splitBySpike(this->players);
+                            //it.splitBySpike(participants);
+                            break;
                         }
                 }
             }
         }
-        for(auto& it : this->bots) // iteracja po wszystkich graczach
-            {
-                if(it.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds()))
-                { // sprawdzenie czy punkty się nie przecinają
-                    switch(this->staticPoints[i].getType())
-                    {
-                        case StaticPointsTypes::FOOD: // jeśli jedzenie zwiększ mase
-                            it.grow(this->staticPoints[i].getMass());
-                            this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
-                            break;
-                        case StaticPointsTypes::SPIKES: // jeśli spike'a porównaj mase
-                            if(it.getMass() > this->staticPoints[i].getMass() * 1.1)
-                            {
-                                it.grow(this->staticPoints[i].getMass());
-                                this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
-                            }
-                    }
-                }
-            }
     }
 }
 
@@ -295,7 +278,8 @@ void Game::update()
         this->spawnStaticPoints();
         this->updatePlayer();
         this->updateBot();
-        this->updateCollision();
+        this->updateCollision(this->players);
+        this->updateCollision(this->bots);
         this->updateGui();
     }
     if(this->totalPoints <= 0){

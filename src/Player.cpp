@@ -160,19 +160,20 @@ void Player::split(std::vector<Player>& players)
     }
 }
 
-void Player::splitBySpike(vector <Player>& players)
+template<typename T>
+void Player::splitBySpike(vector <T>& participants)
 {
     /// @brief funkcja dzieląca gracza po dotknięciu spike'a
-    /// @param players wektor graczy na mapie
-    int maxPartsNumber = min(3, (8 - (int)players.size()));//maksymalna ilosc kulek jednego gracza wynosi 8
+    /// @param participants wektor graczy na mapie
+    int maxPartsNumber = min(3, (8 - (int)participants.size()));//maksymalna ilosc kulek jednego gracza wynosi 8
     if(maxPartsNumber > 0)
     {
         this->setMass(this->getMass() / (maxPartsNumber + 1));
         for(int i = 1; i <= maxPartsNumber; ++i)
         {
-            players[0].setSplitTime(clock());
-            Player player = Player(this->getPlayerPostion().x + 2 * i * this->getRadius(), this->getPlayerPostion().y, this->getMass(), startingSpeed);
-            players.push_back(player);
+            participants[0].setSplitTime(clock());
+            T participant = T(this->getPlayerPostion().x + 2 * i * this->getRadius(), this->getPlayerPostion().y, this->getMass(), startingSpeed);
+            participants.push_back(participant);
         }
     }
 }
