@@ -171,8 +171,8 @@ void Game::updatePlayer()
             mouseX -= window.getSize().x / 2;
             mouseY -= window.getSize().y / 2;
             float direction = atan2(-mouseY, mouseX);
-            this->staticPoints.push_back(StaticPoints(type, it.getPlayerPostion().x + 3 * it.getRadius() * cos(direction),
-                it.getPlayerPostion().y - 3 * it.getRadius() * sin(direction), it.getStartingSpeed(), direction));
+            this->staticPoints.push_back(StaticPoints(type, it.getRadius() + it.getPlayerPostion().x + 1.8 * it.getRadius() * cos(direction),
+                 it.getRadius() + it.getPlayerPostion().y - 1.8 * it.getRadius() * sin(direction), it.getStartingSpeed(), direction));
             it.loseMass();
         }
         viewCenter += it.getPlayerPostion();
@@ -308,7 +308,6 @@ void Game::update()
     this->pollEvents();
     if(!this->endGame){
         this->zoomOut();
-        this->calculateTotalPoints();
         this->spawnStaticPoints();
         this->updatePlayer();
         this->updateBot();
@@ -318,6 +317,7 @@ void Game::update()
         this->initBots(this->players[0].getStartingSpeed());
         this->calculateStaticPoints();
     }
+    this->calculateTotalPoints();
     if(this->totalPoints <= 0){
         this->endGame = true;
         this->updateMaxPoints();

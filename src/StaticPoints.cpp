@@ -123,10 +123,9 @@ void StaticPoints::render(RenderTarget& target)
 
 void StaticPoints::calculateSpeed()
 {
-    if((double)(clock() - this->freshSpawnedTime) / CLOCKS_PER_SEC < 0.3 &&
-        (double)(clock() - this->freshSpawnedTime) / CLOCKS_PER_SEC > 0)
+    if(this->speed > 0)
     {
-        this->speed -= (double)(clock() - this->freshSpawnedTime) / CLOCKS_PER_SEC;
+        this->speed -= 0.6 * (double)(clock() - this->freshSpawnedTime) / CLOCKS_PER_SEC;
         this->shape.setPosition(this->getPlayerPostion().x + cos(direction) * speed, 
             this->getPlayerPostion().y - sin(direction) * speed);
     }
