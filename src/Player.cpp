@@ -7,6 +7,8 @@ void Player::Variables(const int mass, const int speed)
     this->startingSpeed = speed;
     this->mass = mass;
     this->speed = this->startingSpeed - (log(this->mass) / log(4));
+    this->shape.setOutlineColor(Color::Cyan);
+    this->shape.setOutlineThickness(10);
 }
 
 void Player::makeShape()
@@ -57,7 +59,7 @@ Player::~Player()
     /// destruktor klasy
 }
 
-const CircleShape & Player::getShape() const
+CircleShape & Player::getShape()
 {
     /// @brief getter kształtu gracza
     /// @return kształt gracza
@@ -142,7 +144,7 @@ void Player::split(std::vector<Player>& players)
     if(flag){
         std::vector<Player> tempPlayers;
         for(auto& it : players){
-            if(players.size() + tempPlayers.size() < 16){
+            if(players.size() + tempPlayers.size() < 8){
                 if(it.getMass() > 30){
                     players[0].setSplitTime(clock());
                     it.splitMass();
@@ -158,11 +160,11 @@ void Player::split(std::vector<Player>& players)
     }
 }
 
-void Player::splitBySpike(std::vector <Player>& players)
+void Player::splitBySpike(vector <Player>& players)
 {
     /// @brief funkcja dzieląca gracza po dotknięciu spike'a
     /// @param players wektor graczy na mapie
-    int maxPartsNumber = min(7, (16 - (int)players.size()));//maksymalna ilosc kulek jednego gracza wynosi 16
+    int maxPartsNumber = min(3, (8 - (int)players.size()));//maksymalna ilosc kulek jednego gracza wynosi 8
     if(maxPartsNumber > 0)
     {
         this->setMass(this->getMass() / (maxPartsNumber + 1));
@@ -206,8 +208,23 @@ void Player::move(RenderWindow& window, std::vector <Player>& players)
     mouseY += -this->getPlayerPostion().y + centralPositionY;
     float direction = atan2(-mouseY, mouseX);
     this->shape.move(cos(direction) * this->speed, -sin(direction) * this->speed);
-    if(Keyboard::isKeyPressed(Keyboard::P)){ // do usunięcia
-        this->setMass(0);
+    
+    for(auto& it : players)
+    { 
+        if(this->getShape().getGlobalBounds().intersects(it.getShape().getGlobalBounds()))
+        {
+            float x1 = this->getPlayerPostion().x;
+            float y1 = this->getPlayerPostion().y;
+            float x2 = it.getPlayerPostion().x;
+            float y2 = it.getPlayerPostion().y;
+            if(abs(mouseX - x1) + abs(mouseY - y1) <= abs(mouseX - x2) + abs(mouseY - y2))
+                continue;
+            float d = this->getRadius() + it.getRadius();
+            float diffx = x2 - x1;
+            float diffy = y2 - y1;
+            float direction = atan2(-diffy, diffx);
+            it.getShape().setPosition(x1 + cos(direction) * d, y1 - sin(direction) * d);
+        }
     }
 }
 

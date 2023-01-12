@@ -4,7 +4,7 @@
 #include<sstream>
 #include<fstream>
 
-#include "StaticPoints.h"
+#include "Bot.h"
 
 using namespace sf;
 using namespace std;
@@ -17,6 +17,7 @@ private:
     bool endGame; // czy koniec gry
     Event sfmlEvent; // event gry
     vector<Player> players; // wektor graczy
+    vector<Bot> bots; // wektor botów
     Font font; // czcionka
     Text guiText; // tekst GUI
     Text table; //tekst wyników
@@ -24,10 +25,12 @@ private:
     int maxStaticPoints; // maksymalna ilość obiektó statycznych
     int totalPoints; // sumaryczna ilośc punktów
     int maxPoints = 10; // maksymalna ilość punktów w grze
+    int maxBots = 5; // maksymalna ilość graczy w grze
     void variables(const int speed); // inicjowanie zmiennych
     void initWindow(); // inicjowanie okna
     void initFonts(); // inicjowanie czcionki
     void initText(); // inicjowanie tekstu
+    void initBots(); // inicjowanie botów
     void zoomOut(); // oddalanie obrazu
 public:
     Game(const int speed); // konstruktor domyślny
@@ -43,6 +46,7 @@ public:
     void updateCollision(); // sprawdzanie kolizji
     void updateGui(); // uaktualnianie GUI
     void updateMaxPoints(); // uaktualnianie maksymalnej liczby punktów w grze
+    void updateBot(); // wykonanie aktualizacji ruchow
     void update(); // uaktualnianie wydarzeń na mapie
     void renderGui(RenderTarget* target); // wyświetlanie GUI
     void render(); // renderowanie i wyświetlanie mapy oraz obiektów

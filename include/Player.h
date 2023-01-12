@@ -20,20 +20,21 @@ private:
     float speed; // prędkość gracza
     float startingSpeed; // początkowa prędkość gracza
     int mass; // masa gracza
+    string name; // nazwa gracza
     void Variables(const int mass, const int speed); // inicjowanie zmiennych
     void makeShape(); // tworzenie kształtu
-    void calculateSpeed(); // obliczanie prędkości
     void connect(std::vector<Player>& players); // łącznie graczy
 public:
     Player(float x = 0, float y = 0, const int mass = 10, const int speed = 10); // konstruktor graczy
     ~Player(); // destruktor klasy
-    const CircleShape& getShape() const; // getter kształtu
+    CircleShape& getShape(); // getter kształtu
     const int& getMass() const; // getter masy
     float getRadius(); // getter promienia
     const float& getSpeed() const; // getter prędkości
     const Vector2f& getPlayerPostion() const; // getter pozycji gracza
     const clock_t& getSplitTime() const; // getter czasu podziału
     void setSplitTime(clock_t splittime); // setter czasu podziału
+    void calculateSpeed(); // obliczanie prędkości
     void setMass(const int weight); // setter masy
     void grow(const int food); // jedzenie masy
     void split(std::vector <Player>& players); // dzielenie gracza
