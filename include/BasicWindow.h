@@ -18,12 +18,12 @@ public:
     sf::Sprite sprite_; // wygląd okna
     sf::Texture texture_; // tekstura
     sf::Event sfml_event_; // event
-    sf::Font font_;
-    virtual void setTexture();
+    sf::Font font_; // czcionka
+    virtual void setTexture(); // ustawia teksture
     virtual void initWindow(); // inicjowanie okna
-    virtual void initFonts();
-    virtual void setNewTextParams(sf::Text& name, sf::Color color, int size, sf::Vector2f setPosition = {0, 0}, std::string text = "");
-    virtual bool running();
+    virtual void initFonts(); // inicjuje czcionke
+    virtual void setNewTextParams(sf::Text& name, sf::Color color, int size, sf::Vector2f set_position = {0, 0}, std::string text = ""); // ustawia parametry napisów
+    virtual bool running(); // sprawdzenie działania okna
     virtual void pollEvents(); // sprawdzanie wydarzeń 
     ~BasicWindow(); // destruktor domyślny
     virtual int update() = 0; // uaktualnianie okna

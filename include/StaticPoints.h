@@ -13,18 +13,19 @@
 
 enum StaticPointsTypes {FOOD = 0, SPIKES}; // typy punktów statycznych
 
-class StaticPoints : public Player // klasa punktów statycznych w grze
+class StaticPoints : public Player
 {
+/// @brief klasa odpowiedzialna za obiekty statyczne na mapie
 private:
     sf::CircleShape shape_; // kształ punktu
     clock_t fresh_spawned_time_; // czas podziału gracza
     int type_; // typ punktu
     int mass_ = 5; // masa punktu
-    float speed_ = 0;
-    float direction_ = 0;
-    void makeShape(std::vector<Player> rect); // tworzy punkt
+    float speed_ = 0; // prędkość punktu
+    float direction_ = 0; // kierunek punktu
+    void makeShape(std::vector<Player> players); // tworzy punkt
 public:
-    StaticPoints(int type, std::vector<Player> rect); // domyślny konstruktor
+    StaticPoints(int type, std::vector<Player> players); // domyślny konstruktor
     StaticPoints(int type, float X, float Y); // konstruktor pozycyjny
     StaticPoints(int type, float X, float Y, float speed, float direction); // konstruktor pozycyjny
     virtual ~StaticPoints(); // destruktor 
@@ -33,6 +34,6 @@ public:
     const int& getType() const; // zwraca typ punktu
     const int& getMass() const; // zwraca mase punktu
     void render(sf::RenderTarget& target); // renderowanie punktu
-    void calculateSpeed();
+    void calculateSpeed(); // oblicza prędkość wystrzeliwanych punktów
 };
 #endif

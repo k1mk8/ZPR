@@ -39,12 +39,12 @@ public:
     void updateCollision(); // sprawdzanie kolizji
     template<typename T, typename U>
     void updateCollisionForObject(T& participant, std::vector<U>& objects, std::vector<T>& participants); // sprawdzanie kolizji
-    void updateTable(std::stringstream& ss, std::stringstream& ss2, sf::Vector2f& viewCenter);
+    void updateTable(std::stringstream& ss, std::stringstream& ss2, sf::Vector2f& view_center); // aktualizowanie tablicy z wynikami
     void updateGui(); // uaktualnianie GUI
     void updateMaxPoints(); // uaktualnianie maksymalnej liczby punktów w grze
     void updateBot(); // wykonanie aktualizacji ruchow
     int update(); // uaktualnianie wydarzeń na mapie
-    void calculateStaticPoints();
+    void calculateStaticPoints(); // obliczanie pozycji punktów statycznych
     void renderGui(sf::RenderTarget* target); // wyświetlanie GUI
     void render(); // renderowanie i wyświetlanie mapy oraz obiektów
 };

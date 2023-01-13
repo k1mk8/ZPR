@@ -34,13 +34,13 @@ public:
     const float& getSpeed() const; // getter prędkości
     const sf::Vector2f& getPlayerPostion() const; // getter pozycji gracza
     const clock_t& getSplitTime() const; // getter czasu podziału
-    void setSplitTime(clock_t splittime); // setter czasu podziału
+    void setSplitTime(clock_t split_time); // setter czasu podziału
     void Variables(const int mass, const int speed); // inicjowanie zmiennych
     void makeShape(); // tworzenie kształtu
     void connect(std::vector<Player>& players); // łącznie graczy
     void setType(int type); // setter Typu obiektu
     const clock_t& getFreshSpawnedTime() const; // getter czasu podziału
-    void setFreshSpawnedTime(clock_t freshSpawnedTime); // setter czasu podziału
+    void setFreshSpawnedTime(clock_t fresh_spawned_time); // setter czasu podziału
     void calculateSpeed(); // obliczanie prędkości
     void calculateFreshSpawnedSpeed(); // obliczanie prędkości po utworzeniu nowego bytu
     void setMass(const int weight); // setter masy
