@@ -13,16 +13,16 @@
 class Game:public BasicWindow
 {
 private:
-    bool endGame; // czy koniec gry
-    std::vector<Player> players; // wektor graczy
-    std::vector<Bot> bots; // wektor botów
-    std::vector<StaticPoints> staticPoints; // punkty statyczne na mapie
-    sf::Text guiText; // tekst GUI
-    sf::Text table; //tekst wyników
-    int maxStaticPoints; // maksymalna ilość obiektó statycznych
-    int totalPoints; // sumaryczna ilośc punktów
-    int maxPoints = 10; // maksymalna ilość punktów w grze
-    int maxBots = 10; // maksymalna ilość graczy w grze
+    bool end_game_; // czy koniec gry
+    std::vector<Player> players_; // wektor graczy
+    std::vector<Bot> bots_; // wektor botów
+    std::vector<StaticPoints> static_points_; // punkty statyczne na mapie
+    sf::Text gui_text_; // tekst GUI
+    sf::Text table_; //tekst wyników
+    int max_static_points_; // maksymalna ilość obiektó statycznych
+    int total_points_; // sumaryczna ilośc punktów
+    int max_points_ = 10; // maksymalna ilość punktów w grze
+    int max_bots_ = 10; // maksymalna ilość graczy w grze
     void variables(const int& speed); // inicjowanie zmiennych
     void initWindow(); // inicjowanie okna
     void initText(); // inicjowanie tekstu

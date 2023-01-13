@@ -13,12 +13,12 @@
 class BasicWindow
 {
 public:
-    sf::RenderWindow* window; // okno końca gry
-    sf::VideoMode videoMode; // okno wyświetlane
-    sf::Sprite sprite; // wygląd okna
-    sf::Texture texture; // tekstura
-    sf::Event sfmlEvent; // event
-    sf::Font font;
+    sf::RenderWindow* window_; // okno końca gry
+    sf::VideoMode video_mode_; // okno wyświetlane
+    sf::Sprite sprite_; // wygląd okna
+    sf::Texture texture_; // tekstura
+    sf::Event sfml_event_; // event
+    sf::Font font_;
     virtual void setTexture();
     virtual void initWindow(); // inicjowanie okna
     virtual void initFonts();

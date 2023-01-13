@@ -1,3 +1,6 @@
+#ifndef StaticPoints_H
+#define StaticPoints_H
+
 #include <vector>
 
 #include <SFML/Graphics.hpp>
@@ -13,12 +16,12 @@ enum StaticPointsTypes {FOOD = 0, SPIKES}; // typy punktów statycznych
 class StaticPoints : public Player // klasa punktów statycznych w grze
 {
 private:
-    sf::CircleShape shape; // kształ punktu
-    clock_t freshSpawnedTime; // czas podziału gracza
-    int type; // typ punktu
-    int mass = 5; // masa punktu
-    float speed = 0;
-    float direction = 0;
+    sf::CircleShape shape_; // kształ punktu
+    clock_t fresh_spawned_time_; // czas podziału gracza
+    int type_; // typ punktu
+    int mass_ = 5; // masa punktu
+    float speed_ = 0;
+    float direction_ = 0;
     void makeShape(std::vector<Player> rect); // tworzy punkt
 public:
     StaticPoints(int type, std::vector<Player> rect); // domyślny konstruktor
@@ -32,3 +35,4 @@ public:
     void render(sf::RenderTarget& target); // renderowanie punktu
     void calculateSpeed();
 };
+#endif

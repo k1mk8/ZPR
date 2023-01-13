@@ -6,11 +6,11 @@ using namespace sf;
 void Game::variables(const int& speed)
 {
     /// @brief ustawia zmienne klasy
-    this->endGame = false;
-    this->maxStaticPoints = 1000;
-    this->totalPoints = 10;
+    this->end_game_ = false;
+    this->max_static_points_ = 1000;
+    this->total_points_ = 10;
     Player player(0, 0, 10, speed);
-    this->players.push_back(player);
+    this->players_.push_back(player);
 }
 
 void Game::initWindow()
@@ -19,38 +19,38 @@ void Game::initWindow()
     srand( time( NULL ) );
     View view(Vector2f(920, 540), Vector2f(9600, 5400));
     view.zoom(0.2);
-    view.setCenter(this->players[0].getPlayerPostion());
-    this->videoMode = VideoMode(1920, 1080);
-    this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
-    this->window->clear(Color::White);
-    this->window->setFramerateLimit(60);
-    this->window->setView(view);
+    view.setCenter(this->players_[0].getPlayerPostion());
+    this->video_mode_ = VideoMode(1920, 1080);
+    this->window_ = new RenderWindow(this->video_mode_, "Agario", Style::Close | Style::Titlebar);
+    this->window_->clear(Color::White);
+    this->window_->setFramerateLimit(60);
+    this->window_->setView(view);
 }
 
 void Game::initText()
 {
     /// @brief iniciuje teksty w grze
-    setNewTextParams(this->guiText, Color::Black, 32);
-    setNewTextParams(this->table, Color::Black, 32);
+    setNewTextParams(this->gui_text_, Color::Black, 32);
+    setNewTextParams(this->table_, Color::Black, 32);
 }
 
 void Game::initBots(const float& speed)
 {
     /// @brief iniciuje boty w grze
-    if(this->bots.size() < 10)
-        for(int i = (int)this->bots.size(); i < this->maxBots; ++i)
+    if(this->bots_.size() < 10)
+        for(int i = (int)this->bots_.size(); i < this->max_bots_; ++i)
         {
             Bot bot(rand()%8000 - 4000, rand()%5000 - 2500, 10, speed);
-            this->bots.push_back(bot);
+            this->bots_.push_back(bot);
         }
 }
 
 void Game::zoomOut()
 {
     /// @brief oddala obraz aby gracz mieścił się w oknie
-    View view = this->window->getDefaultView();
-    view.zoom(1+ log(this->totalPoints) / log(4) / 10);
-    this->window->setView(view);
+    View view = this->window_->getDefaultView();
+    view.zoom(1+ log(this->total_points_) / log(4) / 10);
+    this->window_->setView(view);
 }
 
 Game::Game(const int& speed)
@@ -67,34 +67,34 @@ const bool& Game::getEndGame() const
 {
     /// @brief getter końca gry
     /// @return prawda lub fałsz czy koniec gry 
-    return this->endGame;
+    return this->end_game_;
 }
 
 const int & Game::getTotalPoints() const
 {
     /// @brief getter sumarycznej liczby punktów
     /// @return sumaryczną ilość punktów
-    return this->totalPoints;
+    return this->total_points_;
 }
 
 int Game::calculateTotalPoints()
 {
     /// @brief oblicza łączną liczbę punktów gracza
-    this->totalPoints = 0;
-    for(auto& it : this->players)
-        this->totalPoints += it.getMass();
+    this->total_points_ = 0;
+    for(auto& it : this->players_)
+        this->total_points_ += it.getMass();
     
-    if(this->totalPoints > this->maxPoints)
-        this->maxPoints = this->totalPoints;
+    if(this->total_points_ > this->max_points_)
+        this->max_points_ = this->total_points_;
 
-    return this->totalPoints;
+    return this->total_points_;
 }
 
 void Game::spawnStaticPoints()
 {
     /// @brief tworzy obiekty statyczne na mapie
-    if((int)this->staticPoints.size() < this->maxStaticPoints)
-        this->staticPoints.push_back(StaticPoints(this->randPointType(), this->players));
+    if((int)this->static_points_.size() < this->max_static_points_)
+        this->static_points_.push_back(StaticPoints(this->randPointType(), this->players_));
 }
 
 int Game::randPointType()
@@ -111,34 +111,34 @@ int Game::randPointType()
 void Game::updatePlayer()
 {
     /// @brief funkcja uaktualniająca informację o graczu
-    View view = this->window->getView();
+    View view = this->window_->getView();
     Vector2f viewCenter;
     bool shooting = false;
     while(Keyboard::isKeyPressed(Keyboard::E)){
         shooting = true;
     }
-    for(auto& it : this->players)
+    for(auto& it : this->players_)
     {
-        it.setPosition(this->players, *this->window);
+        it.setPosition(this->players_, *this->window_);
         if(shooting && it.getMass() > 20){ // sprawdza czy gracz strzelił
             int type = StaticPointsTypes::FOOD;
-            auto& window = *this->window;
-            float mouseX = Mouse::getPosition(window).x;
-            float mouseY = Mouse::getPosition(window).y;
-            mouseX -= window.getSize().x / 2;
-            mouseY -= window.getSize().y / 2;
+            auto& window_ = *this->window_;
+            float mouseX = Mouse::getPosition(window_).x;
+            float mouseY = Mouse::getPosition(window_).y;
+            mouseX -= window_.getSize().x / 2;
+            mouseY -= window_.getSize().y / 2;
             float direction = atan2(-mouseY, mouseX);
-            this->staticPoints.push_back(StaticPoints(type, it.getRadius() + it.getPlayerPostion().x + 1.8 * it.getRadius() * cos(direction),
+            this->static_points_.push_back(StaticPoints(type, it.getRadius() + it.getPlayerPostion().x + 1.8 * it.getRadius() * cos(direction),
                  it.getRadius() + it.getPlayerPostion().y - 1.8 * it.getRadius() * sin(direction), it.getStartingSpeed(), direction));
             it.loseMass();
         }
         viewCenter += it.getPlayerPostion();
         viewCenter += Vector2f(log(it.getMass())/log(1.05),log(it.getMass())/log(1.05));
     }
-    viewCenter.x = viewCenter.x / this->players.size();
-    viewCenter.y = viewCenter.y / this->players.size();
+    viewCenter.x = viewCenter.x / this->players_.size();
+    viewCenter.y = viewCenter.y / this->players_.size();
     view.setCenter(viewCenter);
-    this->window->setView(view);
+    this->window_->setView(view);
 }
 
 template<typename T, typename U>
@@ -180,27 +180,27 @@ void Game::updateCollisionForObject(T& participant, vector<U>& objects, vector<T
 void Game::updateCollision()
 {
     /// @brief funkcja sprawdzająca kolizję na mapie
-    for(auto& it:players)
+    for(auto& it:players_)
     {
-        this->updateCollisionForObject(it, this->bots, this->players);
-        this->updateCollisionForObject(it, this->staticPoints, this->players);
+        this->updateCollisionForObject(it, this->bots_, this->players_);
+        this->updateCollisionForObject(it, this->static_points_, this->players_);
     }
-    for(auto& it:bots)
+    for(auto& it:bots_)
     {
-        this->updateCollisionForObject(it, this->players, this->bots);
-        this->updateCollisionForObject(it, this->staticPoints, this->bots);
+        this->updateCollisionForObject(it, this->players_, this->bots_);
+        this->updateCollisionForObject(it, this->static_points_, this->bots_);
     }
 }
 
 void Game::updateTable(stringstream& ss, stringstream& ss2, Vector2f& viewCenter)
 {
-    ss << " - Points: " << this->totalPoints << "\n"; // uaktualnienie liczby punktów
+    ss << " - Points: " << this->total_points_ << "\n"; // uaktualnienie liczby punktów
     ss2 << "TABLICA WYNIKOW\n";
 
     vector<int> bestFive;
-    for(auto& it: bots)
+    for(auto& it: bots_)
         bestFive.push_back(-it.getMass());
-    for(auto& it: players)
+    for(auto& it: players_)
     {
         viewCenter += it.getPlayerPostion();
         viewCenter += Vector2f(it.getRadius()+30, it.getRadius()+30);
@@ -218,55 +218,55 @@ void Game::updateGui()
     stringstream ss, ss2;
     Vector2f viewCenter;
     this->updateTable(ss, ss2 , viewCenter);
-    viewCenter.x = viewCenter.x / this->players.size();
-    viewCenter.y = viewCenter.y / this->players.size();
-    View view = window->getView();
+    viewCenter.x = viewCenter.x / this->players_.size();
+    viewCenter.y = viewCenter.y / this->players_.size();
+    View view = window_->getView();
     Vector2f size = view.getSize();
     Vector2f tablePosition = viewCenter;
     tablePosition += Vector2f(size.x/2 - 300, -size.y/2);
     viewCenter += Vector2f(-size.x/2, -size.y/2);
-    this->guiText.setPosition(viewCenter);
-    this->guiText.setString(ss.str());
-    this->table.setPosition(tablePosition);
-    this->table.setString(ss2.str());
+    this->gui_text_.setPosition(viewCenter);
+    this->gui_text_.setString(ss.str());
+    this->table_.setPosition(tablePosition);
+    this->table_.setString(ss2.str());
 }
 
 void Game::updateMaxPoints()
 {
     /// @brief funkcja po zakończeniu gry zapisuje maksymalną ilość punktów do pliku
     int allMaxPoints = 0;
-    ifstream Plik("./maxPoints.txt");
+    ifstream Plik("./max_points_.txt");
     Plik >> allMaxPoints;
     Plik.close();
-    if(maxPoints > allMaxPoints){
-        ofstream Plik("./maxPoints.txt");
-        Plik << maxPoints;
+    if(max_points_ > allMaxPoints){
+        ofstream Plik("./max_points_.txt");
+        Plik << max_points_;
         Plik.close();
     }
 }
 
 void Game::updateBot()
 {
-    for(auto& it: this->bots)
-        it.moveBot(this->bots, this->players, this->staticPoints);
+    for(auto& it: this->bots_)
+        it.moveBot(this->bots_, this->players_, this->static_points_);
 }
 
 int Game::update()
 {
     /// @brief funkcja uaktualniająca wydarzenia na mapie
     this->pollEvents();
-    if(!this->endGame){
+    if(!this->end_game_){
         this->zoomOut();
         this->spawnStaticPoints();
         this->updatePlayer();
         this->updateBot();
         this->updateCollision();
         this->updateGui();
-        this->initBots(this->players[0].getStartingSpeed());
+        this->initBots(this->players_[0].getStartingSpeed());
         this->calculateStaticPoints();
     }
-    if(this->calculateTotalPoints() <= 0 || this->endGame == true){
-        this->endGame = true;
+    if(this->calculateTotalPoints() <= 0 || this->end_game_ == true){
+        this->end_game_ = true;
         this->updateMaxPoints();
     }
     return 0;
@@ -274,7 +274,7 @@ int Game::update()
 
 void Game::calculateStaticPoints()
 {
-    for(auto& it: this->staticPoints)
+    for(auto& it: this->static_points_)
         it.calculateSpeed();
 }
 
@@ -282,30 +282,30 @@ void Game::renderGui(RenderTarget* target)
 {
     /// @brief funkcja generująca GUI dla okna
     /// @param target miejsce renderu obiektu
-    target->draw(this->guiText);
-    target->draw(this->table);
+    target->draw(this->gui_text_);
+    target->draw(this->table_);
 }
 
 void Game::render()
 {
     /// @brief funkcja renderująca i wyświetlająca okno oraz obiekty na nim
-    this->window->clear(Color::White);
+    this->window_->clear(Color::White);
 
-    for(auto& it : this->players)
-        it.render(*this->window);
+    for(auto& it : this->players_)
+        it.render(*this->window_);
 
-    for(auto& it : this->bots)
-        it.render(*this->window);
+    for(auto& it : this->bots_)
+        it.render(*this->window_);
 
-    for(auto& it : this->staticPoints)
-        it.render(*this->window);
+    for(auto& it : this->static_points_)
+        it.render(*this->window_);
 
-    this->renderGui(this->window);
+    this->renderGui(this->window_);
 
-    if(this->endGame){
-        this->window->close();
+    if(this->end_game_){
+        this->window_->close();
         return;
     }
 
-    this->window->display();
+    this->window_->display();
 }

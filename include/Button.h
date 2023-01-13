@@ -12,7 +12,7 @@
 class Button // klasa odpowiedzialna za klikalny button do interakcji z użytkownikiem
 {
 private:
-    sf::RectangleShape button; // zmienna przetrzymująca kształt przycisku
+    sf::RectangleShape button_; // zmienna przetrzymująca kształt przycisku
 public:
     Button(); // konstruktor domyślny
     Button(sf::Vector2f size, sf::Color color, sf::Vector2f pos); // konstruktor przyjmujący wartości startowe

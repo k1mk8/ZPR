@@ -14,8 +14,8 @@
 class GameOver:public BasicWindow
 {
 private:
-    Button buttonYes; // przycisk powtórzenia gry
-    Button buttonNo; // przycisk zakończenia gry
+    Button button_yes_; // przycisk powtórzenia gry
+    Button button_no_; // przycisk zakończenia gry
     void setTexture(); // inicjowanie okna
     void initButton(); // inicjowanie przycisków
 public:

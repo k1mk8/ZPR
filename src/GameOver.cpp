@@ -6,16 +6,16 @@ using namespace sf;
 void GameOver::setTexture()
 {
     /// @brief inifcuje początkowe wartości interfejsu
-    this->texture.loadFromFile("images/game_over.png");
-    this->sprite.setTexture(texture);
-    this->videoMode = VideoMode(1920, 1080);
+    this->texture_.loadFromFile("images/game_over.png");
+    this->sprite_.setTexture(texture_);
+    this->video_mode_ = VideoMode(1920, 1080);
 }
 
 void GameOver::initButton()
 {
     /// @brief iniciuje przyciski do zakończenia gry
-    this->buttonYes = Button(Vector2f(125, 60), Color::Transparent, Vector2f(800, 750));
-    this->buttonNo = Button(Vector2f(125, 60), Color::Transparent, Vector2f(1000, 750));
+    this->button_yes_ = Button(Vector2f(125, 60), Color::Transparent, Vector2f(800, 750));
+    this->button_no_ = Button(Vector2f(125, 60), Color::Transparent, Vector2f(1000, 750));
 }
 
 GameOver::GameOver()
@@ -30,9 +30,9 @@ int GameOver::update()
     /// @brief funkcja sprawdzająca czy wydarzyły się jakieś interakcje od użytkownika
     /// @return czy przycisk rozpoczęcia gry został wciśnięty
     this->pollEvents();
-    if(this->buttonYes.isButtonPressed(window))
+    if(this->button_yes_.isButtonPressed(window_))
         return 1;
-    else if(this->buttonNo.isButtonPressed(window))
+    else if(this->button_no_.isButtonPressed(window_))
         return 2;
     return 0;
 }
@@ -40,9 +40,9 @@ int GameOver::update()
 void GameOver::render()
 {
     /// @brief funkcja renderująca i wyświetlająca okno
-    this->window->clear(Color::White);
-    this->window->draw(sprite);
-    this->window->draw(buttonYes.getButton());
-    this->window->draw(buttonNo.getButton());
-    this->window->display();
+    this->window_->clear(Color::White);
+    this->window_->draw(sprite_);
+    this->window_->draw(button_yes_.getButton());
+    this->window_->draw(button_no_.getButton());
+    this->window_->display();
 }

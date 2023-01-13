@@ -1,3 +1,6 @@
+#ifndef Bot_H
+#define Bot_H
+
 #include "StaticPoints.h"
 
 class Bot : public Player
@@ -13,3 +16,4 @@ public:
     bool searchNearby(const std::vector<T>& participants, int range);
     void splitBySpike(std::vector<Bot>& participants);
 };
+#endif

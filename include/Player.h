@@ -1,3 +1,6 @@
+#ifndef Interface_H
+#define Interface_H
+
 #include <vector>
 #include <cmath>
 #include <iostream>
@@ -12,14 +15,14 @@
 class Player
 {
 private:
-    clock_t splitTime; // czas podziału gracza
-    clock_t freshSpawnedTime; // czas podziału gracza
-    sf::CircleShape shape; // kształt gracza
-    float speed; // prędkość gracza
-    float startingSpeed; // początkowa prędkość gracza
-    int mass; // masa gracza
-    int type; // rodzaj obiektu
-    std::string name; // nazwa gracza
+    clock_t split_time_; // czas podziału gracza
+    clock_t fresh_spawned_time_; // czas podziału gracza
+    sf::CircleShape shape_; // kształt gracza
+    float speed_; // prędkość gracza
+    float starting_speed_; // początkowa prędkość gracza
+    int mass_; // masa gracza
+    int type_; // rodzaj obiektu
+    std::string name_; // nazwa gracza
 public:
     Player(float x = 0, float y = 0, const int mass = 10, const int speed = 10); // konstruktor graczy
     ~Player(); // destruktor klasy
@@ -52,3 +55,4 @@ public:
     void setPosition(std::vector <Player>& players, sf::RenderWindow& window); // ustawianie pozycji
     void render(sf::RenderTarget& target); // enderowanie gracza
 };
+#endif

@@ -9,22 +9,22 @@ void BasicWindow::initWindow()
 {
     /// @brief inifcuje początkowe wartości interfejsu
     this->setTexture();
-    this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
-    this->window->clear(Color::White);
-    this->window->setFramerateLimit(60);
+    this->window_ = new RenderWindow(this->video_mode_, "Agario", Style::Close | Style::Titlebar);
+    this->window_->clear(Color::White);
+    this->window_->setFramerateLimit(60);
 }
 
 void BasicWindow::initFonts()
 {
     /// @brief ustawia czcionkę tekstu
-    if(!this->font.loadFromFile("fonts/MilkyHoney.ttf")){
+    if(!this->font_.loadFromFile("fonts/MilkyHoney.ttf")){
         cout << "COULD NOT LOAD MilkyHoney.ttf" << "\n";
     }
 }
 
 void BasicWindow::setNewTextParams(Text& name, Color color, int size, Vector2f setPosition, string text)
 {
-    name.setFont(this->font);
+    name.setFont(this->font_);
     name.setFillColor(color);
     name.setCharacterSize(size);
     name.setPosition(setPosition);
@@ -35,22 +35,22 @@ bool BasicWindow::running()
 {
     /// @brief funkcja sprawdzająca czy okno jest otwarte
     /// @return prawda lub fałsz, czy okno jest otwarte
-    return this->window->isOpen();
+    return this->window_->isOpen();
 }
 
 void BasicWindow::pollEvents()
 {
     /// @brief funkcja sprawdzająca czy okno ma być zamknięte
-    while(this->window->pollEvent(this->sfmlEvent))
+    while(this->window_->pollEvent(this->sfml_event_))
     {
-        if (this->sfmlEvent.type == Event::Closed)
+        if (this->sfml_event_.type == Event::Closed)
         {
-            this->window->close();
+            this->window_->close();
             break;
         }
-        if(this->sfmlEvent.key.code == Keyboard::Escape)
+        if(this->sfml_event_.key.code == Keyboard::Escape)
         {
-            this->window->close();
+            this->window_->close();
             break;
         }
         break;
@@ -60,5 +60,5 @@ void BasicWindow::pollEvents()
 BasicWindow::~BasicWindow()
 {
     /// @brief destruktor domyślny
-    delete this->window;
+    delete this->window_;
 }
