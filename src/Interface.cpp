@@ -5,6 +5,7 @@ using namespace sf;
 
 void Interface::setTexture()
 {
+    /// @brief funkcja ustawia tekstury okna z pliku
     this->texture_.loadFromFile("images/tlo.png");
     this->sprite_.setTexture(texture_);
     this->video_mode_ = VideoMode(1200, 630);

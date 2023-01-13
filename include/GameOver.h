@@ -11,8 +11,9 @@
 #include "BasicWindow.h"
 
 
-class GameOver:public BasicWindow
+class GameOver : public BasicWindow
 {
+/// @brief klasa odpowiedzialna za ekran końcowy
 private:
     Button button_yes_; // przycisk powtórzenia gry
     Button button_no_; // przycisk zakończenia gry

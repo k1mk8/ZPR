@@ -114,22 +114,24 @@ void Game::updatePlayer()
     View view = this->window_->getView();
     Vector2f viewCenter;
     bool shooting = false;
-    while(Keyboard::isKeyPressed(Keyboard::E)){
+    while(Keyboard::isKeyPressed(Keyboard::E)){ // sprawdzamy przyciśnięcie przycisku E na klawiaturze
         shooting = true;
     }
     for(auto& it : this->players_)
     {
         it.setPosition(this->players_, *this->window_);
-        if(shooting && it.getMass() > 20){ // sprawdza czy gracz strzelił
+        if(shooting && it.getMass() > 20){ // sprawdza czy gracz strzelił i ma masę większą niż 20
             int type = StaticPointsTypes::FOOD;
             auto& window_ = *this->window_;
             float mouseX = Mouse::getPosition(window_).x;
             float mouseY = Mouse::getPosition(window_).y;
             mouseX -= window_.getSize().x / 2;
             mouseY -= window_.getSize().y / 2;
-            float direction = atan2(-mouseY, mouseX);
-            this->static_points_.push_back(StaticPoints(type, it.getRadius() + it.getPlayerPostion().x + 1.8 * it.getRadius() * cos(direction),
-                 it.getRadius() + it.getPlayerPostion().y - 1.8 * it.getRadius() * sin(direction), it.getStartingSpeed(), direction));
+            float direction = atan2(-mouseY, mouseX); // oblicza kierunek strzału
+            this->static_points_.push_back(StaticPoints(type, 
+                it.getRadius() + it.getPlayerPostion().x + 1.8 * it.getRadius() * cos(direction),
+                it.getRadius() + it.getPlayerPostion().y - 1.8 * it.getRadius() * sin(direction),
+                it.getStartingSpeed(), direction)); // tworzy nowy obiekt statyczny wystrzliwany przez gracza
             it.loseMass();
         }
         viewCenter += it.getPlayerPostion();
@@ -144,6 +146,12 @@ void Game::updatePlayer()
 template<typename T, typename U>
 void Game::updateCollisionForObject(T& participant, vector<U>& objects, vector<T>& participants)
 {
+    /// @brief funkcja odpowiadająca za kolizje poszczególnych obiektów
+    /// @tparam T template dla uczestnika, na którym sprawdzane są kolizje
+    /// @tparam U template dla obiektów, z którymi może się zderzyć uczestnik
+    /// @param participant uczestnik kolizji
+    /// @param objects obiekty do kolizji
+    /// @param participants wektor wszystkich danych uczestników
     int i = 0;
     for(auto& it : objects) // iteracja po wszystkich graczach
     {
@@ -160,15 +168,15 @@ void Game::updateCollisionForObject(T& participant, vector<U>& objects, vector<T
                     {
                         participant.grow(it.getMass());
                         objects.erase(objects.begin() + i); // usuń punkt z mapy
-                        if(participant.getType() == 3)
+                        if(participant.getType() == 3) // jeśli obiekt jest graczem to rozbij
                             participant.splitBySpike(participants);
                     }
                     break;
                 default:
-                    if(participant.getMass() > it.getMass() * 1.1)
+                    if(participant.getMass() > it.getMass() * 1.1) // jeśli jest to gracz lub bot
                     {
-                        participant.grow(it.getMass());
-                        objects.erase(objects.begin() + i); // usuń punkt z mapy
+                        participant.grow(it.getMass()); // uczestnik rośnie
+                        objects.erase(objects.begin() + i); // mniejszy obiekt rośnie
                     }
                     break;
             }
@@ -194,6 +202,10 @@ void Game::updateCollision()
 
 void Game::updateTable(stringstream& ss, stringstream& ss2, Vector2f& viewCenter)
 {
+    /// @brief funkcja uaktualniająca tablice wyników
+    /// @param ss napisz 1
+    /// @param ss2 napis 2
+    /// @param viewCenter środek ekranu
     ss << " - Points: " << this->total_points_ << "\n"; // uaktualnienie liczby punktów
     ss2 << "TABLICA WYNIKOW\n";
 
@@ -203,10 +215,10 @@ void Game::updateTable(stringstream& ss, stringstream& ss2, Vector2f& viewCenter
     for(auto& it: players_)
     {
         viewCenter += it.getPlayerPostion();
-        viewCenter += Vector2f(it.getRadius()+30, it.getRadius()+30);
+        viewCenter += Vector2f(it.getRadius()+30, it.getRadius()+30); // obliczanie środka ekranu
     }
     bestFive.push_back(-this->calculateTotalPoints());
-    sort(bestFive.begin(), bestFive.end());
+    sort(bestFive.begin(), bestFive.end()); // obliczamy 5 najlepszy zawodników
     
     for(int i = 0; i < min(5, (int)bestFive.size()); ++i)
         ss2 << -bestFive[i] << "\n";
@@ -247,6 +259,7 @@ void Game::updateMaxPoints()
 
 void Game::updateBot()
 {
+    /// @brief funkcja odpowiedzialna za aktualizacje ruchu botów
     for(auto& it: this->bots_)
         it.moveBot(this->bots_, this->players_, this->static_points_);
 }
@@ -274,6 +287,7 @@ int Game::update()
 
 void Game::calculateStaticPoints()
 {
+    /// @brief funkcja oblicza prędkość wystrzelonych punktów
     for(auto& it: this->static_points_)
         it.calculateSpeed();
 }

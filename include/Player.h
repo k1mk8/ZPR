@@ -14,6 +14,7 @@
 #include <SFML/Network.hpp>
 class Player
 {
+/// @brief klasa odpowiedzialna za tworzenie i obsługę gracza 
 private:
     clock_t split_time_; // czas podziału gracza
     clock_t fresh_spawned_time_; // czas podziału gracza

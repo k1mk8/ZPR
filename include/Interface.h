@@ -7,8 +7,9 @@
 
 #include "BasicWindow.h"
 
-class Interface:public BasicWindow
+class Interface : public BasicWindow
 {
+/// @brief klasa odpowiedzialna za ekran początkowego interfejsu
 private:
     Button button_; // przycisk rozpoczęcia gry
     Button speed1_;  // przycisk doboru prędkości

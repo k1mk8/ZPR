@@ -197,17 +197,17 @@ void Player::split(RenderWindow& window, vector<Player>& players)
     if(flag){
         std::vector<Player> tempPlayers;
         for(auto& it : players){
-            if(players.size() + tempPlayers.size() < 8){
-                if(it.getMass() > 30){
+            if(players.size() + tempPlayers.size() < 8){ // sprawdzenie czy nie przekroczono maksymalnej ilości kul
+                if(it.getMass() > 30){ // sprawdzenie, czy można podzielić
                     players[0].setSplitTime(clock());
                     it.splitMass();
                     float radius = it.getRadius();
-                    pair<float, float> relativePos = getRelativeMousePositon(window, players);
-                    float direction = atan2(-relativePos.second, relativePos.first);
+                    pair<float, float> relativePos = getRelativeMousePositon(window, players); // pobiera pozycje myszki
+                    float direction = atan2(-relativePos.second, relativePos.first); // obliczenie kierunku
                     Player player = Player(it.getPlayerPostion().x + 2.5 * radius * cos(direction),
-                        it.getPlayerPostion().y - 2.5 * radius * sin(direction), it.getMass(), starting_speed_);
-                    player.setFreshSpawnedTime(clock());
-                    tempPlayers.push_back(player);
+                        it.getPlayerPostion().y - 2.5 * radius * sin(direction), it.getMass(), starting_speed_); // tworzy nowego gracza wystrzelonego w konkretnym kierunku
+                    player.setFreshSpawnedTime(clock()); // ustawia czas respawnu
+                    tempPlayers.push_back(player); // wrzuca na wektor tymczasowych graczy
                 }
             }
         }
@@ -247,6 +247,10 @@ void Player::loseMass()
 
 pair<float, float> Player::getRelativeMousePositon(RenderWindow& window, vector <Player>& players)
 {
+    /// @brief funkcja zwraca relatywną pozycję myszki na mapie
+    /// @param window okno gry
+    /// @param players wektor graczy
+    /// @return para zawierająca pozycję x i y myszki
     float mouseX = Mouse::getPosition(window).x;
     float mouseY = Mouse::getPosition(window).y;
     mouseX -= window.getSize().x / 2;
@@ -274,17 +278,17 @@ void Player::move(RenderWindow& window, vector <Player>& players)
     this->shape_.move(cos(direction) * this->speed_, -sin(direction) * this->speed_);
 
     if((double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC < 0.3 &&
-        (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC > 0)
+        (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC > 0) // oddzielna reguła dla nowo powstałych kul
             return;
 
-    for(auto& it : players)
+    for(auto& it : players) // iteracja po każdej kuli gracza
     { 
-        if(this->getShape().getGlobalBounds().intersects(it.getShape().getGlobalBounds()))
+        if(this->getShape().getGlobalBounds().intersects(it.getShape().getGlobalBounds())) // sprawdzenie czy kule nie nachodzą na siebie
         {
             float x1 = this->getPlayerPostion().x;
             float y1 = this->getPlayerPostion().y;
             float x2 = it.getPlayerPostion().x;
-            float y2 = it.getPlayerPostion().y;
+            float y2 = it.getPlayerPostion().y; // pobranie pozycju
 
             if(abs(mouseXY.first - x1) + abs(mouseXY.second - y1) 
                 <= abs(mouseXY.first - x2) + abs(mouseXY.second - y2))
@@ -294,7 +298,7 @@ void Player::move(RenderWindow& window, vector <Player>& players)
             float diffx = x2 - x1;
             float diffy = y2 - y1;
             float direction = atan2(-diffy, diffx);
-            it.getShape().setPosition(x1 + cos(direction) * d, y1 - sin(direction) * d);
+            it.getShape().setPosition(x1 + cos(direction) * d, y1 - sin(direction) * d); // omijanie kuli
         }
     }
 }

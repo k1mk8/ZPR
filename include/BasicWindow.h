@@ -12,6 +12,7 @@
 
 class BasicWindow
 {
+/// @brief podstawowa klasa odpowiedzialna za wszystkie ekrany
 public:
     sf::RenderWindow* window_; // okno końca gry
     sf::VideoMode video_mode_; // okno wyświetlane

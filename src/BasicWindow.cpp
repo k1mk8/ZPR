@@ -24,6 +24,12 @@ void BasicWindow::initFonts()
 
 void BasicWindow::setNewTextParams(Text& name, Color color, int size, Vector2f setPosition, string text)
 {
+    /// @brief ustawia parametry podanego tekstu
+    /// @param name nazwa tekstu
+    /// @param color kolor tekstu
+    /// @param size wielkość tekstu
+    /// @param setPosition pozycja tekstu na ekranie
+    /// @param text zawartość
     name.setFont(this->font_);
     name.setFillColor(color);
     name.setCharacterSize(size);

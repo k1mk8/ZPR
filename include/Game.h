@@ -10,8 +10,9 @@
 #include "Bot.h"
 #include "BasicWindow.h"
 
-class Game:public BasicWindow
+class Game : public BasicWindow
 {
+/// @brief klasa odpowiedzialna za symulację i obsługę rozgrywki i interakcji
 private:
     bool end_game_; // czy koniec gry
     std::vector<Player> players_; // wektor graczy

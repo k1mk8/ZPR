@@ -130,6 +130,7 @@ void StaticPoints::render(RenderTarget& target)
 
 void StaticPoints::calculateSpeed()
 {
+    /// @brief funkcja obliczająca prędkość nowo wystrzelonych obiektów
     if(this->speed_ > 0)
     {
         this->speed_ -= 0.6 * (double)(clock() - this->fresh_spawned_time_) / CLOCKS_PER_SEC;

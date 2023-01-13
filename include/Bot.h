@@ -5,6 +5,7 @@
 
 class Bot : public Player
 {
+/// @brief klasa odpowiedzialna za tworzenie i obsługę botów
 public:
     float getDirection(float x, float y); // zwraca kierunek ruchu
     void makeShape(); // tworzenie kształtu
