@@ -20,9 +20,6 @@ private:
     int mass; // masa gracza
     int type; // rodzaj obiektu
     std::string name; // nazwa gracza
-    void Variables(const int mass, const int speed); // inicjowanie zmiennych
-    void makeShape(); // tworzenie kształtu
-    void connect(std::vector<Player>& players); // łącznie graczy
 public:
     Player(float x = 0, float y = 0, const int mass = 10, const int speed = 10); // konstruktor graczy
     ~Player(); // destruktor klasy
@@ -35,6 +32,9 @@ public:
     const sf::Vector2f& getPlayerPostion() const; // getter pozycji gracza
     const clock_t& getSplitTime() const; // getter czasu podziału
     void setSplitTime(clock_t splittime); // setter czasu podziału
+    void Variables(const int mass, const int speed); // inicjowanie zmiennych
+    void makeShape(); // tworzenie kształtu
+    void connect(std::vector<Player>& players); // łącznie graczy
     void setType(int type); // setter Typu obiektu
     const clock_t& getFreshSpawnedTime() const; // getter czasu podziału
     void setFreshSpawnedTime(clock_t freshSpawnedTime); // setter czasu podziału

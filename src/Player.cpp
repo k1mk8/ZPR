@@ -7,6 +7,7 @@ void Player::Variables(const int mass, const int speed)
 {
     /// @brief ustawia zmienne klasy
     /// @param mass masa punktu
+    /// @param speed prędkość punktu
     this->startingSpeed = (float)speed;
     this->mass = mass;
     this->speed = this->startingSpeed - (log(this->mass) / log(4));
@@ -21,43 +22,6 @@ void Player::makeShape()
     this->shape.setRadius(this->getRadius());
 }
 
-void Player::calculateSpeed()
-{
-    /// @brief oblicza aktualną prędkość gracza na podstawie masy
-    if((double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC < 0.3 &&
-        (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC > 0)
-    {
-        this->calculateFreshSpawnedSpeed();
-        return;
-    }
-    this->speed = this->startingSpeed - (log(this->mass) / log(4));
-}
-
-void Player::calculateFreshSpawnedSpeed()
-{
-    /// @brief oblicza aktualną prędkość gracza na podstawie masy
-    this->speed = this->startingSpeed * 3 - 100 * (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC;
-}
-
-void Player::connect(vector<Player>& players)
-{
-    /// @brief łączy rozdzielonego gracza po określonym czasie
-    /// @param players wektor graczy na mapie
-    clock_t actualTime = clock();
-    if(players.size() > 1){
-        if(((double)(actualTime - players[0].getSplitTime()) / CLOCKS_PER_SEC) > 20.0){ // sprawdza czy od ostatniego podziału minął określony czas
-            int mass = 0;
-            Vector2f oldPlayersPos;
-            for(auto& it : players){ // łączy wszystkich graczy w jedną masę
-                mass += it.getMass();
-                oldPlayersPos += it.getPlayerPostion();
-            }
-            Player player = Player(oldPlayersPos.x / players.size(), oldPlayersPos.y / players.size(), mass, startingSpeed); // tworzy gracza po połączeniu
-            players.clear(); // usuwa połączonych graczy
-            players.push_back(player);
-        }
-    }
-}
 Player::Player(float x, float y, const int mass, const int speed)
 {
     /// @brief konstruktor klasy tworzący jej obiekt
@@ -167,6 +131,44 @@ void Player::setMass(const int weight)
     this->shape.setRadius(this->getRadius());
 }
 
+void Player::calculateSpeed()
+{
+    /// @brief oblicza aktualną prędkość gracza na podstawie masy
+    if((double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC < 0.3 &&
+        (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC > 0)
+    {
+        this->calculateFreshSpawnedSpeed();
+        return;
+    }
+    this->speed = this->startingSpeed - (log(this->mass) / log(4));
+}
+
+void Player::calculateFreshSpawnedSpeed()
+{
+    /// @brief oblicza aktualną prędkość gracza na podstawie masy
+    this->speed = this->startingSpeed * 3 - 100 * (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC;
+}
+
+void Player::connect(vector<Player>& players)
+{
+    /// @brief łączy rozdzielonego gracza po określonym czasie
+    /// @param players wektor graczy na mapie
+    clock_t actualTime = clock();
+    if(players.size() > 1){
+        if(((double)(actualTime - players[0].getSplitTime()) / CLOCKS_PER_SEC) > 20.0){ // sprawdza czy od ostatniego podziału minął określony czas
+            int mass = 0;
+            Vector2f oldPlayersPos;
+            for(auto& it : players){ // łączy wszystkich graczy w jedną masę
+                mass += it.getMass();
+                oldPlayersPos += it.getPlayerPostion();
+            }
+            Player player = Player(oldPlayersPos.x / players.size(), oldPlayersPos.y / players.size(), mass, startingSpeed); // tworzy gracza po połączeniu
+            players.clear(); // usuwa połączonych graczy
+            players.push_back(player);
+        }
+    }
+}
+
 void Player::grow(const int food)
 {
     /// @brief funkcja zwiekszająca masę i promień gracza
@@ -226,7 +228,8 @@ void Player::splitBySpike(vector<Player>& players)
         for(int i = 1; i <= maxPartsNumber; ++i)
         {
             players[0].setSplitTime(clock());
-            Player player = Player(this->getPlayerPostion().x + 2 * i * this->getRadius(), this->getPlayerPostion().y, this->getMass(), startingSpeed);
+            Player player = Player(this->getPlayerPostion().x + 2 * i * this->getRadius(), 
+                this->getPlayerPostion().y, this->getMass(), startingSpeed);
             players.push_back(player);
         }
     }
@@ -269,9 +272,11 @@ void Player::move(RenderWindow& window, vector <Player>& players)
     pair<float, float> mouseXY = this->getRelativeMousePositon(window, players);
     float direction = atan2(-mouseXY.second, mouseXY.first);
     this->shape.move(cos(direction) * this->speed, -sin(direction) * this->speed);
+
     if((double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC < 0.3 &&
         (double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC > 0)
             return;
+
     for(auto& it : players)
     { 
         if(this->getShape().getGlobalBounds().intersects(it.getShape().getGlobalBounds()))
@@ -280,9 +285,11 @@ void Player::move(RenderWindow& window, vector <Player>& players)
             float y1 = this->getPlayerPostion().y;
             float x2 = it.getPlayerPostion().x;
             float y2 = it.getPlayerPostion().y;
+
             if(abs(mouseXY.first - x1) + abs(mouseXY.second - y1) 
                 <= abs(mouseXY.first - x2) + abs(mouseXY.second - y2))
                     continue;
+                    
             float d = this->getRadius() + it.getRadius();
             float diffx = x2 - x1;
             float diffy = y2 - y1;

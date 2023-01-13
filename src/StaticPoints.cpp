@@ -3,10 +3,10 @@
 using namespace std;
 using namespace sf;
 
-void StaticPoints::makeShape(std::vector<Player> rect)
+void StaticPoints::makeShape(vector<Player> players)
 {
     /// @brief tworzy kształt przycisku na podstawie typu obiektu
-    /// @param rect lista graczy, aby punkty nie tworzyły się w graczach
+    /// @param players lista graczy, aby punkty nie tworzyły się w graczach
     Color color;
     switch (this->type)
     {
@@ -27,12 +27,12 @@ void StaticPoints::makeShape(std::vector<Player> rect)
     t[0] = -1;
     t[1] = 1;
     bool contain = true;
-    int x, y;
+    float x, y;
     while(contain)
     {
-        x = static_cast<float>((rand() % (int(size.x) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().width);
-        y = static_cast<float>((rand() % (int(size.y) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().height);
-        for(auto& it : rect) // iteruje się po wszystkich graczach na planszy
+        x = float((rand() % (int(size.x) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().width);
+        y = float((rand() % (int(size.y) / 2)) * t[(rand() % 2)] - this->shape.getGlobalBounds().height);
+        for(auto& it : players) // iteruje się po wszystkich graczach na planszy
         {
             CircleShape point;
             point.setRadius(5);
@@ -42,28 +42,28 @@ void StaticPoints::makeShape(std::vector<Player> rect)
                 break;
             }
             else
-            {
                 contain = false;
-            }
         }
     }
     this->shape.setPosition(Vector2f(x,y)); // ustawia pozycje punktu
 }
 
-StaticPoints::StaticPoints(int type, std::vector <Player> rect)
+StaticPoints::StaticPoints(int type, vector<Player> players)
         : type(type)
 {
     /// @brief konstruktor domyślny tworzący obiekt klasy
     /// @param type typ punktu
-    /// @param rect wektor z graczami na planszy
-    this->makeShape(rect);
+    /// @param players wektor z graczami na planszy
+    this->makeShape(players);
 }
 StaticPoints::StaticPoints(int type, float X, float Y)
         : type(type)
 {
     /// @brief konstruktor pozycyjny tworzący obiekt klasy
     /// @param type typ punktu
-    /// @param rect wektor z graczami na planszy
+    /// @param X pozycja X
+    /// @param Y pozycja Y
+
     this->shape.setFillColor(Color::Blue);
     this->mass = 10;
     this->shape.setRadius(8);
@@ -74,7 +74,11 @@ StaticPoints::StaticPoints(int type, float X, float Y, float speed, float direct
 {
     /// @brief konstruktor pozycyjny tworzący obiekt klasy
     /// @param type typ punktu
-    /// @param rect wektor z graczami na planszy
+    /// @param X pozycja X
+    /// @param Y pozycja Y
+    /// @param speed prędkość
+    /// @param direction kierunek
+
     this->shape.setFillColor(Color::Blue);
     this->mass = 10;
     this->shape.setRadius(8);
@@ -130,6 +134,6 @@ void StaticPoints::calculateSpeed()
     {
         this->speed -= 0.6 * (double)(clock() - this->freshSpawnedTime) / CLOCKS_PER_SEC;
         this->shape.setPosition(this->getPlayerPostion().x + cos(direction) * speed, 
-            this->getPlayerPostion().y - sin(direction) * speed);
+        this->getPlayerPostion().y - sin(direction) * speed);
     }
 }

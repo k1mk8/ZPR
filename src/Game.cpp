@@ -9,7 +9,7 @@ void Game::variables(const int& speed)
     this->endGame = false;
     this->maxStaticPoints = 1000;
     this->totalPoints = 10;
-    Player player(0, 0, 512, speed);
+    Player player(0, 0, 10, speed);
     this->players.push_back(player);
 }
 
