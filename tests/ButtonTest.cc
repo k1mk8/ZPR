@@ -1,6 +1,7 @@
 #include "../include/Button.h"
 #include <gtest/gtest.h>
 #include <typeinfo>
+using namespace sf;
 
 TEST(ButtonTest, getButton)
 {

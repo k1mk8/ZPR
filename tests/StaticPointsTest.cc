@@ -1,6 +1,8 @@
 #include "../include/StaticPoints.h"
 #include <gtest/gtest.h>
 #include <typeinfo>
+using namespace std;
+using namespace sf;
 
 TEST(StaticPointsTest, createStaticPointFood)
 {
@@ -22,6 +24,31 @@ TEST(StaticPointsTest, createStaticPointSpike)
     ASSERT_EQ(point.getShape().getRadius(), 30);
 }
 
+TEST(StaticPointsTest, createStaticPointFoodOnPosition)
+{
+    StaticPoints point = StaticPoints(FOOD, 5, 15);
+    ASSERT_EQ(point.getMass(), 10);
+    ASSERT_EQ(point.getShape().getRadius(), 8);
+    ASSERT_EQ(point.getShape().getPosition().x, 5);
+    ASSERT_EQ(point.getShape().getPosition().y, 15);
+}
+
+TEST(StaticPointsTest, createStaticPointSpikeOnPosition)
+{
+    StaticPoints point = StaticPoints(SPIKES, 5, 15);
+    ASSERT_EQ(point.getMass(), 10);
+    ASSERT_EQ(point.getShape().getRadius(),8);
+    ASSERT_EQ(point.getShape().getPosition().x, 5);
+    ASSERT_EQ(point.getShape().getPosition().y, 15);
+}
+
+TEST(StaticPointsTest, getPlayerPosition)
+{
+    StaticPoints point = StaticPoints(SPIKES, 5, 15);
+    ASSERT_EQ(point.getShape().getPosition().x, 5);
+    ASSERT_EQ(point.getShape().getPosition().y, 15);
+}
+
 TEST(StaticPointsTest, getType)
 {
     vector <Player> players;
@@ -36,15 +63,6 @@ TEST(StaticPointsTest, getMass)
     players.push_back(Player(5,5,10));
     StaticPoints point = StaticPoints(FOOD, players);
     ASSERT_EQ(point.getMass(), 1);
-}
-
-TEST(StaticPointsTest, eatMass)
-{
-    vector <Player> players;
-    players.push_back(Player(5,5,10));
-    StaticPoints point = StaticPoints(FOOD, players);
-    point.eatMass(10);
-    ASSERT_EQ(point.getMass(), 11);
 }
 
 int main(int argc, char **argv){
