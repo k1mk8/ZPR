@@ -2,9 +2,11 @@
 #include <gtest/gtest.h>
 #include <typeinfo>
 
+using namespace sf;
+
 TEST(PlayerTest, variables)
 {
-    Player player = Player(5,5,10);
+    Player player = Player(5,5,10, 10);
     int mass = 10;
     float speed = 10 - (log(10) / log(4));;
     ASSERT_EQ(player.getSpeed(), speed);
@@ -16,23 +18,24 @@ TEST(PlayerTest, makeShape)
     Player player = Player(5,5,10);
     auto shape = player.getShape();
     ASSERT_EQ(shape.getFillColor(), Color::Green);
-    ASSERT_EQ(round(round(shape.getRadius())), round(log(10)/log(1.05)));
+    ASSERT_EQ(round(round(shape.getRadius())), round(log(10)/log(1.05) - 30));
 }
 
 TEST(PlayerTest, calculateSpeed)
 {   
-    Player player = Player(5,5,10);
+    Player player = Player(5, 5, 10, 10);
     player.grow(10);
-    player.move();
-    float speed = 10 - (log(20) / log(4));
+    float speed = 10 - (log(10) / log(4));
     ASSERT_EQ(player.getSpeed(), speed);
 }
 
 TEST(PlayerTest, createPlayer)
 {   
-    Player player = Player(5,5,10);
+    Player player = Player(5,5,10, 10);
     ASSERT_EQ(player.getMass(), 10);
     ASSERT_EQ(player.getPlayerPostion(), Vector2f(5,5));
+    ASSERT_FLOAT_EQ(player.getSpeed(), 10 - log(10) / log(4));
+    ASSERT_EQ(player.getType(), 3);
 }
 
 TEST(PlayerTest, getShape)
@@ -47,6 +50,25 @@ TEST(PlayerTest, getMass)
     Player player = Player(5,5,10);
     int mass = 10;
     ASSERT_EQ(player.getMass(), mass);
+}
+
+TEST(PlayerTest, getStartingSpeed)
+{
+    Player player = Player(5,5,10, 10);
+    ASSERT_EQ(player.getStartingSpeed(), 10);
+}
+
+TEST(PlayerTest, getRadius)
+{
+    Player player = Player(5,5,10, 10);
+    ASSERT_FLOAT_EQ(player.getRadius(), log(10) / log(1.05) - 30);
+}
+
+TEST(PlayerTest, getSetType)
+{
+    Player player = Player(5,5,10, 10);
+    player.setType(5);
+    ASSERT_EQ(player.getType(), 5);
 }
 
 TEST(PlayerTest, getSpeed)
@@ -64,7 +86,7 @@ TEST(PlayerTest, getPlayerPosition)
     ASSERT_EQ(pos.y, 5);
 }
 
-TEST(PlayerTest, SplitTime)
+TEST(PlayerTest, getSetSplitTime)
 {
     Player player = Player(5,5,10);
     clock_t split = clock();
@@ -78,6 +100,19 @@ TEST(PlayerTest, setMass)
     int mass = 5;
     player.setMass(mass);
     ASSERT_EQ(player.getMass(), mass);
+}
+
+TEST(PlayerTest, connect)
+{
+    Player player = Player(5,5,10,10);
+    Player player2 = Player(5,5,10,10);
+    std::vector<Player> players;
+    players.push_back(player);
+    players.push_back(player2);
+    players[0].setSplitTime(clock() - 100000000);
+    player.connect(players);
+    ASSERT_EQ(players[0].getMass(), 20);
+    ASSERT_EQ(players.size(), 1);
 }
 
 TEST(PlayerTest, grow)
@@ -100,6 +135,25 @@ TEST(PlayerTest, splitMassOdd)
     Player player = Player(5,5,31);
     player.splitMass();
     ASSERT_EQ(player.getMass(), 15);
+}
+
+TEST(PlayerTest, splitBySpike)
+{
+    Player player = Player(5,5,40);
+    std::vector<Player> players;
+    players.push_back(player);
+    player.splitBySpike(players);
+    ASSERT_EQ((int)players.size(), 4);
+    ASSERT_EQ(player.getMass(), 10);
+    ASSERT_EQ(players[1].getMass(), 10);
+    ASSERT_EQ(player.getPlayerPostion().x, 5);
+}
+
+TEST(PlayerTest, checkMapColission)
+{
+    Player player = Player(-4900,0,31);
+    player.checkMapCollision();
+    ASSERT_EQ(player.getPlayerPostion().x, -4770);
 }
 
 TEST(PlayerTest, loseMass)
