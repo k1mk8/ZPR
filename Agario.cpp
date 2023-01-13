@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GameOver.h"
+#include "Interface.h"
 
 int main()
 {

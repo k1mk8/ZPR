@@ -1,3 +1,6 @@
+#ifndef Button_H
+#define Button_H
+
 #include <bits/stdc++.h>
 
 #include <SFML/Graphics.hpp>
@@ -21,3 +24,4 @@ public:
     const RectangleShape& getButton() const; // zwraca przycisk
     bool isButtonPressed(RenderWindow* window); // sprawdza czy button jest wciśnięty
 };
+#endif

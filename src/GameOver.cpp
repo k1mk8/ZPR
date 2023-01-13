@@ -1,4 +1,4 @@
-#include <GameOver.h>
+#include "GameOver.h"
 
 void GameOver::initWindow()
 {

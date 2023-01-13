@@ -1,23 +1,23 @@
-#include <bits/stdc++.h>
+#ifndef Interface_H
+#define Interface_H
 
+#include <bits/stdc++.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
-#include "Button.h"
+#include "BasicWindow.h"
 using namespace sf;
 
-class Interface
+class Interface:public BasicWindow
 {
 private:
-
     Button button; // przycisk rozpoczęcia gry
     Button speed1;  // przycisk doboru prędkości
     Button speed2;  // przycisk doboru prędkości
     Button speed3;  // przycisk doboru prędkości
-    VideoMode videoMode; // wyświetlanie okno
     Event sfmlEvent; // eventy
     Sprite sprite; // wygląd okna
     Texture texture; // tekstura
@@ -27,19 +27,13 @@ private:
     Text buttonText1; // tekst paska prędkości
     Text buttonText2; // tekst paska prędkości
     Text buttonText3; // tekst paska prędkości
-    Font font; // czcionka
-    void initWindow(); // inicjowanie okna
-    void initFonts(); // inicjowanie czcionki
+    void setTexture();
     void initText(); // inicjowanie tekstu
-    void setNewTextParams(Text& name, Color color, int size, Vector2f setPosition = {0, 0}, string text = "");
     void initButton(); // inicjowanie przycisków
 public:
-    RenderWindow* window; // okno gry
     Interface(); // konstruktor domyślny
-    ~Interface(); // destruktor domyślny
-    bool running(); // sprawdzenie czy okno działa
-    void pollEvents(); // // sprawdzanie wydarzeń
     int update(); // uaktualnianie okna
     void renderGui(RenderTarget* target); // renderowanie GUI
     void render(); // renderowanie i wyświetlanie okna 
 };
+#endif

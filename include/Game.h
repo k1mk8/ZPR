@@ -1,3 +1,6 @@
+#ifndef Game_H
+#define Game_H
+
 #include<iostream>
 #include<ctime>
 #include<vector>
@@ -5,6 +8,7 @@
 #include<fstream>
 
 #include "Bot.h"
+#include "BasicWindow.h"
 
 using namespace sf;
 using namespace std;
@@ -53,3 +57,4 @@ public:
     void renderGui(RenderTarget* target); // wyświetlanie GUI
     void render(); // renderowanie i wyświetlanie mapy oraz obiektów
 };
+#endif

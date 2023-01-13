@@ -1,23 +1,11 @@
 #include "Interface.h"
 
 using namespace std;
-void Interface::initWindow()
+void Interface::setTexture()
 {
-    /// @brief inifcuje początkowe wartości interfejsu
     this->texture.loadFromFile("images/tlo.png");
     this->sprite.setTexture(texture);
     this->videoMode = VideoMode(1200, 630);
-    this->window = new RenderWindow(this->videoMode, "Agario", Style::Close | Style::Titlebar);
-    this->window->clear(Color::White);
-    this->window->setFramerateLimit(60);
-}
-
-void Interface::initFonts()
-{
-    /// @brief ustawia czcionkę tekstu
-    if(!this->font.loadFromFile("fonts/MilkyHoney.ttf")){
-        cout << " COULD NOT LOAD MilkyHoney.ttf" << "\n";
-    }
 }
 
 void Interface::initButton()
@@ -27,15 +15,6 @@ void Interface::initButton()
     this->speed1 = Button(Vector2f(125, 60), Color::Cyan, Vector2f(380, 470));
     this->speed2 = Button(Vector2f(125, 60), Color::Cyan, Vector2f(560, 470));
     this->speed3 = Button(Vector2f(125, 60), Color::Cyan, Vector2f(740, 470));
-}
-
-void Interface::setNewTextParams(Text& name, Color color, int size, Vector2f setPosition, string text)
-{
-    name.setFont(this->font);
-    name.setFillColor(color);
-    name.setCharacterSize(size);
-    name.setPosition(setPosition);
-    name.setString(text);
 }
 
 void Interface::initText()
@@ -72,41 +51,6 @@ Interface::Interface()
     this->initFonts();
     this->initText();
     this->initButton();
-}
-
-Interface::~Interface()
-{
-    /// @brief destruktor domyślny
-    delete this->window;
-}
-
-bool Interface::running()
-{
-    /// @brief funkcja sprawdzająca czy okno jest otwarte
-    /// @return prawda lub fałsz, czy okno jest otwarte
-    return this->window->isOpen();
-}
-
-void Interface::pollEvents()
-{
-    /// @brief funkcja sprawdzająca czy okno ma być zamknięte
-    while(this->window->pollEvent(this->sfmlEvent))
-    {
-if (this->sfmlEvent.type == Event::Closed)
-        {
-            this->window->close();
-            break;
-        }
-        else if(this->sfmlEvent.type == Event::KeyPressed)
-        {
-            if(this->sfmlEvent.key.code == Keyboard::Escape)
-            {
-                this->window->close();
-                break;
-            }
-        }
-        break;
-    }
 }
 
 int Interface::update()
