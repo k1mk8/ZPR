@@ -31,7 +31,7 @@ GameOver::~GameOver()
     delete this->window;
 }
 
-int GameOver::buttonPressed()
+int GameOver::whichButtonPressed()
 {
     /// @brief funkcja sprawdzająca, jaki przycisk jest wciskany
     /// @return informacja na temat wciśniętego przycisku
@@ -69,7 +69,7 @@ int GameOver::update()
     /// @brief funkcja sprawdzająca czy wydarzyły się jakieś interakcje od użytkownika
     /// @return czy przycisk rozpoczęcia gry został wciśnięty
     this->pollEvents();
-    return this->buttonPressed();
+    return this->whichButtonPressed();
 }
 
 void GameOver::render()

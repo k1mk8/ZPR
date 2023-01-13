@@ -29,61 +29,41 @@ void Interface::initButton()
     this->speed3 = Button(Vector2f(125, 60), Color::Cyan, Vector2f(740, 470));
 }
 
+void Interface::setNewTextParams(Text& name, Color color, int size, Vector2f setPosition, string text)
+{
+    name.setFont(this->font);
+    name.setFillColor(color);
+    name.setCharacterSize(size);
+    name.setPosition(setPosition);
+    name.setString(text);
 
+}
 
 void Interface::initText()
 {
     /// @brief iniciuje teksty do interfejsu
-    this->guiText.setFont(this->font);
-    this->guiText.setFillColor(Color::Black);
-    this->guiText.setCharacterSize(32);
-
     // tekst początkowy ekranu
-    this->standardText.setFont(this->font);
-    this->standardText.setFillColor(Color::Black);
-    this->standardText.setCharacterSize(25);
-    this->standardText.setPosition(Vector2f(280,100));
-    this->standardText.setString("\t\t\t\t\t\tWitamy w grze AGARIO!\n Prosze wcisnac przycisk graj, aby rozpoczac rozgrywke!");
-
+    setNewTextParams(this->standardText, Color::Black, 25, Vector2f(280,100), "\t\t\t\t\t\tWitamy w grze AGARIO!\n Prosze wcisnac przycisk graj, aby rozpoczac rozgrywke!");
+    
     // tekst na przycisku
-    this->buttonText.setFont(this->font);
-    this->buttonText.setFillColor(Color::Black);
-    this->buttonText.setCharacterSize(25);
-    this->buttonText.setPosition(Vector2f(590,565));
-    this->buttonText.setString("Graj!");
+    setNewTextParams(this->buttonText, Color::Black, 25, Vector2f(590,565), "Graj!");
 
     // tekst na przycisku prędkości
-    this->buttonText1.setFont(this->font);
-    this->buttonText1.setFillColor(Color::Black);
-    this->buttonText1.setCharacterSize(35);
-    this->buttonText1.setPosition(Vector2f(420,475));
-    this->buttonText1.setString("5x");
+    setNewTextParams(this->buttonText1, Color::Black, 35, Vector2f(420,475), "5x");
 
     // tekst na przycisku prędkości
-    this->buttonText2.setFont(this->font);
-    this->buttonText2.setFillColor(Color::Black);
-    this->buttonText2.setCharacterSize(35);
-    this->buttonText2.setPosition(Vector2f(600,475));
-    this->buttonText2.setString("10x");
+    setNewTextParams(this->buttonText2, Color::Black, 35, Vector2f(600,475), "10x");
 
     // tekst na przycisku prędkości
-    this->buttonText3.setFont(this->font);
-    this->buttonText3.setFillColor(Color::Black);
-    this->buttonText3.setCharacterSize(35);
-    this->buttonText3.setPosition(Vector2f(780,475));
-    this->buttonText3.setString("20x");
+    setNewTextParams(this->buttonText3, Color::Black, 35, Vector2f(780,475), "20x");
 
     // maksymalna ilość punktów w historii
-    this->maxPointsText.setFont(this->font);
-    this->maxPointsText.setFillColor(Color::Black);
-    this->maxPointsText.setCharacterSize(25);
-    this->maxPointsText.setPosition(Vector2f(380,425));
     int allMaxPoints = 0;
     ifstream Plik("./maxPoints.txt"); // pobieranie danych z pliku o maksymalnej ilości punktów
     Plik >> allMaxPoints;
     Plik.close();
     auto s = to_string(allMaxPoints);
-    this->maxPointsText.setString("Twoj najlepszy dotychczasowy wynik to: " + s);
+    setNewTextParams(this->maxPointsText, Color::Black, 25, Vector2f(380,425), "Twoj najlepszy dotychczasowy wynik to: " + s);
 }
 
 Interface::Interface()
@@ -150,7 +130,6 @@ void Interface::renderGui(RenderTarget* target)
 {
     /// @brief funkcja generująca GUI dla okna
     /// @param target miejsce renderu obiektu
-    target->draw(this->guiText);
     target->draw(this->standardText);
     target->draw(this->maxPointsText);
     target->draw(this->buttonText);

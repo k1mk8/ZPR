@@ -22,7 +22,6 @@ private:
     Sprite sprite; // wygląd okna
     Texture texture; // tekstura
     Text standardText; // tekst paska 
-    Text guiText; // tekst głównego ekranu
     Text buttonText; // tekst przycisku
     Text maxPointsText; // tekst maksymalnej historycznej liczby punktów
     Text buttonText1; // tekst paska prędkości
@@ -32,6 +31,7 @@ private:
     void initWindow(); // inicjowanie okna
     void initFonts(); // inicjowanie czcionki
     void initText(); // inicjowanie tekstu
+    void setNewTextParams(Text& name, Color color, int size, Vector2f setPosition = {0, 0}, string text = "");
     void initButton(); // inicjowanie przycisków
 public:
     RenderWindow* window; // okno gry

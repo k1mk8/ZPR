@@ -24,7 +24,7 @@ private:
 public:
     GameOver(); // konstruktor domyślny
     ~GameOver(); // destruktor domyślny
-    int buttonPressed(); // sprawdzenie czy przycisk wciśnięty
+    int whichButtonPressed(); // sprawdzenie czy przycisk wciśnięty
     void pollEvents(); // sprawdzanie wydarzeń 
     int update(); // uaktualnianie okna
     void render(); // renderowanie i wyświetlanie okna 
