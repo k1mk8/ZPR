@@ -18,9 +18,6 @@ private:
     Button speed1;  // przycisk doboru prędkości
     Button speed2;  // przycisk doboru prędkości
     Button speed3;  // przycisk doboru prędkości
-    Event sfmlEvent; // eventy
-    Sprite sprite; // wygląd okna
-    Texture texture; // tekstura
     Text standardText; // tekst paska 
     Text buttonText; // tekst przycisku
     Text maxPointsText; // tekst maksymalnej historycznej liczby punktów

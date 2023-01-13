@@ -19,9 +19,6 @@ void BasicWindow::initFonts()
     }
 }
 
-void BasicWindow::initButton(){}
-
-
 void BasicWindow::setNewTextParams(Text& name, Color color, int size, Vector2f setPosition, string text)
 {
     name.setFont(this->font);
@@ -55,11 +52,6 @@ void BasicWindow::pollEvents()
         }
         break;
     }
-}
-
-BasicWindow::BasicWindow()
-{
-    /// @brief konstruktor domyślny
 }
 
 BasicWindow::~BasicWindow()
