@@ -13,10 +13,10 @@ find_package(
 )
 include_directories(include)
 enable_testing()
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cc")
 add_executable(
     agario
-    Agario.cpp
+    Agario.cc
     ${SOURCES}
 )
 target_link_libraries(
