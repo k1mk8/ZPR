@@ -1,6 +1,8 @@
 #include "Interface.h"
 
 using namespace std;
+using namespace sf;
+
 void Interface::setTexture()
 {
     this->texture.loadFromFile("images/tlo.png");

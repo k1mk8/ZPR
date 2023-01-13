@@ -2,6 +2,9 @@
 #include "GameOver.h"
 #include "Interface.h"
 
+using namespace std;
+using namespace sf;
+
 int main()
 {
     srand(static_cast<unsigned>(time(0)));

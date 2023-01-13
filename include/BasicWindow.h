@@ -8,22 +8,21 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 #include "Button.h"
-using namespace sf;
 
 
 class BasicWindow
 {
 public:
-    RenderWindow* window; // okno końca gry
-    VideoMode videoMode; // okno wyświetlane
-    Sprite sprite; // wygląd okna
-    Texture texture; // tekstura
-    Event sfmlEvent; // event
-    Font font;
+    sf::RenderWindow* window; // okno końca gry
+    sf::VideoMode videoMode; // okno wyświetlane
+    sf::Sprite sprite; // wygląd okna
+    sf::Texture texture; // tekstura
+    sf::Event sfmlEvent; // event
+    sf::Font font;
     virtual void setTexture();
     virtual void initWindow(); // inicjowanie okna
     virtual void initFonts();
-    virtual void setNewTextParams(Text& name, Color color, int size, Vector2f setPosition = {0, 0}, string text = "");
+    virtual void setNewTextParams(sf::Text& name, sf::Color color, int size, sf::Vector2f setPosition = {0, 0}, std::string text = "");
     virtual bool running();
     virtual void pollEvents(); // sprawdzanie wydarzeń 
     ~BasicWindow(); // destruktor domyślny

@@ -1,5 +1,8 @@
 #include "GameOver.h"
 
+using namespace std;
+using namespace sf;
+
 void GameOver::setTexture()
 {
     /// @brief inifcuje początkowe wartości interfejsu

@@ -1,5 +1,8 @@
 #include "Game.h"
 
+using namespace std;
+using namespace sf;
+
 void Game::variables(const int& speed)
 {
     /// @brief ustawia zmienne klasy
@@ -24,36 +27,22 @@ void Game::initWindow()
     this->window->setView(view);
 }
 
-void Game::initFonts()
-{
-    /// @brief ustawia czcionkę tekstu
-    if(!this->font.loadFromFile("fonts/MilkyHoney.ttf")){
-        cout << " COULD NOT LOAD MilkyHoney.ttf" << "\n";
-    }
-}
-
 void Game::initText()
 {
     /// @brief iniciuje teksty w grze
-    this->guiText.setFont(this->font);
-    this->guiText.setFillColor(Color::Black);
-    this->guiText.setCharacterSize(32);
-    this->table.setFont(this->font);
-    this->table.setFillColor(Color::Black);
-    this->table.setCharacterSize(32);
+    setNewTextParams(this->guiText, Color::Black, 32);
+    setNewTextParams(this->table, Color::Black, 32);
 }
 
 void Game::initBots(const float& speed)
 {
     /// @brief iniciuje boty w grze
     if(this->bots.size() < 10)
-    {
         for(int i = (int)this->bots.size(); i < this->maxBots; ++i)
         {
             Bot bot(rand()%8000 - 4000, rand()%5000 - 2500, 10, speed);
             this->bots.push_back(bot);
         }
-    }
 }
 
 void Game::zoomOut()
@@ -74,43 +63,11 @@ Game::Game(const int& speed)
     this->initBots(speed);
 }
 
-Game::~Game()
-{
-    /// @brief destruktor domyślny
-    delete this->window;
-}
-
 const bool& Game::getEndGame() const
 {
     /// @brief getter końca gry
     /// @return prawda lub fałsz czy koniec gry 
     return this->endGame;
-}
-
-bool Game::running()
-{
-    /// @brief funkcja sprawdzająca czy okno jest otwarte
-    /// @return prawda lub fałsz, czy okno jest otwarte
-    return this->window->isOpen();
-}
-
-void Game::pollEvents()
-{
-    /// @brief funkcja sprawdzająca czy okno ma być zamknięte
-    while(this->window->pollEvent(this->sfmlEvent))
-    {
-        if (this->sfmlEvent.type == Event::Closed)
-        {
-            this->endGame = true;
-            break;
-        }
-        if(this->sfmlEvent.key.code == Keyboard::Escape)
-        {
-            this->endGame = true;
-            break;
-        }
-        break;
-    }
 }
 
 const int & Game::getTotalPoints() const
@@ -302,7 +259,7 @@ void Game::updateBot()
     }
 }
 
-void Game::update()
+int Game::update()
 {
     /// @brief funkcja uaktualniająca wydarzenia na mapie
     this->pollEvents();
@@ -322,6 +279,7 @@ void Game::update()
         this->endGame = true;
         this->updateMaxPoints();
     }
+    return 0;
 }
 
 void Game::calculateStaticPoints()

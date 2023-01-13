@@ -1,5 +1,8 @@
 #include "Player.h"
 
+using namespace std;
+using namespace sf;
+
 void Player::Variables(const int mass, const int speed)
 {
     /// @brief ustawia zmienne klasy

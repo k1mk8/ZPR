@@ -1,5 +1,8 @@
 #include "StaticPoints.h"
 
+using namespace std;
+using namespace sf;
+
 void StaticPoints::makeShape(std::vector<Player> rect)
 {
     /// @brief tworzy kształt przycisku na podstawie typu obiektu

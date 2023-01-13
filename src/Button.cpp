@@ -1,6 +1,8 @@
 #include <Button.h>
 
 using namespace std;
+using namespace sf;
+
 Button::Button()
 {
     /// @brief konstruktor domyślny klasy button

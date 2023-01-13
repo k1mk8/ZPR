@@ -9,19 +9,15 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
-
-using namespace sf;
-using namespace std;
-
 class Button // klasa odpowiedzialna za klikalny button do interakcji z użytkownikiem
 {
 private:
-    RectangleShape button; // zmienna przetrzymująca kształt przycisku
+    sf::RectangleShape button; // zmienna przetrzymująca kształt przycisku
 public:
     Button(); // konstruktor domyślny
-    Button(Vector2f size, Color color, Vector2f pos); // konstruktor przyjmujący wartości startowe
+    Button(sf::Vector2f size, sf::Color color, sf::Vector2f pos); // konstruktor przyjmujący wartości startowe
     ~Button(); // destruktor
-    const RectangleShape& getButton() const; // zwraca przycisk
-    bool isButtonPressed(RenderWindow* window); // sprawdza czy button jest wciśnięty
+    const sf::RectangleShape& getButton() const; // zwraca przycisk
+    bool isButtonPressed(sf::RenderWindow* window); // sprawdza czy button jest wciśnięty
 };
 #endif

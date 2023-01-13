@@ -10,8 +10,6 @@
 
 #include "BasicWindow.h"
 
-using namespace sf;
-
 
 class GameOver:public BasicWindow
 {

@@ -1,6 +1,7 @@
 #include "Bot.h"
 
 using namespace std;
+using namespace sf;
 
 /// @brief Konstruktor bota
 ///

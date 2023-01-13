@@ -1,5 +1,8 @@
 #include "BasicWindow.h"
 
+using namespace std;
+using namespace sf;
+
 void BasicWindow::setTexture(){}
 
 void BasicWindow::initWindow()
