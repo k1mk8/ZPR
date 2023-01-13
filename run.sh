@@ -5,5 +5,5 @@ make -C ./build/
 ./build/buttonTest
 ./build/botTest
 ./build/staticPointsTest
-# ./build/gameTest
+./build/gameTest
 ./build/agario
