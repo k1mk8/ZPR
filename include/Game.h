@@ -20,10 +20,10 @@ private:
     std::vector<StaticPoints> static_points_; // punkty statyczne na mapie
     sf::Text gui_text_; // tekst GUI
     sf::Text table_; //tekst wyników
-    int max_static_points_; // maksymalna ilość obiektó statycznych
+    const int MAX_STATIC_POINTS_ = 1000; // maksymalna ilość obiektó statycznych
     int total_points_; // sumaryczna ilośc punktów
     int max_points_ = 10; // maksymalna ilość punktów w grze
-    int max_bots_ = 10; // maksymalna ilość graczy w grze
+    const int MAX_BOTS_ = 10; // maksymalna ilość graczy w grze
     void variables(const int& speed); // inicjowanie zmiennych
     void initWindow(); // inicjowanie okna
     void initText(); // inicjowanie tekstu

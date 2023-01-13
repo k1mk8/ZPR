@@ -7,7 +7,6 @@ void Game::variables(const int& speed)
 {
     /// @brief ustawia zmienne klasy
     this->end_game_ = false;
-    this->max_static_points_ = 1000;
     this->total_points_ = 10;
     Player player(0, 0, 10, speed);
     this->players_.push_back(player);
@@ -38,7 +37,7 @@ void Game::initBots(const float& speed)
 {
     /// @brief iniciuje boty w grze
     if(this->bots_.size() < 10)
-        for(int i = (int)this->bots_.size(); i < this->max_bots_; ++i)
+        for(int i = (int)this->bots_.size(); i < this->MAX_BOTS_; ++i)
         {
             Bot bot(rand()%8000 - 4000, rand()%5000 - 2500, 10, speed);
             this->bots_.push_back(bot);
@@ -93,7 +92,7 @@ int Game::calculateTotalPoints()
 void Game::spawnStaticPoints()
 {
     /// @brief tworzy obiekty statyczne na mapie
-    if((int)this->static_points_.size() < this->max_static_points_)
+    if((int)this->static_points_.size() < this->MAX_STATIC_POINTS_)
         this->static_points_.push_back(StaticPoints(this->randPointType(), this->players_));
 }
 
