@@ -36,7 +36,6 @@ void Interface::setNewTextParams(Text& name, Color color, int size, Vector2f set
     name.setCharacterSize(size);
     name.setPosition(setPosition);
     name.setString(text);
-
 }
 
 void Interface::initText()

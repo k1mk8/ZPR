@@ -41,38 +41,46 @@ void Bot::makeShape()
     this->getShape().setFillColor(Color::Black);
     this->getShape().setRadius(this->getRadius());
 }
+
 template<typename T>
 bool Bot::searchNearby(const vector<T>& participants, int range)
 {
     float direction = 0;
     float closest = 1e12;
+    float speed = this->getSpeed();
     for(auto& it: participants)
     {
-        if(it.getPlayerPostion() == this->getPlayerPostion())
+        float thisX = this->getPlayerPostion().x;
+        float thisY = this->getPlayerPostion().y;
+        float itX = it.getPlayerPostion().x;
+        float itY = it.getPlayerPostion().y;
+        if(itX == thisX && itY == thisY)
             continue;
-        float diffX = abs(it.getPlayerPostion().x - this->getPlayerPostion().x);
-        float diffY = abs(it.getPlayerPostion().y - this->getPlayerPostion().y);
+        float diffX = abs(itX - thisX);
+        float diffY = abs(itY - thisY);
         if(diffX < range && diffY < range)
         {
-            if(this->getMass() >= 1.2 * it.getMass())
+            int thisMass = this->getMass();
+            int itMass = it.getMass();
+            if(thisMass >= 1.2 * itMass)
             {
                 if(diffX + diffY < closest)
                 {
-                    direction = this->getDirection(it.getPlayerPostion().x, it.getPlayerPostion().y);
+                    direction = this->getDirection(itX, itY);
                     closest = diffX + diffY;
                 }
             }
-            else if(0.95 * this->getMass() < it.getMass() && it.getMass() != 30)
+            else if(0.95 * thisMass < itMass && itMass != 30)
             {
-                direction = this->getDirection(it.getPlayerPostion().x, it.getPlayerPostion().y);
-                this->getShape().move(-cos(direction) * this->getSpeed(), sin(direction) * this->getSpeed());
+                direction = this->getDirection(itX, itY);
+                this->getShape().move(-cos(direction) * speed, sin(direction) * speed);
                 return 0;
             }
         }
     }
     if(direction == 0)
         return 1;
-    this->getShape().move(cos(direction) * this->getSpeed(), -sin(direction) * this->getSpeed());
+    this->getShape().move(cos(direction) * speed, -sin(direction) * speed);
     return 0;
 }
 
@@ -87,5 +95,5 @@ void Bot::moveBot(const vector<Bot>& bots, const vector<Player>& players, const 
 
 void Bot::splitBySpike(vector <Bot>& participants)
 {
-    auto x = participants;
+    (void)participants;
 }
