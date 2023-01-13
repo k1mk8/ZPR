@@ -51,29 +51,29 @@ bool Bot::searchNearby(const vector<T>& participants, int range)
     float speed = this->getSpeed();
     for(auto& it: participants) // iteracja po wszystkich obiektach
     {
-        float thisX = this->getPlayerPostion().x; // pobranie swojej pozycji
-        float thisY = this->getPlayerPostion().y;
-        float itX = it.getPlayerPostion().x; // pobranie pozycji obiektu
-        float itY = it.getPlayerPostion().y;
-        if(itX == thisX && itY == thisY) // sprawdzenie czy nie jesteśmy sobą
+        float this_x = this->getPlayerPostion().x; // pobranie swojej pozycji
+        float this_y = this->getPlayerPostion().y;
+        float it_x = it.getPlayerPostion().x; // pobranie pozycji obiektu
+        float it_y = it.getPlayerPostion().y;
+        if(it_x == this_x && it_y == this_y) // sprawdzenie czy nie jesteśmy sobą
             continue;
-        float diffX = abs(itX - thisX);
-        float diffY = abs(itY - thisY);
-        if(diffX < range && diffY < range) // sprawdzenie czy obiekt jest w zasięgu
+        float diff_x = abs(it_x - this_x);
+        float diff_y = abs(it_y - this_y);
+        if(diff_x < range && diff_y < range) // sprawdzenie czy obiekt jest w zasięgu
         {
-            int thisMass = this->getMass();
-            int itMass = it.getMass();
-            if(thisMass >= 1.2 * itMass) // porównanie mas 
+            int this_mass = this->getMass();
+            int it_mass = it.getMass();
+            if(this_mass >= 1.2 * it_mass) // porównanie mas 
             {
-                if(diffX + diffY < closest)
+                if(diff_x + diff_y < closest)
                 {
-                    direction = this->getDirection(itX, itY); // ustalenie kierunku do najbliższego
-                    closest = diffX + diffY;
+                    direction = this->getDirection(it_x, it_y); // ustalenie kierunku do najbliższego
+                    closest = diff_x + diff_y;
                 }
             }
-            else if(0.95 * thisMass < itMass && itMass != 30)
+            else if(0.95 * this_mass < it_mass && it_mass != 30)
             {
-                direction = this->getDirection(itX, itY);
+                direction = this->getDirection(it_x, it_y);
                 this->getShape().move(-cos(direction) * speed, sin(direction) * speed);
                 return 0;
             }
@@ -85,16 +85,16 @@ bool Bot::searchNearby(const vector<T>& participants, int range)
     return 0;
 }
 
-void Bot::moveBot(const vector<Bot>& bots, const vector<Player>& players, const vector<StaticPoints>& staticPoints)
+void Bot::moveBot(const vector<Bot>& bots, const vector<Player>& players, const vector<StaticPoints>& static_points)
 {
     /// @brief funkcja obsługująca poruszanie się botów
     /// @param bots wektory botów na planszy
     /// @param players wektor graczy na planszy
-    /// @param staticPoints wektor punktów statycznych na planszy
+    /// @param static_points wektor punktów statycznych na planszy
     this->calculateSpeed();
     if(searchNearby(players, this->getMass() / 5 + 300))
         if(searchNearby(bots, this->getMass() / 5 + 300))
-            searchNearby(staticPoints, 4000);
+            searchNearby(static_points, 4000);
     this->checkMapCollision();
 }
 

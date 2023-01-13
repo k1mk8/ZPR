@@ -112,7 +112,7 @@ void Game::updatePlayer()
 {
     /// @brief funkcja uaktualniająca informację o graczu
     View view = this->window_->getView();
-    Vector2f viewCenter;
+    Vector2f view_center;
     bool shooting = false;
     while(Keyboard::isKeyPressed(Keyboard::E)){ // sprawdzamy przyciśnięcie przycisku E na klawiaturze
         shooting = true;
@@ -123,23 +123,23 @@ void Game::updatePlayer()
         if(shooting && it.getMass() > 20){ // sprawdza czy gracz strzelił i ma masę większą niż 20
             int type = StaticPointsTypes::FOOD;
             auto& window_ = *this->window_;
-            float mouseX = Mouse::getPosition(window_).x;
-            float mouseY = Mouse::getPosition(window_).y;
-            mouseX -= window_.getSize().x / 2;
-            mouseY -= window_.getSize().y / 2;
-            float direction = atan2(-mouseY, mouseX); // oblicza kierunek strzału
+            float mouse_x = Mouse::getPosition(window_).x;
+            float mouse_y = Mouse::getPosition(window_).y;
+            mouse_x -= window_.getSize().x / 2;
+            mouse_y -= window_.getSize().y / 2;
+            float direction = atan2(-mouse_y, mouse_x); // oblicza kierunek strzału
             this->static_points_.push_back(StaticPoints(type, 
                 it.getRadius() + it.getPlayerPostion().x + 1.8 * it.getRadius() * cos(direction),
                 it.getRadius() + it.getPlayerPostion().y - 1.8 * it.getRadius() * sin(direction),
                 it.getStartingSpeed(), direction)); // tworzy nowy obiekt statyczny wystrzliwany przez gracza
             it.loseMass();
         }
-        viewCenter += it.getPlayerPostion();
-        viewCenter += Vector2f(log(it.getMass())/log(1.05),log(it.getMass())/log(1.05));
+        view_center += it.getPlayerPostion();
+        view_center += Vector2f(log(it.getMass())/log(1.05),log(it.getMass())/log(1.05));
     }
-    viewCenter.x = viewCenter.x / this->players_.size();
-    viewCenter.y = viewCenter.y / this->players_.size();
-    view.setCenter(viewCenter);
+    view_center.x = view_center.x / this->players_.size();
+    view_center.y = view_center.y / this->players_.size();
+    view.setCenter(view_center);
     this->window_->setView(view);
 }
 
@@ -200,57 +200,57 @@ void Game::updateCollision()
     }
 }
 
-void Game::updateTable(stringstream& ss, stringstream& ss2, Vector2f& viewCenter)
+void Game::updateTable(stringstream& ss, stringstream& ss2, Vector2f& view_center)
 {
     /// @brief funkcja uaktualniająca tablice wyników
     /// @param ss napisz 1
     /// @param ss2 napis 2
-    /// @param viewCenter środek ekranu
+    /// @param view_center środek ekranu
     ss << " - Points: " << this->total_points_ << "\n"; // uaktualnienie liczby punktów
     ss2 << "TABLICA WYNIKOW\n";
 
-    vector<int> bestFive;
+    vector<int> best_five;
     for(auto& it: bots_)
-        bestFive.push_back(-it.getMass());
+        best_five.push_back(-it.getMass());
     for(auto& it: players_)
     {
-        viewCenter += it.getPlayerPostion();
-        viewCenter += Vector2f(it.getRadius()+30, it.getRadius()+30); // obliczanie środka ekranu
+        view_center += it.getPlayerPostion();
+        view_center += Vector2f(it.getRadius()+30, it.getRadius()+30); // obliczanie środka ekranu
     }
-    bestFive.push_back(-this->calculateTotalPoints());
-    sort(bestFive.begin(), bestFive.end()); // obliczamy 5 najlepszy zawodników
+    best_five.push_back(-this->calculateTotalPoints());
+    sort(best_five.begin(), best_five.end()); // obliczamy 5 najlepszy zawodników
     
-    for(int i = 0; i < min(5, (int)bestFive.size()); ++i)
-        ss2 << -bestFive[i] << "\n";
+    for(int i = 0; i < min(5, (int)best_five.size()); ++i)
+        ss2 << -best_five[i] << "\n";
 }
 
 void Game::updateGui()
 {
     /// @brief aktualizowanie informacji interfejsu
     stringstream ss, ss2;
-    Vector2f viewCenter;
-    this->updateTable(ss, ss2 , viewCenter);
-    viewCenter.x = viewCenter.x / this->players_.size();
-    viewCenter.y = viewCenter.y / this->players_.size();
+    Vector2f view_center;
+    this->updateTable(ss, ss2 , view_center);
+    view_center.x = view_center.x / this->players_.size();
+    view_center.y = view_center.y / this->players_.size();
     View view = window_->getView();
     Vector2f size = view.getSize();
-    Vector2f tablePosition = viewCenter;
-    tablePosition += Vector2f(size.x/2 - 300, -size.y/2);
-    viewCenter += Vector2f(-size.x/2, -size.y/2);
-    this->gui_text_.setPosition(viewCenter);
+    Vector2f table_position = view_center;
+    table_position += Vector2f(size.x/2 - 300, -size.y/2);
+    view_center += Vector2f(-size.x/2, -size.y/2);
+    this->gui_text_.setPosition(view_center);
     this->gui_text_.setString(ss.str());
-    this->table_.setPosition(tablePosition);
+    this->table_.setPosition(table_position);
     this->table_.setString(ss2.str());
 }
 
 void Game::updateMaxPoints()
 {
     /// @brief funkcja po zakończeniu gry zapisuje maksymalną ilość punktów do pliku
-    int allMaxPoints = 0;
+    int all_max_points = 0;
     ifstream Plik("./max_points_.txt");
-    Plik >> allMaxPoints;
+    Plik >> all_max_points;
     Plik.close();
-    if(max_points_ > allMaxPoints){
+    if(max_points_ > all_max_points){
         ofstream Plik("./max_points_.txt");
         Plik << max_points_;
         Plik.close();

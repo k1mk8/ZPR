@@ -39,11 +39,11 @@ void Interface::initText()
     setNewTextParams(this->button_text3_, Color::Black, 35, Vector2f(780,475), "20x");
 
     // maksymalna ilość punktów w historii
-    int allMaxPoints = 0;
+    int all_max_points = 0;
     ifstream Plik("./maxPoints.txt"); // pobieranie danych z pliku o maksymalnej ilości punktów
-    Plik >> allMaxPoints;
+    Plik >> all_max_points;
     Plik.close();
-    auto s = to_string(allMaxPoints);
+    auto s = to_string(all_max_points);
     setNewTextParams(this->max_points_text_, Color::Black, 25, Vector2f(380,425), "Twoj najlepszy dotychczasowy wynik to: " + s);
 }
 

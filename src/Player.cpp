@@ -109,11 +109,11 @@ const clock_t & Player::getSplitTime() const
     return this->split_time_;
 }
 
-void Player::setSplitTime(clock_t splittime)
+void Player::setSplitTime(clock_t split_time)
 {
     /// @brief setter czasu podziału
-    /// @param splittime czasu podziału gracza
-    this->split_time_ = splittime;
+    /// @param split_time czasu podziału gracza
+    this->split_time_ = split_time;
 }
 
 void Player::setType(int type_)
@@ -153,16 +153,16 @@ void Player::connect(vector<Player>& players)
 {
     /// @brief łączy rozdzielonego gracza po określonym czasie
     /// @param players wektor graczy na mapie
-    clock_t actualTime = clock();
+    clock_t actual_time = clock();
     if(players.size() > 1){
-        if(((double)(actualTime - players[0].getSplitTime()) / CLOCKS_PER_SEC) > 20.0){ // sprawdza czy od ostatniego podziału minął określony czas
+        if(((double)(actual_time - players[0].getSplitTime()) / CLOCKS_PER_SEC) > 20.0){ // sprawdza czy od ostatniego podziału minął określony czas
             int mass_ = 0;
-            Vector2f oldPlayersPos;
+            Vector2f old_players_pos;
             for(auto& it : players){ // łączy wszystkich graczy w jedną masę
                 mass_ += it.getMass();
-                oldPlayersPos += it.getPlayerPostion();
+                old_players_pos += it.getPlayerPostion();
             }
-            Player player = Player(oldPlayersPos.x / players.size(), oldPlayersPos.y / players.size(), mass_, starting_speed_); // tworzy gracza po połączeniu
+            Player player = Player(old_players_pos.x / players.size(), old_players_pos.y / players.size(), mass_, starting_speed_); // tworzy gracza po połączeniu
             players.clear(); // usuwa połączonych graczy
             players.push_back(player);
         }
@@ -195,23 +195,23 @@ void Player::split(RenderWindow& window, vector<Player>& players)
         flag = true;
     }
     if(flag){
-        std::vector<Player> tempPlayers;
+        std::vector<Player> temp_players;
         for(auto& it : players){
-            if(players.size() + tempPlayers.size() < 8){ // sprawdzenie czy nie przekroczono maksymalnej ilości kul
+            if(players.size() + temp_players.size() < 8){ // sprawdzenie czy nie przekroczono maksymalnej ilości kul
                 if(it.getMass() > 30){ // sprawdzenie, czy można podzielić
                     players[0].setSplitTime(clock());
                     it.splitMass();
                     float radius = it.getRadius();
-                    pair<float, float> relativePos = getRelativeMousePositon(window, players); // pobiera pozycje myszki
-                    float direction = atan2(-relativePos.second, relativePos.first); // obliczenie kierunku
+                    pair<float, float> relative_pos = getRelativeMousePositon(window, players); // pobiera pozycje myszki
+                    float direction = atan2(-relative_pos.second, relative_pos.first); // obliczenie kierunku
                     Player player = Player(it.getPlayerPostion().x + 2.5 * radius * cos(direction),
                         it.getPlayerPostion().y - 2.5 * radius * sin(direction), it.getMass(), starting_speed_); // tworzy nowego gracza wystrzelonego w konkretnym kierunku
                     player.setFreshSpawnedTime(clock()); // ustawia czas respawnu
-                    tempPlayers.push_back(player); // wrzuca na wektor tymczasowych graczy
+                    temp_players.push_back(player); // wrzuca na wektor tymczasowych graczy
                 }
             }
         }
-        for(auto& it : tempPlayers){
+        for(auto& it : temp_players){
             players.push_back(it);
         }
     }
@@ -221,11 +221,11 @@ void Player::splitBySpike(vector<Player>& players)
 {
     /// @brief funkcja dzieląca gracza po dotknięciu spike'a
     /// @param players wektor graczy na mapie
-    int maxPartsNumber = min(3, (8 - (int)players.size()));//maksymalna ilosc kulek jednego gracza wynosi 8
-    if(maxPartsNumber > 0)
+    int max_parts_number = min(3, (8 - (int)players.size()));//maksymalna ilosc kulek jednego gracza wynosi 8
+    if(max_parts_number > 0)
     {
-        this->setMass(this->getMass() / (maxPartsNumber + 1));
-        for(int i = 1; i <= maxPartsNumber; ++i)
+        this->setMass(this->getMass() / (max_parts_number + 1));
+        for(int i = 1; i <= max_parts_number; ++i)
         {
             players[0].setSplitTime(clock());
             Player player = Player(this->getPlayerPostion().x + 2 * i * this->getRadius(), 
@@ -251,30 +251,30 @@ pair<float, float> Player::getRelativeMousePositon(RenderWindow& window, vector 
     /// @param window okno gry
     /// @param players wektor graczy
     /// @return para zawierająca pozycję x i y myszki
-    float mouseX = Mouse::getPosition(window).x;
-    float mouseY = Mouse::getPosition(window).y;
-    mouseX -= window.getSize().x / 2;
-    mouseY -= window.getSize().y / 2;
-    float centralPositionX = 0;
-    float centralPositionY = 0;
+    float mouse_x = Mouse::getPosition(window).x;
+    float mouse_y = Mouse::getPosition(window).y;
+    mouse_x -= window.getSize().x / 2;
+    mouse_y -= window.getSize().y / 2;
+    float central_position_x = 0;
+    float central_position_y = 0;
     for(auto& it : players)
     { // łączy wszystkich graczy w jedną masę
-        centralPositionX += it.getPlayerPostion().x;
-        centralPositionY += it.getPlayerPostion().y;
+        central_position_x += it.getPlayerPostion().x;
+        central_position_y += it.getPlayerPostion().y;
     }
-    centralPositionX /= players.size();
-    centralPositionY /= players.size();
-    mouseX += -this->getPlayerPostion().x + centralPositionX;
-    mouseY += -this->getPlayerPostion().y + centralPositionY;
-    return {mouseX, mouseY};
+    central_position_x /= players.size();
+    central_position_y /= players.size();
+    mouse_x += -this->getPlayerPostion().x + central_position_x;
+    mouse_y += -this->getPlayerPostion().y + central_position_y;
+    return {mouse_x, mouse_y};
 }
 
 void Player::move(RenderWindow& window, vector <Player>& players)
 {
     /// @brief funkcja odpowiedzialna za poruszanie się gracza w każdą stronę 
     this->calculateSpeed(); // obliczanie prędkości gracza
-    pair<float, float> mouseXY = this->getRelativeMousePositon(window, players);
-    float direction = atan2(-mouseXY.second, mouseXY.first);
+    pair<float, float> mouse_x_y = this->getRelativeMousePositon(window, players);
+    float direction = atan2(-mouse_x_y.second, mouse_x_y.first);
     this->shape_.move(cos(direction) * this->speed_, -sin(direction) * this->speed_);
 
     if((double)(clock() - this->getFreshSpawnedTime()) / CLOCKS_PER_SEC < 0.3 &&
@@ -290,8 +290,8 @@ void Player::move(RenderWindow& window, vector <Player>& players)
             float x2 = it.getPlayerPostion().x;
             float y2 = it.getPlayerPostion().y; // pobranie pozycju
 
-            if(abs(mouseXY.first - x1) + abs(mouseXY.second - y1) 
-                <= abs(mouseXY.first - x2) + abs(mouseXY.second - y2))
+            if(abs(mouse_x_y.first - x1) + abs(mouse_x_y.second - y1) 
+                <= abs(mouse_x_y.first - x2) + abs(mouse_x_y.second - y2))
                     continue;
                     
             float d = this->getRadius() + it.getRadius();
