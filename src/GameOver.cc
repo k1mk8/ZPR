@@ -1,3 +1,9 @@
+/*
+    @file GameOver.cc
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający implementację klasy GameOver
+*/
+
 #include "GameOver.h"
 
 using namespace std;

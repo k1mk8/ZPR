@@ -1,3 +1,9 @@
+/*
+    @file Button.h
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający deklarację klasy Button
+*/
+
 #ifndef Button_H
 #define Button_H
 

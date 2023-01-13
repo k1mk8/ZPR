@@ -1,3 +1,9 @@
+/*
+    @file GameOver.h
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający deklarację klasy GameOver
+*/
+
 #ifndef GameOver_H
 #define GameOver_H
 

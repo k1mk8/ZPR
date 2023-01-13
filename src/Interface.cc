@@ -1,3 +1,9 @@
+/*
+    @file Interface.cc
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający implementację klasy Interface
+*/
+
 #include "Interface.h"
 
 using namespace std;

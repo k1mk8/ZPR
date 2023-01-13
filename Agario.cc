@@ -1,3 +1,9 @@
+/*
+    @file Agario.cc
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający główną pętlę gry
+*/
+
 #include "Game.h"
 #include "GameOver.h"
 #include "Interface.h"
@@ -11,10 +17,10 @@ int main()
     int choice = 0;
     while(true)
     {
-        Interface interface;
+        Interface interface; // stworzenie interfejsu
         int change = 0;
         int speed = 10;
-        while(interface.running() && change != 1)
+        while(interface.running() && change != 1) // dopóki działa intefejs
         {
             change = interface.update();
             interface.render();
@@ -25,14 +31,14 @@ int main()
             if(change == 4)
                 speed = 20;
         }
-        Game game(speed);
-        while(game.running())
+        Game game(speed); // tworzenie gry z wybraną przez użytkownika prędkością
+        while(game.running()) // dopóki działa okno gry
         {
             game.update();
             game.render();
         }
-        GameOver gameOver;
-        while(choice == 0)
+        GameOver gameOver; // stworzenie okna końcowego
+        while(choice == 0) // dopóki działa okno
         {
             choice = gameOver.update();
             gameOver.render();

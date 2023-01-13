@@ -1,3 +1,9 @@
+/*
+    @file Game.h
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający deklarację klasy Game
+*/
+
 #ifndef Game_H
 #define Game_H
 

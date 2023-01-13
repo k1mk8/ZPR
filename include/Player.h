@@ -1,3 +1,9 @@
+/*
+    @file Player.h
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający deklarację klasy Player
+*/
+
 #ifndef Interface_H
 #define Interface_H
 

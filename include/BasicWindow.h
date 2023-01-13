@@ -1,3 +1,9 @@
+/*
+    @file BasicWindow.h
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający deklarację klasy BasicWindow
+*/
+
 #ifndef BasicWindow_H
 #define BasicWindow_H
 

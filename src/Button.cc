@@ -1,3 +1,9 @@
+/*
+    @file Button.cc
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający implementację klasy Button
+*/
+
 #include <Button.h>
 
 using namespace std;

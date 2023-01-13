@@ -1,3 +1,9 @@
+/*
+    @file Player.cc
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający implementację klasy Player
+*/
+
 #include "Player.h"
 
 using namespace std;

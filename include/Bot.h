@@ -1,3 +1,9 @@
+/*
+    @file Bot.h
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający deklarację klasy Bot
+*/
+
 #ifndef Bot_H
 #define Bot_H
 

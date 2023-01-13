@@ -1,3 +1,9 @@
+/*
+    @file Bot.cc
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający implementację klasy Bot
+*/
+
 #include "Bot.h"
 
 using namespace std;

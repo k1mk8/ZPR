@@ -1,3 +1,9 @@
+/*
+    @file BasicWindow.cc
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający implementację klasy BasicWindow
+*/
+
 #include "BasicWindow.h"
 
 using namespace std;

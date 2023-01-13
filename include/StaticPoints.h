@@ -1,3 +1,9 @@
+/*
+    @file StaticPoints.h
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający deklarację klasy StaticPoints
+*/
+
 #ifndef StaticPoints_H
 #define StaticPoints_H
 

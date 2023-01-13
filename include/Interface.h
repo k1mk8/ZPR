@@ -1,3 +1,9 @@
+/*
+    @file Interface.h
+    @author Karol Kasperek, Szymon Dyszewski
+    @brief plik zawierający deklarację klasy Interface
+*/
+
 #include <bits/stdc++.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
