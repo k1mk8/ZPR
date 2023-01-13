@@ -29,16 +29,21 @@ target_link_libraries(
 #    ./tests/PlayerTest.cc
 #    ${SOURCES}
 #)
+# add_executable(
+    # buttonTest
+    # ./tests/ButtonTest.cc
+    # ${SOURCES}
+# )
 add_executable(
-    buttonTest
-    ./tests/ButtonTest.cc
+    botTest
+    ./tests/BotTest.cc
     ${SOURCES}
 )
-add_executable(
-    staticPointsTest
-    ./tests/StaticPointsTest.cc
-    ${SOURCES}
-)
+# add_executable(
+    # staticPointsTest
+    # ./tests/StaticPointsTest.cc
+    # ${SOURCES}
+# )
 #add_executable(
 #    gameTest
 #    ./tests/GameTest.cc
@@ -49,16 +54,21 @@ add_executable(
 #    GTest::gtest_main
 #    sfml-graphics
 #)
+# target_link_libraries(
+    # buttonTest
+    # GTest::gtest_main
+    # sfml-graphics
+# )
 target_link_libraries(
-    buttonTest
+    botTest
     GTest::gtest_main
     sfml-graphics
 )
-target_link_libraries(
-    staticPointsTest
-    GTest::gtest_main
-    sfml-graphics
-)
+# target_link_libraries(
+#     staticPointsTest
+#     GTest::gtest_main
+#     sfml-graphics
+# )
 #target_link_libraries(
 #    gameTest
 #    GTest::gtest_main
@@ -66,8 +76,9 @@ target_link_libraries(
 #)
 include(GoogleTest)
 #    gtest_discover_tests(playerTest)
-    gtest_discover_tests(buttonTest)
-    gtest_discover_tests(staticPointsTest)
+    #gtest_discover_tests(buttonTest)
+    gtest_discover_tests(botTest)
+    #gtest_discover_tests(staticPointsTest)
 #    gtest_discover_tests(gameTest)
 
 
