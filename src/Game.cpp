@@ -77,22 +77,24 @@ const int & Game::getTotalPoints() const
     return this->totalPoints;
 }
 
-void Game::calculateTotalPoints()
+int Game::calculateTotalPoints()
 {
     /// @brief oblicza łączną liczbę punktów gracza
     this->totalPoints = 0;
     for(auto& it : this->players)
-    {
         this->totalPoints += it.getMass();
-    }
+    
+    if(this->totalPoints > this->maxPoints)
+        this->maxPoints = this->totalPoints;
+
+    return this->totalPoints;
 }
 
 void Game::spawnStaticPoints()
 {
     /// @brief tworzy obiekty statyczne na mapie
-    if((int)this->staticPoints.size() < this->maxStaticPoints){
+    if((int)this->staticPoints.size() < this->maxStaticPoints)
         this->staticPoints.push_back(StaticPoints(this->randPointType(), this->players));
-    }
 }
 
 int Game::randPointType()
@@ -101,10 +103,8 @@ int Game::randPointType()
     /// @return typ punktu statycznego
     int type = StaticPointsTypes::FOOD;
     int value = rand() % 100 + 1;
-    if(value > 98){
+    if(value > 98)
         type = StaticPointsTypes::SPIKES;
-    }
-
     return type;
 }
 
@@ -141,89 +141,83 @@ void Game::updatePlayer()
     this->window->setView(view);
 }
 
-template<typename T>
-void Game::updateCollision(vector<T>& participants, bool isBot)
+template<typename T, typename U>
+void Game::updateCollisionForObject(T& participant, vector<U>& objects, vector<T>& participants)
+{
+    int i = 0;
+    for(auto& it : objects) // iteracja po wszystkich graczach
+    {
+        if(it.getShape().getGlobalBounds().intersects(participant.getShape().getGlobalBounds()))
+        { // sprawdzenie czy punkty się nie przecinają
+            switch(it.getType())
+            {
+                case StaticPointsTypes::FOOD: // jeśli jedzenie zwiększ mase
+                    participant.grow(it.getMass());
+                    objects.erase(objects.begin() + i); // usuń punkt z mapy
+                    break;
+                case StaticPointsTypes::SPIKES: // jeśli spike'a porównaj mase
+                    if(participant.getMass() > it.getMass() * 1.1)
+                    {
+                        participant.grow(it.getMass());
+                        objects.erase(objects.begin() + i); // usuń punkt z mapy
+                        if(participant.getType() == 3)
+                            participant.splitBySpike(participants);
+                    }
+                    break;
+                default:
+                    if(participant.getMass() > it.getMass() * 1.1)
+                    {
+                        participant.grow(it.getMass());
+                        objects.erase(objects.begin() + i); // usuń punkt z mapy
+                    }
+                    break;
+            }
+        }
+        ++i;
+    }
+}
+
+void Game::updateCollision()
 {
     /// @brief funkcja sprawdzająca kolizję na mapie
-    for(size_t i = 0; i < this->staticPoints.size(); ++i){ // iteracja po wszystkich punktach na mapie
-        for(auto& it : participants) // iteracja po wszystkich graczach
-        {
-            if(it.getShape().getGlobalBounds().intersects(this->staticPoints[i].getShape().getGlobalBounds()))
-            { // sprawdzenie czy punkty się nie przecinają
-                switch(this->staticPoints[i].getType())
-                {
-                    case StaticPointsTypes::FOOD: // jeśli jedzenie zwiększ mase
-                        it.grow(this->staticPoints[i].getMass());
-                        this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
-                        break;
-                    case StaticPointsTypes::SPIKES: // jeśli spike'a porównaj mase
-                        if(it.getMass() > this->staticPoints[i].getMass() * 1.1)
-                        {
-                            it.grow(this->staticPoints[i].getMass());
-                            this->staticPoints.erase(this->staticPoints.begin() + i); // usuń punkt z mapy
-                            if(isBot == false)
-                                it.splitBySpike(participants);
-                            break;
-                        }
-                }
-            }
-        }
+    for(auto& it:players)
+    {
+        this->updateCollisionForObject(it, this->bots, this->players);
+        this->updateCollisionForObject(it, this->staticPoints, this->players);
     }
-    if(isBot == true)
-        for(auto& it : participants)
-            for(size_t i = 0; i < this->players.size(); ++i){
-            {
-                if(it.getShape().getGlobalBounds().intersects(this->players[i].getShape().getGlobalBounds()))
-                { // sprawdzenie czy punkty się nie przecinają
-                    if(it.getMass() > this->players[i].getMass() * 1.1)
-                    {
-                        it.grow(this->players[i].getMass());
-                        this->players.erase(this->players.begin() + i); // usuń punkt z mapy
-                        break;
-                    }
-                }
-            }
-        }
-    for(auto& it : participants)
-        for(size_t i = 0; i < this->bots.size(); ++i){
-        {
-            if(it.getShape().getGlobalBounds().intersects(this->bots[i].getShape().getGlobalBounds()))
-            { // sprawdzenie czy punkty się nie przecinają
-                if(it.getMass() > this->bots[i].getMass() * 1.1)
-                {
-                    it.grow(this->bots[i].getMass());
-                    this->bots.erase(this->bots.begin() + i); // usuń punkt z mapy
-                    break;
-                }
-            }
-        }
+    for(auto& it:bots)
+    {
+        this->updateCollisionForObject(it, this->players, this->bots);
+        this->updateCollisionForObject(it, this->staticPoints, this->bots);
     }
+}
+
+void Game::updateTable(stringstream& ss, stringstream& ss2, Vector2f& viewCenter)
+{
+    ss << " - Points: " << this->totalPoints << "\n"; // uaktualnienie liczby punktów
+    ss2 << "TABLICA WYNIKOW\n";
+
+    vector<int> bestFive;
+    for(auto& it: bots)
+        bestFive.push_back(-it.getMass());
+    for(auto& it: players)
+    {
+        viewCenter += it.getPlayerPostion();
+        viewCenter += Vector2f(it.getRadius()+30, it.getRadius()+30);
+    }
+    bestFive.push_back(-this->calculateTotalPoints());
+    sort(bestFive.begin(), bestFive.end());
+    
+    for(int i = 0; i < min(5, (int)bestFive.size()); ++i)
+        ss2 << -bestFive[i] << "\n";
 }
 
 void Game::updateGui()
 {
     /// @brief aktualizowanie informacji interfejsu
     stringstream ss, ss2;
-    if(this->totalPoints > maxPoints){
-        maxPoints = this->totalPoints;
-    }
-    ss << " - Points: " << this->totalPoints << "\n"; // uaktualnienie liczby punktów
     Vector2f viewCenter;
-    ss2 << "TABLICA WYNIKOW\n";
-    int playerMass = 0;
-    for(auto& it: players)
-    {
-        viewCenter += it.getPlayerPostion();
-        viewCenter += Vector2f(log(it.getMass())/log(1.05), log(it.getMass())/log(1.05));
-        playerMass += it.getMass();
-    }
-    vector<int> bestFive;
-    bestFive.push_back(-playerMass);
-    for(auto& it: bots)
-        bestFive.push_back(-it.getMass());
-    sort(bestFive.begin(), bestFive.end());
-    for(int i = 0; i < min(5, (int)bestFive.size()); ++i)
-        ss2 << -bestFive[i] << "\n";
+    this->updateTable(ss, ss2 , viewCenter);
     viewCenter.x = viewCenter.x / this->players.size();
     viewCenter.y = viewCenter.y / this->players.size();
     View view = window->getView();
@@ -254,9 +248,7 @@ void Game::updateMaxPoints()
 void Game::updateBot()
 {
     for(auto& it: this->bots)
-    {
         it.moveBot(this->bots, this->players, this->staticPoints);
-    }
 }
 
 int Game::update()
@@ -268,14 +260,12 @@ int Game::update()
         this->spawnStaticPoints();
         this->updatePlayer();
         this->updateBot();
-        this->updateCollision(this->players, false);
-        this->updateCollision(this->bots, true);
+        this->updateCollision();
         this->updateGui();
         this->initBots(this->players[0].getStartingSpeed());
         this->calculateStaticPoints();
     }
-    this->calculateTotalPoints();
-    if(this->totalPoints <= 0 || this->endGame == true){
+    if(this->calculateTotalPoints() <= 0 || this->endGame == true){
         this->endGame = true;
         this->updateMaxPoints();
     }
@@ -301,17 +291,14 @@ void Game::render()
     /// @brief funkcja renderująca i wyświetlająca okno oraz obiekty na nim
     this->window->clear(Color::White);
 
-    for(auto& it : this->players){
+    for(auto& it : this->players)
         it.render(*this->window);
-    }
 
-    for(auto& it : this->bots){
+    for(auto& it : this->bots)
         it.render(*this->window);
-    }
 
-    for(auto& it : this->staticPoints){
+    for(auto& it : this->staticPoints)
         it.render(*this->window);
-    }
 
     this->renderGui(this->window);
 
@@ -319,5 +306,6 @@ void Game::render()
         this->window->close();
         return;
     }
+
     this->window->display();
 }

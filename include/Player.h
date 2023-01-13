@@ -18,6 +18,7 @@ private:
     float speed; // prędkość gracza
     float startingSpeed; // początkowa prędkość gracza
     int mass; // masa gracza
+    int type; // rodzaj obiektu
     std::string name; // nazwa gracza
     void Variables(const int mass, const int speed); // inicjowanie zmiennych
     void makeShape(); // tworzenie kształtu
@@ -29,10 +30,12 @@ public:
     const int& getMass() const; // getter masy
     float getStartingSpeed(); // getter masy
     float getRadius(); // getter promienia
+    int getType(); // getter Typu obiektu
     const float& getSpeed() const; // getter prędkości
     const sf::Vector2f& getPlayerPostion() const; // getter pozycji gracza
     const clock_t& getSplitTime() const; // getter czasu podziału
     void setSplitTime(clock_t splittime); // setter czasu podziału
+    void setType(int type); // setter Typu obiektu
     const clock_t& getFreshSpawnedTime() const; // getter czasu podziału
     void setFreshSpawnedTime(clock_t freshSpawnedTime); // setter czasu podziału
     void calculateSpeed(); // obliczanie prędkości

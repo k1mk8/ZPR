@@ -67,6 +67,7 @@ Player::Player(float x, float y, const int mass, const int speed)
     this->shape.setPosition(x,y);
     this->Variables(mass, speed);
     this->makeShape();
+    this->setType(3);
 }
 
 Player::~Player()
@@ -100,6 +101,13 @@ float Player::getRadius()
     /// @brief getter promienia gracza
     /// @return promień gracza
     return log(this->mass)/log(1.05) - 30;
+}
+
+int Player::getType()
+{
+    /// @brief getter typu obiektu
+    /// @return typ obiektu
+    return this->type;
 }
 
 const float & Player::getSpeed() const
@@ -142,6 +150,13 @@ void Player::setSplitTime(clock_t splittime)
     /// @brief setter czasu podziału
     /// @param splittime czasu podziału gracza
     this->splitTime = splittime;
+}
+
+void Player::setType(int type)
+{
+    /// @brief setter typu obiektu
+    /// @param type typu obiektu
+    this->type = type;
 }
 
 void Player::setMass(const int weight)

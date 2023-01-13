@@ -16,6 +16,7 @@ Bot::Bot(float x, float y, const int mass, const int speed)
     : Player(x, y, mass, speed)
 {
     this->makeShape();
+    this->setType(4);
 }
 
 Bot::~Bot()

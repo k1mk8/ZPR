@@ -32,12 +32,14 @@ public:
     Game(const int& speed); // konstruktor domyślny
     const bool& getEndGame() const; // zwraca informację o końcu gry
     const int& getTotalPoints() const; // zwraca sumaryczną ilośc punktów
-    void calculateTotalPoints(); // obliczanie sumy punktów
+    int calculateTotalPoints(); // obliczanie sumy punktów
     void spawnStaticPoints(); // tworzenie obiektów statycznych
     int randPointType(); // losowanie obiektów do stworzenia
     void updatePlayer(); // uaktualnianie graczy
-    template<typename T>
-    void updateCollision(std::vector<T>& participants, bool isBot); // sprawdzanie kolizji
+    void updateCollision(); // sprawdzanie kolizji
+    template<typename T, typename U>
+    void updateCollisionForObject(T& participant, std::vector<U>& objects, std::vector<T>& participants); // sprawdzanie kolizji
+    void updateTable(std::stringstream& ss, std::stringstream& ss2, sf::Vector2f& viewCenter);
     void updateGui(); // uaktualnianie GUI
     void updateMaxPoints(); // uaktualnianie maksymalnej liczby punktów w grze
     void updateBot(); // wykonanie aktualizacji ruchow
