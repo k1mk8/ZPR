@@ -7,28 +7,26 @@
 #ifndef GameOver_H
 #define GameOver_H
 
-#include <bits/stdc++.h>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
+#include <bits/stdc++.h>
 
 #include "BasicWindow.h"
 
-
-class GameOver : public BasicWindow
-{
-/// @brief klasa odpowiedzialna za ekran końcowy
+class GameOver : public BasicWindow {
+  /// @brief klasa odpowiedzialna za ekran końcowy
 private:
-    Button button_yes_; // przycisk powtórzenia gry
-    Button button_no_; // przycisk zakończenia gry
-    void setTexture(); // inicjowanie okna
-    void initButton(); // inicjowanie przycisków
+  Button button_yes_; // przycisk powtórzenia gry
+  Button button_no_;  // przycisk zakończenia gry
+  void setTexture();  // inicjowanie okna
+  void initButton();  // inicjowanie przycisków
 public:
-    GameOver(); // konstruktor domyślny
-    int update(); // uaktualnianie okna
-    void render(); // renderowanie i wyświetlanie okna 
+  GameOver();    // konstruktor domyślny
+  int update();  // uaktualnianie okna
+  void render(); // renderowanie i wyświetlanie okna
 };
 
 #endif
