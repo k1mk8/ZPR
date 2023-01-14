@@ -19,7 +19,7 @@
 
 enum StaticPointsTypes { FOOD = 0, SPIKES }; // typy punktów statycznych
 
-class StaticPoints : public Player {
+class StaticPoints {
   /// @brief klasa odpowiedzialna za obiekty statyczne na mapie
 private:
   sf::CircleShape shape_;                      // kształ punktu
