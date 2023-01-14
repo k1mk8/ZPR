@@ -32,7 +32,7 @@ public:
                    sf::Vector2f set_position = {0, 0},
                    std::string text = ""); // ustawia parametry napisów
   virtual bool running();                  // sprawdzenie działania okna
-  virtual void pollEvents();               // sprawdzanie wydarzeń
+  virtual bool pollEvents();               // sprawdzanie wydarzeń
   ~BasicWindow();                          // destruktor domyślny
   virtual int update() = 0;                // uaktualnianie okna
   virtual void render() = 0;               // renderowanie i wyświetlanie okna

@@ -70,9 +70,15 @@ int Interface::update() {
   /// @brief funkcja sprawdzająca czy wydarzyły się jakieś interakcje od
   /// użytkownika
   /// @return czy przycisk rozpoczęcia gry został wciśnięty
-  this->pollEvents();
-  if (this->button_.isButtonPressed(this->window_))
+  bool close = this->pollEvents();
+  if(close){
+    this->window_->close();
+    return 5;
+  }
+  if (this->button_.isButtonPressed(this->window_)){
+    this->window_->close();
     return 1;
+  }
   if (this->speed1_.isButtonPressed(this->window_))
     return 2;
   if (this->speed2_.isButtonPressed(this->window_))

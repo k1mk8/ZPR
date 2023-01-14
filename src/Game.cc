@@ -264,7 +264,10 @@ void Game::updateBot() {
 
 int Game::update() {
   /// @brief funkcja uaktualniająca wydarzenia na mapie
-  this->pollEvents();
+  bool close = this->pollEvents();
+  if(close){
+    return close;
+  }
   if (!this->end_game_) {
     this->zoomOut();
     this->spawnStaticPoints();

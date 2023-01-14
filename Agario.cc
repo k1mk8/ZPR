@@ -28,13 +28,20 @@ int main() {
         speed = 10;
       if (change == 4)
         speed = 20;
+      if(change == 5)
+        break;
     }
+    if (change == 5)
+      break;
     Game game(speed); // tworzenie gry z wybraną przez użytkownika prędkością
-    while (game.running()) // dopóki działa okno gry
+    bool close = false;
+    while (game.running() && !close) // dopóki działa okno gry
     {
-      game.update();
+      close = game.update();
       game.render();
     }
+    if(close)
+      break;
     GameOver gameOver;  // stworzenie okna końcowego
     while (choice == 0) // dopóki działa okno
     {
@@ -43,7 +50,7 @@ int main() {
     }
     if (choice == 1) {
       choice = 0;
-    } else if (choice == 2) {
+    } else if (choice == 2 || choice == 3) {
       break;
     }
   }

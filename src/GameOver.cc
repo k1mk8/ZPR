@@ -34,11 +34,13 @@ int GameOver::update() {
   /// @brief funkcja sprawdzająca czy wydarzyły się jakieś interakcje od
   /// użytkownika
   /// @return czy przycisk rozpoczęcia gry został wciśnięty
-  this->pollEvents();
+  bool close = this->pollEvents();
   if (this->button_yes_.isButtonPressed(window_))
     return 1;
   else if (this->button_no_.isButtonPressed(window_))
     return 2;
+  else if (close)
+    return 3;
   return 0;
 }
 

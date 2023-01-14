@@ -49,19 +49,19 @@ bool BasicWindow::running() {
   return this->window_->isOpen();
 }
 
-void BasicWindow::pollEvents() {
+bool BasicWindow::pollEvents() {
   /// @brief funkcja sprawdzająca czy okno ma być zamknięte
+  bool close = false;
   while (this->window_->pollEvent(this->sfml_event_)) {
-    if (this->sfml_event_.type == Event::Closed) {
+    if (this->sfml_event_.type == Event::Closed || 
+        this->sfml_event_.key.code == Keyboard::Escape) {
       this->window_->close();
-      break;
-    }
-    if (this->sfml_event_.key.code == Keyboard::Escape) {
-      this->window_->close();
+      close = true;
       break;
     }
     break;
   }
+  return close;
 }
 
 BasicWindow::~BasicWindow() {
